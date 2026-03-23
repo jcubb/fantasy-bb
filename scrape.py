@@ -132,12 +132,12 @@ async def get_player_from_cell(cell) -> dict | None:
     return {'name': name, 'injury': injury}
 
 
-async def scrape_position(page, pos: str, url_path: str) -> dict:
+async def scrape_position(page, pos: str, url_path: str, max_depth: int = 2) -> dict:
     """
     Scrape one position page.
-    Table structure: ROWS = teams, COLS = [Team | Starter | Backup | Reserves]
+    Table structure: ROWS = teams, COLS = [Team | Starter | Backup | Reserves...]
     AL and NL are separate tables; we identify AL by .TableBase-title text.
-    Returns {team_abbr: [{'name':..., 'injury':...}, ...]}  (up to 2 players)
+    Returns {team_abbr: [{'name':..., 'injury':...}, ...]}  (up to max_depth players)
     """
     url = BASE_URL + url_path
     try:
@@ -191,9 +191,9 @@ async def scrape_position(page, pos: str, url_path: str) -> dict:
         if not is_al(team):
             continue
 
-        # Cells 1 = Starter, 2 = Backup
+        # Cells 1..max_depth = Starter, Backup, Reserves...
         players = []
-        for cell in cells[1:3]:
+        for cell in cells[1:1 + max_depth]:
             p = await get_player_from_cell(cell)
             if p:
                 players.append(p)
@@ -297,19 +297,23 @@ async def main():
         # Simpler: build from scratch
         depth_chart = {}
 
+        # SP: 5 starters; RP: 4 relievers (first 2 = CL candidates, next 2 = setup)
+        depth_limits = {'SP': 5, 'RP': 4}
+
         for pos, url_path in POSITION_URLS.items():
             print(f'  Scraping {pos}...')
-            pos_data = await scrape_position(page, pos, url_path)
+            max_depth = depth_limits.get(pos, 2)
+            pos_data = await scrape_position(page, pos, url_path, max_depth=max_depth)
 
             for team, players in pos_data.items():
                 if team not in depth_chart:
                     depth_chart[team] = {}
 
                 if pos == 'RP' and players:
-                    # First reliever = closer
-                    depth_chart[team]['CL'] = [players[0]]
-                    if len(players) > 1:
-                        depth_chart[team]['RP'] = [players[1]]
+                    # First 2 relievers = closer candidates, next 2 = setup men
+                    depth_chart[team]['CL'] = players[:2]
+                    if len(players) > 2:
+                        depth_chart[team]['RP'] = players[2:4]
                 else:
                     depth_chart[team][pos] = players
 

@@ -134,7 +134,8 @@ body {
   user-select: none;
 }
 .starter .p-name  { font-weight: 600; color: #1a2035; }
-.backup .p-name   { color: #7a8ca0; font-size: 11px; }
+.backup .p-name, .backup2 .p-name, .backup3 .p-name, .backup4 .p-name
+                  { color: #7a8ca0; font-size: 11px; }
 .drafted .p-name  { text-decoration: line-through; color: #b0bec8 !important; }
 .drafted          { opacity: .6; }
 
@@ -343,14 +344,15 @@ function renderGrid() {
   teams.forEach(abbr => {
     const team = dc[abbr] || {};
     html += `<tr><td class="team-cell">${abbr}</td>`;
+    const MAX_DEPTH = { SP: 5, CL: 2, RP: 2 };
     cols.forEach(pos => {
-      const players = (team[pos] || []).slice(0, 2);
+      const players = (team[pos] || []).slice(0, MAX_DEPTH[pos] ?? 2);
       html += '<td>';
       let shown = 0;
       players.forEach((p, i) => {
         const isDrafted = drafted.has(p.name);
         if (hideDrafted && isDrafted) return;
-        const depCls  = i === 0 ? 'starter' : 'backup';
+        const depCls  = i === 0 ? 'starter' : 'backup' + (i > 1 ? i : '');
         const dftCls  = isDrafted ? ' drafted' : '';
         const injHtml = p.injury
           ? `<span class="inj-flag" title="${esc(p.injury)}">!</span>`
