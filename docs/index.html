@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fantasy BB Draft Tool</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  background: #f0f4f8;
+  color: #1a2035;
+}
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+#header {
+  background: #1e3a5f;
+  color: white;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 6px rgba(0,0,0,.4);
+  flex-wrap: wrap;
+}
+#header h1 { font-size: 15px; font-weight: 700; letter-spacing: .4px; white-space: nowrap; }
+#meta { font-size: 11px; opacity: .65; white-space: nowrap; }
+#controls { margin-left: auto; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+#controls label { cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+#btn-reset {
+  background: #c0392b; border: none; color: white;
+  padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;
+}
+#btn-reset:hover { background: #a93226; }
+
+/* ── Tabs ───────────────────────────────────────────────────────────────── */
+#tabs {
+  background: #f0f4f8;
+  padding: 8px 16px 0;
+  border-bottom: 2px solid #c8d3e0;
+  display: flex;
+  gap: 4px;
+}
+.tab-btn {
+  padding: 6px 18px;
+  border: none;
+  background: #dce4ee;
+  cursor: pointer;
+  font-size: 13px;
+  color: #555;
+  border-radius: 6px 6px 0 0;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: background .15s;
+}
+.tab-btn:hover { background: #cfd9e8; }
+.tab-btn.active { background: white; color: #1e3a5f; border-bottom-color: #1e3a5f; font-weight: 600; }
+
+/* ── Grid wrapper ───────────────────────────────────────────────────────── */
+#grid-wrapper {
+  overflow-x: auto;
+  padding: 12px 16px;
+  background: #f0f4f8;
+}
+
+/* ── Grid table ─────────────────────────────────────────────────────────── */
+#grid-table { border-collapse: collapse; white-space: nowrap; }
+
+#grid-table thead th {
+  background: #1e3a5f;
+  color: #cfe0f8;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  letter-spacing: .5px;
+}
+#grid-table thead th:first-child {
+  text-align: left;
+  left: 0;
+  z-index: 11;
+  background: #162d4a;
+}
+
+#grid-table td {
+  border: 1px solid #d0dae6;
+  padding: 4px 6px;
+  vertical-align: top;
+  min-width: 118px;
+  background: white;
+}
+#grid-table td.team-cell {
+  position: sticky;
+  left: 0;
+  background: #eaf0f8;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+  min-width: 42px;
+  width: 42px;
+  z-index: 5;
+  color: #1e3a5f;
+  border-right: 2px solid #b0c4d8;
+}
+#grid-table tr:hover td { background: #f5f8ff; }
+#grid-table tr:hover td.team-cell { background: #dce8f5; }
+
+/* ── Player entry ───────────────────────────────────────────────────────── */
+.player-entry {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 3px;
+  cursor: default;
+  border-radius: 3px;
+}
+.player-entry:hover { background: #e8f4fd; }
+.player-entry input[type=checkbox] { cursor: pointer; flex-shrink: 0; accent-color: #1e3a5f; }
+
+.p-name {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 95px;
+  user-select: none;
+}
+.starter .p-name  { font-weight: 600; color: #1a2035; }
+.backup .p-name   { color: #7a8ca0; font-size: 11px; }
+.drafted .p-name  { text-decoration: line-through; color: #b0bec8 !important; }
+.drafted          { opacity: .6; }
+
+.inj-flag { color: #c0392b; font-size: 10px; font-weight: 700; margin-left: 1px; flex-shrink: 0; }
+
+/* ── Ranked list ─────────────────────────────────────────────────────────── */
+#ranked-section { padding: 0 16px 24px; }
+#ranked-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0 8px;
+  border-top: 2px solid #c8d3e0;
+  flex-wrap: wrap;
+}
+#ranked-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
+#list-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-left: auto; }
+#pos-filter, #search-box {
+  padding: 4px 8px;
+  border: 1px solid #b0c4d8;
+  border-radius: 4px;
+  font-size: 12px;
+  background: white;
+}
+#search-box { width: 140px; }
+
+#ranked-table { border-collapse: collapse; width: 100%; max-width: 680px; }
+#ranked-table thead th {
+  background: #1e3a5f;
+  color: #cfe0f8;
+  padding: 5px 10px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .4px;
+}
+#ranked-table tbody td {
+  padding: 4px 10px;
+  border-bottom: 1px solid #e8eef5;
+  font-size: 12px;
+}
+#ranked-table tbody tr:hover td { background: #f5f8ff; cursor: default; }
+#ranked-table .rank-num { color: #7a8ca0; text-align: right; width: 36px; }
+.row-drafted td { opacity: .5; }
+.row-drafted .r-name { text-decoration: line-through; }
+.r-injury { color: #c0392b; font-size: 11px; }
+
+/* ── Tooltip ─────────────────────────────────────────────────────────────── */
+#tooltip {
+  position: fixed;
+  background: #162d4a;
+  color: #e8f0f8;
+  padding: 9px 13px;
+  border-radius: 7px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 300;
+  max-width: 230px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.45);
+  line-height: 1.55;
+  display: none;
+}
+.tt-name  { font-weight: 700; margin-bottom: 3px; font-size: 13px; }
+.tt-row   { color: #90b4d8; font-size: 11px; }
+.tt-inj   { color: #f08080; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div id="header">
+  <h1>⚾ Fantasy BB Draft Tool</h1>
+  <span id="meta">Loading...</span>
+  <div id="controls">
+    <label><input type="checkbox" id="hide-drafted" onchange="render()"> Hide drafted</label>
+    <button id="btn-reset" onclick="resetDraft()">Reset Draft</button>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div id="tabs">
+  <button class="tab-btn active" onclick="switchTab('batters',this)">Batters</button>
+  <button class="tab-btn" onclick="switchTab('pitchers',this)">Pitchers</button>
+</div>
+
+<!-- Grid -->
+<div id="grid-wrapper">
+  <table id="grid-table"><tbody id="grid-body"></tbody></table>
+</div>
+
+<!-- Ranked list -->
+<div id="ranked-section">
+  <div id="ranked-header">
+    <h2>Available Players — by Rank</h2>
+    <div id="list-controls">
+      <input type="text" id="search-box" placeholder="Search name..." oninput="renderList()">
+      <select id="pos-filter" onchange="renderList()">
+        <option value="all">All Positions</option>
+        <option value="batter">All Batters</option>
+        <option value="pitcher">All Pitchers</option>
+        <option value="C">C</option>
+        <option value="1B">1B</option>
+        <option value="2B">2B</option>
+        <option value="3B">3B</option>
+        <option value="SS">SS</option>
+        <option value="OF">OF (LF/CF/RF)</option>
+        <option value="DH">DH</option>
+        <option value="SP">SP</option>
+        <option value="CL">CL</option>
+        <option value="RP">RP</option>
+      </select>
+      <label><input type="checkbox" id="list-hide-drafted" onchange="renderList()"> Hide drafted</label>
+    </div>
+  </div>
+  <table id="ranked-table">
+    <thead>
+      <tr>
+        <th style="width:36px">Rank</th>
+        <th>Name</th>
+        <th style="width:42px">Team</th>
+        <th style="width:42px">Pos</th>
+        <th>Injury / Note</th>
+      </tr>
+    </thead>
+    <tbody id="list-body"></tbody>
+  </table>
+</div>
+
+<!-- Tooltip -->
+<div id="tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-row"  id="tt-rank"></div>
+  <div class="tt-row"  id="tt-elig">Pos Eligibility: <em>(Phase 2)</em></div>
+  <div class="tt-inj"  id="tt-inj" style="display:none"></div>
+</div>
+
+<script>
+// ── Constants ──────────────────────────────────────────────────────────────
+const BATTER_COLS  = ['C','1B','2B','3B','SS','LF','CF','RF','DH'];
+const PITCHER_COLS = ['SP','CL','RP'];
+const BATTER_SET   = new Set(BATTER_COLS);
+const PITCHER_SET  = new Set(PITCHER_COLS);
+const OF_SET       = new Set(['LF','CF','RF','OF']);
+const AL_ORDER     = ['BAL','BOS','NYY','TB','TOR','CWS','CLE','DET','KC','MIN','HOU','LAA','OAK','SEA','TEX'];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let DATA        = null;
+let drafted     = new Set(JSON.parse(localStorage.getItem('ff_drafted') || '[]'));
+let currentTab  = 'batters';
+
+// ── Init ───────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    const res = await fetch('data.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    DATA = await res.json();
+    const d = new Date(DATA.scraped_at);
+    document.getElementById('meta').textContent =
+      'Scraped: ' + d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    render();
+  } catch (e) {
+    document.getElementById('grid-body').innerHTML =
+      `<tr><td colspan="20" style="padding:20px;color:#c0392b">
+        Failed to load data.json — run scrape.py first.<br><small>${e}</small>
+      </td></tr>`;
+    document.getElementById('meta').textContent = 'No data';
+  }
+}
+
+// ── Draft state ────────────────────────────────────────────────────────────
+function toggleDrafted(name) {
+  drafted.has(name) ? drafted.delete(name) : drafted.add(name);
+  localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
+  render();
+}
+
+function resetDraft() {
+  if (!confirm('Clear all drafted players?')) return;
+  drafted.clear();
+  localStorage.removeItem('ff_drafted');
+  render();
+}
+
+// ── Rendering ──────────────────────────────────────────────────────────────
+function render() { renderGrid(); renderList(); }
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+}
+
+function renderGrid() {
+  if (!DATA) return;
+  const hideDrafted = document.getElementById('hide-drafted').checked;
+  const cols = currentTab === 'batters' ? BATTER_COLS : PITCHER_COLS;
+  const dc   = DATA.depth_chart || {};
+
+  // Determine row order: AL_ORDER first, then any extras
+  const teams = [...AL_ORDER.filter(t => dc[t]),
+                 ...Object.keys(dc).filter(t => !AL_ORDER.includes(t))];
+
+  let html = `<thead><tr><th>Team</th>${cols.map(p => `<th>${p}</th>`).join('')}</tr></thead><tbody>`;
+
+  teams.forEach(abbr => {
+    const team = dc[abbr] || {};
+    html += `<tr><td class="team-cell">${abbr}</td>`;
+    cols.forEach(pos => {
+      const players = (team[pos] || []).slice(0, 2);
+      html += '<td>';
+      let shown = 0;
+      players.forEach((p, i) => {
+        const isDrafted = drafted.has(p.name);
+        if (hideDrafted && isDrafted) return;
+        const depCls  = i === 0 ? 'starter' : 'backup';
+        const dftCls  = isDrafted ? ' drafted' : '';
+        const injHtml = p.injury
+          ? `<span class="inj-flag" title="${esc(p.injury)}">!</span>`
+          : '';
+        html += `<div class="player-entry ${depCls}${dftCls}"
+                      data-name="${esc(p.name)}" data-injury="${esc(p.injury||'')}">
+                   <input type="checkbox" ${isDrafted?'checked':''}
+                          onclick="toggleDrafted('${esc(p.name)}')">
+                   <span class="p-name" onmouseenter="showTip(event,'${esc(p.name)}','${esc(p.injury||'')}')"
+                         onmouseleave="hideTip()">${esc(p.name)}</span>
+                   ${injHtml}
+                 </div>`;
+        shown++;
+      });
+      if (shown === 0 && hideDrafted) {
+        html += '<span style="color:#c0d0e0;font-size:11px">—</span>';
+      }
+      html += '</td>';
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody>';
+  document.getElementById('grid-table').innerHTML = html;
+}
+
+function renderList() {
+  if (!DATA) return;
+
+  const hideDrafted = document.getElementById('list-hide-drafted').checked;
+  const posFilter   = document.getElementById('pos-filter').value;
+  const searchVal   = document.getElementById('search-box').value.trim().toLowerCase();
+  const rankings    = DATA.rankings || {};
+  const dc          = DATA.depth_chart || {};
+
+  // Build player map: merge depth chart positions with rankings data
+  const players = {};
+
+  // Start from depth chart — primary source of team/pos/injury
+  Object.entries(dc).forEach(([team, positions]) => {
+    Object.entries(positions).forEach(([pos, list]) => {
+      list.forEach(p => {
+        if (!players[p.name]) {
+          players[p.name] = { name: p.name, team, pos, injury: p.injury, rank: 99999 };
+        } else if (p.injury && !players[p.name].injury) {
+          players[p.name].injury = p.injury;
+        }
+      });
+    });
+  });
+
+  // Overlay rankings rank + canonical pos
+  Object.entries(rankings).forEach(([name, info]) => {
+    if (!players[name]) {
+      players[name] = { name, team: info.team, pos: info.pos, injury: null, rank: info.rank };
+    } else {
+      players[name].rank = info.rank;
+      if (info.pos) players[name].pos = info.pos;
+    }
+  });
+
+  // Filter
+  let list = Object.values(players).filter(p => {
+    if (hideDrafted && drafted.has(p.name)) return false;
+    if (searchVal && !p.name.toLowerCase().includes(searchVal)) return false;
+    const pos = (p.pos || '').toUpperCase();
+    if (posFilter === 'all')     return true;
+    if (posFilter === 'batter')  return BATTER_SET.has(pos);
+    if (posFilter === 'pitcher') return PITCHER_SET.has(pos);
+    if (posFilter === 'OF')      return OF_SET.has(pos);
+    return pos === posFilter;
+  });
+
+  list.sort((a, b) => a.rank - b.rank);
+
+  let html = '';
+  list.forEach(p => {
+    const isDrafted  = drafted.has(p.name);
+    const dftCls     = isDrafted ? ' row-drafted' : '';
+    const rankStr    = p.rank < 99999 ? p.rank : '—';
+    const injHtml    = p.injury
+      ? `<span class="r-injury">${esc(p.injury)}</span>` : '';
+    html += `<tr class="${dftCls}"
+                 onmouseenter="showTip(event,'${esc(p.name)}','${esc(p.injury||'')}')"
+                 onmouseleave="hideTip()">
+               <td class="rank-num">${rankStr}</td>
+               <td>
+                 <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
+                   <input type="checkbox" ${isDrafted?'checked':''}
+                          onchange="toggleDrafted('${esc(p.name)}')">
+                   <span class="r-name">${esc(p.name)}</span>
+                 </label>
+               </td>
+               <td>${esc(p.team||'')}</td>
+               <td>${esc(p.pos||'')}</td>
+               <td>${injHtml}</td>
+             </tr>`;
+  });
+
+  document.getElementById('list-body').innerHTML =
+    html || '<tr><td colspan="5" style="padding:12px;color:#7a8ca0">No players match.</td></tr>';
+}
+
+// ── Tooltip ────────────────────────────────────────────────────────────────
+function showTip(e, name, injury) {
+  const rankings = DATA?.rankings || {};
+  const info     = rankings[name] || {};
+
+  document.getElementById('tt-name').textContent = name;
+  document.getElementById('tt-rank').textContent =
+    info.rank ? `CBS AL Rank: #${info.rank}` : 'CBS AL Rank: —';
+
+  const injEl = document.getElementById('tt-inj');
+  if (injury) {
+    injEl.textContent = '⚠ ' + injury;
+    injEl.style.display = '';
+  } else {
+    injEl.style.display = 'none';
+  }
+
+  const tip = document.getElementById('tooltip');
+  tip.style.display = 'block';
+  positionTip(e);
+}
+
+function positionTip(e) {
+  const tip = document.getElementById('tooltip');
+  const x = Math.min(e.clientX + 14, window.innerWidth  - 250);
+  const y = Math.min(e.clientY + 14, window.innerHeight - 130);
+  tip.style.left = x + 'px';
+  tip.style.top  = y + 'px';
+}
+
+function hideTip() { document.getElementById('tooltip').style.display = 'none'; }
+
+document.addEventListener('mousemove', e => {
+  if (document.getElementById('tooltip').style.display !== 'none') positionTip(e);
+});
+
+// ── Utils ──────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+init();
+</script>
+</body>
+</html>

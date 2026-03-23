@@ -1,0 +1,3069 @@
+{
+  "scraped_at": "2026-03-23T19:46:02.579171+00:00",
+  "depth_chart": {
+    "OAK": {
+      "C": [
+        {
+          "name": "Shea Langeliers",
+          "injury": null
+        },
+        {
+          "name": "Austin Wynns",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Nick Kurtz",
+          "injury": null
+        },
+        {
+          "name": "Tyler Soderstrom",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Jeff McNeil",
+          "injury": null
+        },
+        {
+          "name": "Darell Hernaiz",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Max Muncy",
+          "injury": null
+        },
+        {
+          "name": "Andy Ibanez",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Jacob Wilson",
+          "injury": null
+        },
+        {
+          "name": "Darell Hernaiz",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Tyler Soderstrom",
+          "injury": null
+        },
+        {
+          "name": "Carlos Cortes",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Denzel Clarke",
+          "injury": null
+        },
+        {
+          "name": "Lawrence Butler",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Lawrence Butler",
+          "injury": null
+        },
+        {
+          "name": "Carlos Cortes",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Brent Rooker",
+          "injury": null
+        },
+        {
+          "name": "Tyler Soderstrom",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Luis Severino",
+          "injury": null
+        },
+        {
+          "name": "Jeffrey Springs",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Hogan Harris",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Justin Sterner",
+          "injury": null
+        }
+      ]
+    },
+    "BAL": {
+      "C": [
+        {
+          "name": "Adley Rutschman",
+          "injury": null
+        },
+        {
+          "name": "Samuel Basallo",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Pete Alonso",
+          "injury": null
+        },
+        {
+          "name": "Coby Mayo",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Jackson Holliday",
+          "injury": "Hand: Expected to be out until at least Apr 10"
+        },
+        {
+          "name": "Jordan Westburg",
+          "injury": "Elbow: Expected to be out until at least May 1"
+        }
+      ],
+      "3B": [
+        {
+          "name": "Jordan Westburg",
+          "injury": "Elbow: Expected to be out until at least May 1"
+        },
+        {
+          "name": "Coby Mayo",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Gunnar Henderson",
+          "injury": null
+        },
+        {
+          "name": "Jackson Holliday",
+          "injury": "Hand: Expected to be out until at least Apr 10"
+        }
+      ],
+      "LF": [
+        {
+          "name": "Taylor Ward",
+          "injury": null
+        },
+        {
+          "name": "Dylan Beavers",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Colton Cowser",
+          "injury": null
+        },
+        {
+          "name": "Leody Taveras",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Dylan Beavers",
+          "injury": null
+        },
+        {
+          "name": "Tyler O'Neill",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Samuel Basallo",
+          "injury": null
+        },
+        {
+          "name": "Tyler O'Neill",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Trevor Rogers",
+          "injury": null
+        },
+        {
+          "name": "Kyle Bradish",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Ryan Helsley",
+          "injury": "Shoulder: Out for the season"
+        }
+      ],
+      "RP": [
+        {
+          "name": "Andrew Kittredge",
+          "injury": "Shoulder: Expected to be out until at least Apr 10"
+        }
+      ]
+    },
+    "BOS": {
+      "C": [
+        {
+          "name": "Carlos Narvaez",
+          "injury": null
+        },
+        {
+          "name": "Connor Wong",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Willson Contreras",
+          "injury": null
+        },
+        {
+          "name": "Triston Casas",
+          "injury": "Knee: Expected to be out until at least May 1"
+        }
+      ],
+      "2B": [
+        {
+          "name": "Marcelo Mayer",
+          "injury": null
+        },
+        {
+          "name": "Isiah Kiner-Falefa",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Caleb Durbin",
+          "injury": null
+        },
+        {
+          "name": "Marcelo Mayer",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Trevor Story",
+          "injury": null
+        },
+        {
+          "name": "Isiah Kiner-Falefa",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Jarren Duran",
+          "injury": null
+        },
+        {
+          "name": "Roman Anthony",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Ceddanne Rafaela",
+          "injury": null
+        },
+        {
+          "name": "Roman Anthony",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Wilyer Abreu",
+          "injury": null
+        },
+        {
+          "name": "Roman Anthony",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Roman Anthony",
+          "injury": null
+        },
+        {
+          "name": "Masataka Yoshida",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Garrett Crochet",
+          "injury": null
+        },
+        {
+          "name": "Sonny Gray",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Aroldis Chapman",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Garrett Whitlock",
+          "injury": null
+        }
+      ]
+    },
+    "CWS": {
+      "C": [
+        {
+          "name": "Kyle Teel",
+          "injury": "White Sox's Kyle Teel: Making progress with hamstring"
+        },
+        {
+          "name": "Edgar Quero",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Munetaka Murakami",
+          "injury": null
+        },
+        {
+          "name": "Lenyn Sosa",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Chase Meidroth",
+          "injury": null
+        },
+        {
+          "name": "Luisangel Acuna",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Miguel Vargas",
+          "injury": null
+        },
+        {
+          "name": "Curtis Mead",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Colson Montgomery",
+          "injury": null
+        },
+        {
+          "name": "Chase Meidroth",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Andrew Benintendi",
+          "injury": null
+        },
+        {
+          "name": "Austin Hays",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Luisangel Acuna",
+          "injury": null
+        },
+        {
+          "name": "Derek Hill",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Austin Hays",
+          "injury": null
+        },
+        {
+          "name": "Brooks Baldwin",
+          "injury": "Elbow: Questionable for start of season"
+        }
+      ],
+      "DH": [
+        {
+          "name": "Lenyn Sosa",
+          "injury": null
+        },
+        {
+          "name": "Edgar Quero",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Shane Smith",
+          "injury": null
+        },
+        {
+          "name": "Sean Burke",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Seranthony Dominguez",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Jordan Leasure",
+          "injury": null
+        }
+      ]
+    },
+    "CLE": {
+      "C": [
+        {
+          "name": "Bo Naylor",
+          "injury": null
+        },
+        {
+          "name": "Austin Hedges",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Kyle Manzardo",
+          "injury": null
+        },
+        {
+          "name": "Rhys Hoskins",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Brayan Rocchio",
+          "injury": null
+        },
+        {
+          "name": "Daniel Schneemann",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Jose Ramirez",
+          "injury": null
+        },
+        {
+          "name": "Daniel Schneemann",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Gabriel Arias",
+          "injury": null
+        },
+        {
+          "name": "Brayan Rocchio",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Steven Kwan",
+          "injury": null
+        },
+        {
+          "name": "C.J. Kayfus",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Chase DeLauter",
+          "injury": null
+        },
+        {
+          "name": "Daniel Schneemann",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "C.J. Kayfus",
+          "injury": null
+        },
+        {
+          "name": "George Valera",
+          "injury": "Calf: Expected to be out until at least Apr 6"
+        }
+      ],
+      "DH": [
+        {
+          "name": "Rhys Hoskins",
+          "injury": null
+        },
+        {
+          "name": "Kyle Manzardo",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Tanner Bibee",
+          "injury": null
+        },
+        {
+          "name": "Gavin Williams",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Cade Smith",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Hunter Gaddis",
+          "injury": "Forearm: Expected to be out until at least Apr 6"
+        }
+      ]
+    },
+    "DET": {
+      "C": [
+        {
+          "name": "Dillon Dingler",
+          "injury": null
+        },
+        {
+          "name": "Jake Rogers",
+          "injury": "Concussion: Questionable for start of season"
+        }
+      ],
+      "1B": [
+        {
+          "name": "Spencer Torkelson",
+          "injury": null
+        },
+        {
+          "name": "Colt Keith",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Gleyber Torres",
+          "injury": "Back: Questionable for start of season"
+        },
+        {
+          "name": "Zach McKinstry",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Colt Keith",
+          "injury": null
+        },
+        {
+          "name": "Zach McKinstry",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Kevin McGonigle",
+          "injury": null
+        },
+        {
+          "name": "Javier Baez",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Riley Greene",
+          "injury": null
+        },
+        {
+          "name": "Matt Vierling",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Parker Meadows",
+          "injury": null
+        },
+        {
+          "name": "Javier Baez",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Wenceel Perez",
+          "injury": null
+        },
+        {
+          "name": "Matt Vierling",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Kerry Carpenter",
+          "injury": null
+        },
+        {
+          "name": "Colt Keith",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Tarik Skubal",
+          "injury": null
+        },
+        {
+          "name": "Framber Valdez",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Kenley Jansen",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Will Vest",
+          "injury": null
+        }
+      ]
+    },
+    "HOU": {
+      "C": [
+        {
+          "name": "Yainer Diaz",
+          "injury": null
+        },
+        {
+          "name": "Cesar Salazar",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Christian Walker",
+          "injury": null
+        },
+        {
+          "name": "Isaac Paredes",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Jose Altuve",
+          "injury": null
+        },
+        {
+          "name": "Isaac Paredes",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Carlos Correa",
+          "injury": null
+        },
+        {
+          "name": "Isaac Paredes",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Jeremy Pena",
+          "injury": "Finger: Questionable for start of season"
+        },
+        {
+          "name": "Carlos Correa",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Zach Cole",
+          "injury": null
+        },
+        {
+          "name": "Joey Loperfido",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Jake Meyers",
+          "injury": null
+        },
+        {
+          "name": "Zach Cole",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Cam Smith",
+          "injury": null
+        },
+        {
+          "name": "Joey Loperfido",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Yordan Alvarez",
+          "injury": null
+        },
+        {
+          "name": "Isaac Paredes",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Hunter Brown",
+          "injury": null
+        },
+        {
+          "name": "Tatsuya Imai",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Josh Hader",
+          "injury": "Biceps: Expected to be out until at least Apr 10"
+        }
+      ],
+      "RP": [
+        {
+          "name": "Bennett Sousa",
+          "injury": "Oblique: Expected to be out until at least Apr 10"
+        }
+      ]
+    },
+    "KC": {
+      "C": [
+        {
+          "name": "Salvador Perez",
+          "injury": null
+        },
+        {
+          "name": "Carter Jensen",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Vinnie Pasquantino",
+          "injury": null
+        },
+        {
+          "name": "Salvador Perez",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Jonathan India",
+          "injury": null
+        },
+        {
+          "name": "Michael Massey",
+          "injury": "Calf: Questionable for start of season"
+        }
+      ],
+      "3B": [
+        {
+          "name": "Maikel Garcia",
+          "injury": null
+        },
+        {
+          "name": "Nick Loftin",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Bobby Witt",
+          "injury": null
+        },
+        {
+          "name": "Maikel Garcia",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Isaac Collins",
+          "injury": null
+        },
+        {
+          "name": "Lane Thomas",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Kyle Isbel",
+          "injury": null
+        },
+        {
+          "name": "Lane Thomas",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Jac Caglianone",
+          "injury": null
+        },
+        {
+          "name": "Starling Marte",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Carter Jensen",
+          "injury": null
+        },
+        {
+          "name": "Starling Marte",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Cole Ragans",
+          "injury": null
+        },
+        {
+          "name": "Michael Wacha",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Carlos Estevez",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Lucas Erceg",
+          "injury": null
+        }
+      ]
+    },
+    "LAA": {
+      "C": [
+        {
+          "name": "Logan O'Hoppe",
+          "injury": null
+        },
+        {
+          "name": "Travis d'Arnaud",
+          "injury": "Angels' Travis d'Arnaud: In line for No. 2 catcher role"
+        }
+      ],
+      "1B": [
+        {
+          "name": "Nolan Schanuel",
+          "injury": null
+        },
+        {
+          "name": "Oswald Peraza",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Adam Frazier",
+          "injury": null
+        },
+        {
+          "name": "Oswald Peraza",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Yoan Moncada",
+          "injury": null
+        },
+        {
+          "name": "Vaughn Grissom",
+          "injury": "Hand: Questionable for start of season"
+        }
+      ],
+      "SS": [
+        {
+          "name": "Zachary Neto",
+          "injury": null
+        },
+        {
+          "name": "Oswald Peraza",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Joshua Lowe",
+          "injury": null
+        },
+        {
+          "name": "Jo Adell",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Mike Trout",
+          "injury": null
+        },
+        {
+          "name": "Bryce Teodosio",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Jo Adell",
+          "injury": null
+        },
+        {
+          "name": "Mike Trout",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Jorge Soler",
+          "injury": "Angels' Jorge Soler: Belts two long balls in spring game"
+        },
+        {
+          "name": "Mike Trout",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Jose Soriano",
+          "injury": null
+        },
+        {
+          "name": "Yusei Kikuchi",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Kirby Yates",
+          "injury": "Shoulder: Expected to be out until at least Apr 7"
+        }
+      ],
+      "RP": [
+        {
+          "name": "Drew Pomeranz",
+          "injury": null
+        }
+      ]
+    },
+    "MIN": {
+      "C": [
+        {
+          "name": "Ryan Jeffers",
+          "injury": null
+        },
+        {
+          "name": "Victor Caratini",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Josh Bell",
+          "injury": null
+        },
+        {
+          "name": "Kody Clemens",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Luke Keaschall",
+          "injury": null
+        },
+        {
+          "name": "Kody Clemens",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Royce Lewis",
+          "injury": null
+        },
+        {
+          "name": "Brooks Lee",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Brooks Lee",
+          "injury": null
+        },
+        {
+          "name": "Tristan Gray",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "James Outman",
+          "injury": null
+        },
+        {
+          "name": "Austin Martin",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Byron Buxton",
+          "injury": null
+        },
+        {
+          "name": "James Outman",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Matt Wallner",
+          "injury": null
+        },
+        {
+          "name": "James Outman",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Trevor Larnach",
+          "injury": null
+        },
+        {
+          "name": "Victor Caratini",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Joe Ryan",
+          "injury": null
+        },
+        {
+          "name": "Bailey Ober",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Taylor Rogers",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Anthony Banda",
+          "injury": null
+        }
+      ]
+    },
+    "NYY": {
+      "C": [
+        {
+          "name": "Austin Wells",
+          "injury": null
+        },
+        {
+          "name": "J.C. Escarra",
+          "injury": "Yankees' J.C. Escarra: Slated for No. 2 catcher role"
+        }
+      ],
+      "1B": [
+        {
+          "name": "Ben Rice",
+          "injury": null
+        },
+        {
+          "name": "Paul Goldschmidt",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Jazz Chisholm",
+          "injury": null
+        },
+        {
+          "name": "Amed Rosario",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Ryan McMahon",
+          "injury": null
+        },
+        {
+          "name": "Amed Rosario",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Anthony Volpe",
+          "injury": "Shoulder: Expected to be out until at least May 1"
+        },
+        {
+          "name": "Jose Caballero",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Cody Bellinger",
+          "injury": null
+        },
+        {
+          "name": "Jose Caballero",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Trent Grisham",
+          "injury": null
+        },
+        {
+          "name": "Cody Bellinger",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Aaron Judge",
+          "injury": "Yankees' Aaron Judge: Adds to spring homer total"
+        },
+        {
+          "name": "Cody Bellinger",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Giancarlo Stanton",
+          "injury": null
+        },
+        {
+          "name": "Aaron Judge",
+          "injury": "Yankees' Aaron Judge: Adds to spring homer total"
+        }
+      ],
+      "SP": [
+        {
+          "name": "Max Fried",
+          "injury": null
+        },
+        {
+          "name": "Gerrit Cole",
+          "injury": "Elbow: Expected to be out until at least May 25"
+        }
+      ],
+      "CL": [
+        {
+          "name": "David Bednar",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Camilo Doval",
+          "injury": null
+        }
+      ]
+    },
+    "SEA": {
+      "C": [
+        {
+          "name": "Cal Raleigh",
+          "injury": null
+        },
+        {
+          "name": "Mitch Garver",
+          "injury": "Mariners' Mitch Garver: Set to win No. 2 job"
+        }
+      ],
+      "1B": [
+        {
+          "name": "Josh Naylor",
+          "injury": null
+        },
+        {
+          "name": "Brendan Donovan",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Cole Young",
+          "injury": null
+        },
+        {
+          "name": "Brendan Donovan",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Brendan Donovan",
+          "injury": null
+        },
+        {
+          "name": "Ryan Bliss",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "J.P. Crawford",
+          "injury": "Shoulder: Questionable for start of season"
+        },
+        {
+          "name": "Leonardo Rivas",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Randy Arozarena",
+          "injury": null
+        },
+        {
+          "name": "Rob Refsnyder",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Julio Rodriguez",
+          "injury": null
+        },
+        {
+          "name": "Victor Robles",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Luke Raley",
+          "injury": null
+        },
+        {
+          "name": "Victor Robles",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Dominic Canzone",
+          "injury": null
+        },
+        {
+          "name": "Cal Raleigh",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Logan Gilbert",
+          "injury": null
+        },
+        {
+          "name": "George Kirby",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Andres Munoz",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Matt Brash",
+          "injury": null
+        }
+      ]
+    },
+    "TB": {
+      "C": [
+        {
+          "name": "Nick Fortes",
+          "injury": null
+        },
+        {
+          "name": "Hunter Feduccia",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Jonathan Aranda",
+          "injury": null
+        },
+        {
+          "name": "Yandy Diaz",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Gavin Lux",
+          "injury": "Rays' Gavin Lux: Slated for IL stint"
+        },
+        {
+          "name": "Ben Williamson",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Junior Caminero",
+          "injury": null
+        },
+        {
+          "name": "Ben Williamson",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Carson Williams",
+          "injury": null
+        },
+        {
+          "name": "Taylor Walls",
+          "injury": "Oblique: Expected to be out until at least Apr 14"
+        }
+      ],
+      "LF": [
+        {
+          "name": "Chandler Simpson",
+          "injury": null
+        },
+        {
+          "name": "Jake Fraley",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Cedric Mullins",
+          "injury": null
+        },
+        {
+          "name": "Jonny DeLuca",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Jake Fraley",
+          "injury": null
+        },
+        {
+          "name": "Jonny DeLuca",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Yandy Diaz",
+          "injury": null
+        },
+        {
+          "name": "Jonathan Aranda",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Drew Rasmussen",
+          "injury": null
+        },
+        {
+          "name": "Ryan Pepiot",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Griffin Jax",
+          "injury": "Shoulder: Expected to be out until at least Apr 10"
+        }
+      ],
+      "RP": [
+        {
+          "name": "Bryan Baker",
+          "injury": null
+        }
+      ]
+    },
+    "TEX": {
+      "C": [
+        {
+          "name": "Danny Jansen",
+          "injury": null
+        },
+        {
+          "name": "Kyle Higashioka",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Jake Burger",
+          "injury": null
+        },
+        {
+          "name": "Ezequiel Duran",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Josh H. Smith",
+          "injury": null
+        },
+        {
+          "name": "Cody Freeman",
+          "injury": "Back: Expected to be out until at least Apr 5"
+        }
+      ],
+      "3B": [
+        {
+          "name": "Josh Jung",
+          "injury": null
+        },
+        {
+          "name": "Cody Freeman",
+          "injury": "Back: Expected to be out until at least Apr 5"
+        }
+      ],
+      "SS": [
+        {
+          "name": "Corey Seager",
+          "injury": null
+        },
+        {
+          "name": "Josh H. Smith",
+          "injury": null
+        }
+      ],
+      "LF": [
+        {
+          "name": "Wyatt Langford",
+          "injury": null
+        },
+        {
+          "name": "Brandon Nimmo",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Evan Carter",
+          "injury": null
+        },
+        {
+          "name": "Wyatt Langford",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Brandon Nimmo",
+          "injury": null
+        },
+        {
+          "name": "Wyatt Langford",
+          "injury": null
+        }
+      ],
+      "DH": [
+        {
+          "name": "Joc Pederson",
+          "injury": null
+        },
+        {
+          "name": "Andrew McCutchen",
+          "injury": null
+        }
+      ],
+      "SP": [
+        {
+          "name": "Jacob deGrom",
+          "injury": null
+        },
+        {
+          "name": "Nathan Eovaldi",
+          "injury": null
+        }
+      ],
+      "CL": [
+        {
+          "name": "Robert Garcia",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Cole Winn",
+          "injury": null
+        }
+      ]
+    },
+    "TOR": {
+      "C": [
+        {
+          "name": "Alejandro Kirk",
+          "injury": null
+        },
+        {
+          "name": "Tyler Heineman",
+          "injury": null
+        }
+      ],
+      "1B": [
+        {
+          "name": "Vladimir Guerrero Jr.",
+          "injury": "Blue Jays' Vladimir Guerrero: Launches first spring homer"
+        },
+        {
+          "name": "Kazuma Okamoto",
+          "injury": null
+        }
+      ],
+      "2B": [
+        {
+          "name": "Ernie Clement",
+          "injury": "Blue Jays' Ernie Clement: Swipes bag Sunday"
+        },
+        {
+          "name": "Andres Gimenez",
+          "injury": null
+        }
+      ],
+      "3B": [
+        {
+          "name": "Kazuma Okamoto",
+          "injury": null
+        },
+        {
+          "name": "Addison Barger",
+          "injury": null
+        }
+      ],
+      "SS": [
+        {
+          "name": "Andres Gimenez",
+          "injury": null
+        },
+        {
+          "name": "Ernie Clement",
+          "injury": "Blue Jays' Ernie Clement: Swipes bag Sunday"
+        }
+      ],
+      "LF": [
+        {
+          "name": "Jesus Sanchez",
+          "injury": "Blue Jays' Jesus Sanchez: Belts first spring homer"
+        },
+        {
+          "name": "Davis Schneider",
+          "injury": null
+        }
+      ],
+      "CF": [
+        {
+          "name": "Daulton Varsho",
+          "injury": null
+        },
+        {
+          "name": "Myles Straw",
+          "injury": null
+        }
+      ],
+      "RF": [
+        {
+          "name": "Addison Barger",
+          "injury": null
+        },
+        {
+          "name": "Jesus Sanchez",
+          "injury": "Blue Jays' Jesus Sanchez: Belts first spring homer"
+        }
+      ],
+      "DH": [
+        {
+          "name": "George Springer",
+          "injury": null
+        },
+        {
+          "name": "Vladimir Guerrero Jr.",
+          "injury": "Blue Jays' Vladimir Guerrero: Launches first spring homer"
+        }
+      ],
+      "SP": [
+        {
+          "name": "Kevin Gausman",
+          "injury": null
+        },
+        {
+          "name": "Dylan Cease",
+          "injury": "Blue Jays' Dylan Cease: Blanks Tampa in final tuneup"
+        }
+      ],
+      "CL": [
+        {
+          "name": "Jeff Hoffman",
+          "injury": null
+        }
+      ],
+      "RP": [
+        {
+          "name": "Tyler Rogers",
+          "injury": null
+        }
+      ]
+    }
+  },
+  "rankings": {
+    "Aaron Judge": {
+      "rank": 1,
+      "pos": "RF"
+    },
+    "Bobby Witt": {
+      "rank": 2,
+      "pos": "SS"
+    },
+    "Jose Ramirez": {
+      "rank": 3,
+      "pos": "3B"
+    },
+    "Tarik Skubal": {
+      "rank": 4,
+      "pos": "SP"
+    },
+    "Julio Rodriguez": {
+      "rank": 5,
+      "pos": "CF"
+    },
+    "Garrett Crochet": {
+      "rank": 6,
+      "pos": "SP"
+    },
+    "Gunnar Henderson": {
+      "rank": 7,
+      "pos": "SS"
+    },
+    "Cal Raleigh": {
+      "rank": 8,
+      "pos": "C"
+    },
+    "Junior Caminero": {
+      "rank": 9,
+      "pos": "3B"
+    },
+    "Jazz Chisholm": {
+      "rank": 10,
+      "pos": "2B"
+    },
+    "Nick Kurtz": {
+      "rank": 11,
+      "pos": "1B"
+    },
+    "Vladimir Guerrero Jr.": {
+      "rank": 12,
+      "pos": "1B"
+    },
+    "Yordan Alvarez": {
+      "rank": 13,
+      "pos": "DH"
+    },
+    "Pete Alonso": {
+      "rank": 14,
+      "pos": "1B"
+    },
+    "Logan Gilbert": {
+      "rank": 15,
+      "pos": "SP"
+    },
+    "Bryan Woo": {
+      "rank": 16,
+      "pos": "SP"
+    },
+    "Zachary Neto": {
+      "rank": 17,
+      "pos": "SS"
+    },
+    "Hunter Brown": {
+      "rank": 18,
+      "pos": "SP"
+    },
+    "Wyatt Langford": {
+      "rank": 19,
+      "pos": "LF"
+    },
+    "Max Fried": {
+      "rank": 20,
+      "pos": "SP"
+    },
+    "Jacob deGrom": {
+      "rank": 21,
+      "pos": "SP"
+    },
+    "Cole Ragans": {
+      "rank": 22,
+      "pos": "SP"
+    },
+    "Josh Naylor": {
+      "rank": 23,
+      "pos": "1B"
+    },
+    "Brent Rooker": {
+      "rank": 24,
+      "pos": "DH"
+    },
+    "Roman Anthony": {
+      "rank": 25,
+      "pos": "RF"
+    },
+    "Cody Bellinger": {
+      "rank": 26,
+      "pos": "LF"
+    },
+    "Ben Rice": {
+      "rank": 27,
+      "pos": "1B"
+    },
+    "Shea Langeliers": {
+      "rank": 28,
+      "pos": "C"
+    },
+    "Andres Munoz": {
+      "rank": 29,
+      "pos": "RP"
+    },
+    "George Springer": {
+      "rank": 30,
+      "pos": "DH"
+    },
+    "Maikel Garcia": {
+      "rank": 31,
+      "pos": "3B"
+    },
+    "George Kirby": {
+      "rank": 32,
+      "pos": "SP"
+    },
+    "Byron Buxton": {
+      "rank": 33,
+      "pos": "CF"
+    },
+    "Riley Greene": {
+      "rank": 34,
+      "pos": "LF"
+    },
+    "Vinnie Pasquantino": {
+      "rank": 35,
+      "pos": "1B"
+    },
+    "Joe Ryan": {
+      "rank": 36,
+      "pos": "SP"
+    },
+    "Cade Smith": {
+      "rank": 37,
+      "pos": "RP"
+    },
+    "Kyle Bradish": {
+      "rank": 38,
+      "pos": "SP"
+    },
+    "Jarren Duran": {
+      "rank": 39,
+      "pos": "LF"
+    },
+    "Corey Seager": {
+      "rank": 40,
+      "pos": "SS"
+    },
+    "Framber Valdez": {
+      "rank": 41,
+      "pos": "SP"
+    },
+    "Dylan Cease": {
+      "rank": 42,
+      "pos": "SP"
+    },
+    "Randy Arozarena": {
+      "rank": 43,
+      "pos": "LF"
+    },
+    "Tyler Soderstrom": {
+      "rank": 44,
+      "pos": "LF"
+    },
+    "David Bednar": {
+      "rank": 45,
+      "pos": "RP"
+    },
+    "Trevor Story": {
+      "rank": 46,
+      "pos": "SS"
+    },
+    "Aroldis Chapman": {
+      "rank": 47,
+      "pos": "RP"
+    },
+    "Salvador Perez": {
+      "rank": 48,
+      "pos": "C"
+    },
+    "Luke Keaschall": {
+      "rank": 49,
+      "pos": "2B"
+    },
+    "Jeremy Pena": {
+      "rank": 50,
+      "pos": "SS"
+    },
+    "Kevin Gausman": {
+      "rank": 51,
+      "pos": "SP"
+    },
+    "Jose Altuve": {
+      "rank": 52,
+      "pos": "2B"
+    },
+    "Ryan Helsley": {
+      "rank": 53,
+      "pos": "RP"
+    },
+    "Jo Adell": {
+      "rank": 54,
+      "pos": "CF"
+    },
+    "Cameron Schlittler": {
+      "rank": 55,
+      "pos": "SP"
+    },
+    "Yandy Diaz": {
+      "rank": 56,
+      "pos": "DH"
+    },
+    "Brandon Nimmo": {
+      "rank": 57,
+      "pos": "LF"
+    },
+    "Trevor Rogers": {
+      "rank": 58,
+      "pos": "SP"
+    },
+    "Jeff Hoffman": {
+      "rank": 59,
+      "pos": "RP"
+    },
+    "Yainer Diaz": {
+      "rank": 60,
+      "pos": "C"
+    },
+    "Josh Hader": {
+      "rank": 61,
+      "pos": "RP"
+    },
+    "Taylor Ward": {
+      "rank": 62,
+      "pos": "LF"
+    },
+    "Gavin Williams": {
+      "rank": 63,
+      "pos": "SP"
+    },
+    "Adley Rutschman": {
+      "rank": 64,
+      "pos": "C"
+    },
+    "Tatsuya Imai": {
+      "rank": 65,
+      "pos": "SP"
+    },
+    "Kris Bubic": {
+      "rank": 66,
+      "pos": "SP"
+    },
+    "Nathan Eovaldi": {
+      "rank": 67,
+      "pos": "SP"
+    },
+    "Ryan Pepiot": {
+      "rank": 68,
+      "pos": "SP"
+    },
+    "Ranger Suarez": {
+      "rank": 69,
+      "pos": "SP"
+    },
+    "Lawrence Butler": {
+      "rank": 70,
+      "pos": "RF"
+    },
+    "Kenley Jansen": {
+      "rank": 71,
+      "pos": "RP"
+    },
+    "Steven Kwan": {
+      "rank": 72,
+      "pos": "LF"
+    },
+    "Mike Trout": {
+      "rank": 73,
+      "pos": "DH"
+    },
+    "Jonathan Aranda": {
+      "rank": 74,
+      "pos": "1B"
+    },
+    "Samuel Basallo": {
+      "rank": 75,
+      "pos": "C"
+    },
+    "Sonny Gray": {
+      "rank": 76,
+      "pos": "SP"
+    },
+    "Kazuma Okamoto": {
+      "rank": 77,
+      "pos": "3B"
+    },
+    "Jac Caglianone": {
+      "rank": 78,
+      "pos": "RF"
+    },
+    "Mackenzie Gore": {
+      "rank": 79,
+      "pos": "SP"
+    },
+    "Jacob Wilson": {
+      "rank": 80,
+      "pos": "SS"
+    },
+    "Royce Lewis": {
+      "rank": 81,
+      "pos": "3B"
+    },
+    "Luis Castillo": {
+      "rank": 82,
+      "pos": "SP"
+    },
+    "Carter Jensen": {
+      "rank": 83,
+      "pos": "C"
+    },
+    "Spencer Torkelson": {
+      "rank": 84,
+      "pos": "1B"
+    },
+    "Carlos Rodon": {
+      "rank": 85,
+      "pos": "SP"
+    },
+    "Daulton Varsho": {
+      "rank": 86,
+      "pos": "CF"
+    },
+    "Drew Rasmussen": {
+      "rank": 87,
+      "pos": "SP"
+    },
+    "Ceddanne Rafaela": {
+      "rank": 88,
+      "pos": "CF"
+    },
+    "Alejandro Kirk": {
+      "rank": 89,
+      "pos": "C"
+    },
+    "Trey Yesavage": {
+      "rank": 90,
+      "pos": "SP"
+    },
+    "Carlos Estevez": {
+      "rank": 91,
+      "pos": "RP"
+    },
+    "Chandler Simpson": {
+      "rank": 92,
+      "pos": "CF"
+    },
+    "Isaac Paredes": {
+      "rank": 93,
+      "pos": "3B"
+    },
+    "Munetaka Murakami": {
+      "rank": 94,
+      "pos": "1B"
+    },
+    "Tanner Bibee": {
+      "rank": 95,
+      "pos": "SP"
+    },
+    "Colson Montgomery": {
+      "rank": 96,
+      "pos": "SS"
+    },
+    "Willson Contreras": {
+      "rank": 97,
+      "pos": "1B"
+    },
+    "Jackson Holliday": {
+      "rank": 98,
+      "pos": "2B"
+    },
+    "Kyle Teel": {
+      "rank": 99,
+      "pos": "C"
+    },
+    "Griffin Jax": {
+      "rank": 100,
+      "pos": "RP"
+    },
+    "Gerrit Cole": {
+      "rank": 101,
+      "pos": "SP"
+    },
+    "Kevin McGonigle": {
+      "rank": 102,
+      "pos": "SS"
+    },
+    "Shane Baz": {
+      "rank": 103,
+      "pos": "SP"
+    },
+    "Shane Mcclanahan": {
+      "rank": 104,
+      "pos": "SP"
+    },
+    "Kerry Carpenter": {
+      "rank": 105,
+      "pos": "RF"
+    },
+    "Kyle Manzardo": {
+      "rank": 106,
+      "pos": "DH"
+    },
+    "Seranthony Dominguez": {
+      "rank": 107,
+      "pos": "RP"
+    },
+    "Addison Barger": {
+      "rank": 108,
+      "pos": "3B"
+    },
+    "Christian Walker": {
+      "rank": 109,
+      "pos": "1B"
+    },
+    "Bryan Abreu": {
+      "rank": 110,
+      "pos": "RP"
+    },
+    "Michael Burrows": {
+      "rank": 111,
+      "pos": "SP"
+    },
+    "Giancarlo Stanton": {
+      "rank": 112,
+      "pos": "DH"
+    },
+    "Gleyber Torres": {
+      "rank": 113,
+      "pos": "2B"
+    },
+    "Dillon Dingler": {
+      "rank": 114,
+      "pos": "C"
+    },
+    "Austin Wells": {
+      "rank": 115,
+      "pos": "C"
+    },
+    "Chase DeLauter": {
+      "rank": 116,
+      "pos": "RF"
+    },
+    "Joshua Lowe": {
+      "rank": 117,
+      "pos": "RF"
+    },
+    "Wilyer Abreu": {
+      "rank": 118,
+      "pos": "RF"
+    },
+    "Parker Messick": {
+      "rank": 119,
+      "pos": "SP"
+    },
+    "Noah Cameron": {
+      "rank": 120,
+      "pos": "SP"
+    },
+    "Jack Flaherty": {
+      "rank": 121,
+      "pos": "SP"
+    },
+    "Jack Leiter": {
+      "rank": 122,
+      "pos": "SP"
+    },
+    "Mick Abel": {
+      "rank": 123,
+      "pos": "SP"
+    },
+    "Grayson Rodriguez": {
+      "rank": 124,
+      "pos": "SP"
+    },
+    "Caleb Durbin": {
+      "rank": 125,
+      "pos": "3B"
+    },
+    "Trent Grisham": {
+      "rank": 126,
+      "pos": "CF"
+    },
+    "Cody Ponce": {
+      "rank": 127,
+      "pos": "RP"
+    },
+    "Ryan Weathers": {
+      "rank": 128,
+      "pos": "SP"
+    },
+    "Carlos Correa": {
+      "rank": 129,
+      "pos": "SS"
+    },
+    "Colton Cowser": {
+      "rank": 130,
+      "pos": "CF"
+    },
+    "Casey Mize": {
+      "rank": 131,
+      "pos": "SP"
+    },
+    "Connelly Early": {
+      "rank": 132,
+      "pos": "SP"
+    },
+    "Brendan Donovan": {
+      "rank": 133,
+      "pos": "2B"
+    },
+    "Bryce Miller": {
+      "rank": 134,
+      "pos": "SP"
+    },
+    "Shane Smith": {
+      "rank": 135,
+      "pos": "SP"
+    },
+    "Logan O'Hoppe": {
+      "rank": 136,
+      "pos": "C"
+    },
+    "Robert Garcia": {
+      "rank": 137,
+      "pos": "RP"
+    },
+    "Miguel Vargas": {
+      "rank": 138,
+      "pos": "3B"
+    },
+    "Kirby Yates": {
+      "rank": 139,
+      "pos": "RP"
+    },
+    "Shane Bieber": {
+      "rank": 140,
+      "pos": "SP"
+    },
+    "Cedric Mullins": {
+      "rank": 141,
+      "pos": "CF"
+    },
+    "Jordan Westburg": {
+      "rank": 142,
+      "pos": "3B"
+    },
+    "Jake Burger": {
+      "rank": 143,
+      "pos": "1B"
+    },
+    "Jose Caballero": {
+      "rank": 144,
+      "pos": "RF"
+    },
+    "Nolan Schanuel": {
+      "rank": 145,
+      "pos": "1B"
+    },
+    "Zebby Matthews": {
+      "rank": 146,
+      "pos": "SP"
+    },
+    "Joey Cantillo": {
+      "rank": 147,
+      "pos": "RP"
+    },
+    "Jacob Lopez": {
+      "rank": 148,
+      "pos": "SP"
+    },
+    "Jasson Dominguez": {
+      "rank": 149,
+      "pos": "LF"
+    },
+    "Coby Mayo": {
+      "rank": 150,
+      "pos": "1B"
+    },
+    "Anthony Volpe": {
+      "rank": 151,
+      "pos": "SS"
+    },
+    "Andres Gimenez": {
+      "rank": 152,
+      "pos": "2B"
+    },
+    "Brayan Bello": {
+      "rank": 153,
+      "pos": "SP"
+    },
+    "Ryan Jeffers": {
+      "rank": 154,
+      "pos": "C"
+    },
+    "Cam Smith": {
+      "rank": 155,
+      "pos": "RF"
+    },
+    "Josh Jung": {
+      "rank": 156,
+      "pos": "3B"
+    },
+    "Bailey Ober": {
+      "rank": 157,
+      "pos": "SP"
+    },
+    "Dylan Beavers": {
+      "rank": 158,
+      "pos": "LF"
+    },
+    "Austin Hays": {
+      "rank": 159,
+      "pos": "LF"
+    },
+    "Edwin Uceta": {
+      "rank": 160,
+      "pos": "RP"
+    },
+    "Colt Keith": {
+      "rank": 161,
+      "pos": "DH"
+    },
+    "Michael Wacha": {
+      "rank": 162,
+      "pos": "SP"
+    },
+    "Seth Lugo": {
+      "rank": 163,
+      "pos": "SP"
+    },
+    "Ian Seymour": {
+      "rank": 164,
+      "pos": "RP"
+    },
+    "Jose Soriano": {
+      "rank": 165,
+      "pos": "SP"
+    },
+    "Reid Detmers": {
+      "rank": 166,
+      "pos": "RP"
+    },
+    "Payton Tolle": {
+      "rank": 167,
+      "pos": "RP"
+    },
+    "Zach McKinstry": {
+      "rank": 168,
+      "pos": "3B"
+    },
+    "Victor Robles": {
+      "rank": 169,
+      "pos": "RF"
+    },
+    "Matt Wallner": {
+      "rank": 170,
+      "pos": "RF"
+    },
+    "Lenyn Sosa": {
+      "rank": 171,
+      "pos": "2B"
+    },
+    "Josh Bell": {
+      "rank": 172,
+      "pos": "DH"
+    },
+    "Isaac Collins": {
+      "rank": 173,
+      "pos": "LF"
+    },
+    "Jorge Soler": {
+      "rank": 174,
+      "pos": "RF"
+    },
+    "Chase Meidroth": {
+      "rank": 175,
+      "pos": "SS"
+    },
+    "Evan Carter": {
+      "rank": 176,
+      "pos": "CF"
+    },
+    "Marcelo Mayer": {
+      "rank": 177,
+      "pos": "3B"
+    },
+    "Brooks Lee": {
+      "rank": 178,
+      "pos": "SS"
+    },
+    "Carlos Narvaez": {
+      "rank": 179,
+      "pos": "C"
+    },
+    "Luis Morales": {
+      "rank": 180,
+      "pos": "SP"
+    },
+    "Josh H. Smith": {
+      "rank": 181,
+      "pos": "SS"
+    },
+    "Tyler O'Neill": {
+      "rank": 182,
+      "pos": "RF"
+    },
+    "Ryan McMahon": {
+      "rank": 183,
+      "pos": "3B"
+    },
+    "Jeff McNeil": {
+      "rank": 184,
+      "pos": "2B"
+    },
+    "Victor Caratini": {
+      "rank": 185,
+      "pos": "C"
+    },
+    "Triston Casas": {
+      "rank": 186,
+      "pos": "1B"
+    },
+    "Edgar Quero": {
+      "rank": 187,
+      "pos": "C"
+    },
+    "Jose Berrios": {
+      "rank": 188,
+      "pos": "SP"
+    },
+    "Will Warren": {
+      "rank": 189,
+      "pos": "SP"
+    },
+    "Ernie Clement": {
+      "rank": 190,
+      "pos": "3B"
+    },
+    "Lucas Giolito": {
+      "rank": 191,
+      "pos": "SP"
+    },
+    "Justin Verlander": {
+      "rank": 192,
+      "pos": "SP"
+    },
+    "Andrew Benintendi": {
+      "rank": 193,
+      "pos": "LF"
+    },
+    "Kristian Campbell": {
+      "rank": 194,
+      "pos": "2B"
+    },
+    "Taj Bradley": {
+      "rank": 195,
+      "pos": "SP"
+    },
+    "Yusei Kikuchi": {
+      "rank": 196,
+      "pos": "SP"
+    },
+    "Carson Williams": {
+      "rank": 197,
+      "pos": "SS"
+    },
+    "Will Vest": {
+      "rank": 198,
+      "pos": "RP"
+    },
+    "Colt Emerson": {
+      "rank": 199,
+      "pos": "SS"
+    },
+    "Chris Bassitt": {
+      "rank": 200,
+      "pos": "SP"
+    },
+    "Grant Taylor": {
+      "rank": 201,
+      "pos": "RP"
+    },
+    "Max Scherzer": {
+      "rank": 202,
+      "pos": "SP"
+    },
+    "Luis Gil": {
+      "rank": 203,
+      "pos": "SP"
+    },
+    "Cristian Javier": {
+      "rank": 204,
+      "pos": "SP"
+    },
+    "Kyle Finnegan": {
+      "rank": 205,
+      "pos": "RP"
+    },
+    "Jesus Sanchez": {
+      "rank": 206,
+      "pos": "RF"
+    },
+    "Jonathan India": {
+      "rank": 207,
+      "pos": "2B"
+    },
+    "Christian Moore": {
+      "rank": 208,
+      "pos": "2B"
+    },
+    "Wenceel Perez": {
+      "rank": 209,
+      "pos": "RF"
+    },
+    "Luis Severino": {
+      "rank": 210,
+      "pos": "SP"
+    },
+    "Jeffrey Springs": {
+      "rank": 211,
+      "pos": "SP"
+    },
+    "Rhys Hoskins": {
+      "rank": 212,
+      "pos": "1B"
+    },
+    "Simeon Woods Richardson": {
+      "rank": 213,
+      "pos": "SP"
+    },
+    "Paul Goldschmidt": {
+      "rank": 214,
+      "pos": "1B"
+    },
+    "Parker Meadows": {
+      "rank": 215,
+      "pos": "CF"
+    },
+    "J.P. Crawford": {
+      "rank": 216,
+      "pos": "SS"
+    },
+    "Spencer Arrighetti": {
+      "rank": 217,
+      "pos": "SP"
+    },
+    "Joe Boyle": {
+      "rank": 218,
+      "pos": "SP"
+    },
+    "Max Muncy": {
+      "rank": 219,
+      "pos": "3B"
+    },
+    "Dean Kremer": {
+      "rank": 220,
+      "pos": "SP"
+    },
+    "Hogan Harris": {
+      "rank": 221,
+      "pos": "RP"
+    },
+    "Taylor Rogers": {
+      "rank": 222,
+      "pos": "RP"
+    },
+    "Dominic Canzone": {
+      "rank": 223,
+      "pos": "RF"
+    },
+    "Tyler Wells": {
+      "rank": 224,
+      "pos": "SP"
+    },
+    "Trevor Larnach": {
+      "rank": 225,
+      "pos": "DH"
+    },
+    "Jake Meyers": {
+      "rank": 226,
+      "pos": "CF"
+    },
+    "Ryan Mountcastle": {
+      "rank": 227,
+      "pos": "1B"
+    },
+    "Bo Naylor": {
+      "rank": 228,
+      "pos": "C"
+    },
+    "Cole Young": {
+      "rank": 229,
+      "pos": "2B"
+    },
+    "Jordan Leasure": {
+      "rank": 230,
+      "pos": "RP"
+    },
+    "Travis Bazzana": {
+      "rank": 231,
+      "pos": "2B"
+    },
+    "Spencer Jones": {
+      "rank": 232,
+      "pos": "CF"
+    },
+    "Danny Jansen": {
+      "rank": 233,
+      "pos": "C"
+    },
+    "Garrett Cleavinger": {
+      "rank": 234,
+      "pos": "RP"
+    },
+    "Jacob Melton": {
+      "rank": 235,
+      "pos": "CF"
+    },
+    "Cole Sands": {
+      "rank": 236,
+      "pos": "RP"
+    },
+    "Javier Baez": {
+      "rank": 237,
+      "pos": "SS"
+    },
+    "Zach Cole": {
+      "rank": 238,
+      "pos": "RF"
+    },
+    "Blaze Alexander": {
+      "rank": 239,
+      "pos": "3B"
+    },
+    "Denzel Clarke": {
+      "rank": 240,
+      "pos": "CF"
+    },
+    "Zack Gelof": {
+      "rank": 241,
+      "pos": "2B"
+    },
+    "Anthony Kay": {
+      "rank": 242,
+      "pos": "RP"
+    },
+    "Romy Gonzalez": {
+      "rank": 243,
+      "pos": "1B"
+    },
+    "Jose Ferrer": {
+      "rank": 244,
+      "pos": "RP"
+    },
+    "Slade Cecconi": {
+      "rank": 245,
+      "pos": "SP"
+    },
+    "Kyle Higashioka": {
+      "rank": 246,
+      "pos": "C"
+    },
+    "Luisangel Acuna": {
+      "rank": 247,
+      "pos": "2B"
+    },
+    "Nathan Lukes": {
+      "rank": 248,
+      "pos": "RF"
+    },
+    "Gavin Lux": {
+      "rank": 249,
+      "pos": "DH"
+    },
+    "Johan Oviedo": {
+      "rank": 250,
+      "pos": "SP"
+    },
+    "Justin Sterner": {
+      "rank": 251,
+      "pos": "RP"
+    },
+    "Robert Stephenson": {
+      "rank": 252,
+      "pos": "RP"
+    },
+    "Troy Melton": {
+      "rank": 253,
+      "pos": "RP"
+    },
+    "Kody Clemens": {
+      "rank": 254,
+      "pos": "1B"
+    },
+    "Zach Eflin": {
+      "rank": 255,
+      "pos": "SP"
+    },
+    "Walker Jenkins": {
+      "rank": 256,
+      "pos": "CF"
+    },
+    "Matt Brash": {
+      "rank": 257,
+      "pos": "RP"
+    },
+    "Ben Joyce": {
+      "rank": 258,
+      "pos": "RP"
+    },
+    "Sean Newcomb": {
+      "rank": 259,
+      "pos": "RP"
+    },
+    "Emmanuel Rodriguez": {
+      "rank": 260,
+      "pos": "CF"
+    },
+    "Masataka Yoshida": {
+      "rank": 261,
+      "pos": "DH"
+    },
+    "Eric Lauer": {
+      "rank": 262,
+      "pos": "SP"
+    },
+    "David Festa": {
+      "rank": 263,
+      "pos": "SP"
+    },
+    "C.J. Kayfus": {
+      "rank": 264,
+      "pos": "RF"
+    },
+    "Gabriel Arias": {
+      "rank": 265,
+      "pos": "SS"
+    },
+    "Lucas Erceg": {
+      "rank": 266,
+      "pos": "RP"
+    },
+    "Yoan Moncada": {
+      "rank": 267,
+      "pos": "3B"
+    },
+    "Brayan Rocchio": {
+      "rank": 268,
+      "pos": "SS"
+    },
+    "George Valera": {
+      "rank": 269,
+      "pos": "DH"
+    },
+    "Nick Martinez": {
+      "rank": 270,
+      "pos": "SP"
+    },
+    "Garrett Whitlock": {
+      "rank": 271,
+      "pos": "RP"
+    },
+    "Joc Pederson": {
+      "rank": 272,
+      "pos": "DH"
+    },
+    "Lane Thomas": {
+      "rank": 273,
+      "pos": "CF"
+    },
+    "Jack Perkins": {
+      "rank": 274,
+      "pos": "RP"
+    },
+    "Keegan Akin": {
+      "rank": 275,
+      "pos": "RP"
+    },
+    "Louie Varland": {
+      "rank": 276,
+      "pos": "RP"
+    },
+    "Curtis Mead": {
+      "rank": 277,
+      "pos": "1B"
+    },
+    "Steven Matz": {
+      "rank": 278,
+      "pos": "RP"
+    },
+    "Isiah Kiner Falefa": {
+      "rank": 279,
+      "pos": "3B"
+    },
+    "Jt Ginn": {
+      "rank": 280,
+      "pos": "SP"
+    },
+    "Austin Martin": {
+      "rank": 281,
+      "pos": "LF"
+    },
+    "Cody Bradford": {
+      "rank": 282,
+      "pos": "SP"
+    },
+    "Andrew Kittredge": {
+      "rank": 283,
+      "pos": "RP"
+    },
+    "Sebastian Walcott": {
+      "rank": 284,
+      "pos": "SS"
+    },
+    "Yimi Garcia": {
+      "rank": 285,
+      "pos": "RP"
+    },
+    "Colby Thomas": {
+      "rank": 286,
+      "pos": "RF"
+    },
+    "Brooks Baldwin": {
+      "rank": 287,
+      "pos": "LF"
+    },
+    "Kaelen Culpepper": {
+      "rank": 288,
+      "pos": "SS"
+    },
+    "Max Clark": {
+      "rank": 289,
+      "pos": "CF"
+    },
+    "Jonny DeLuca": {
+      "rank": 290,
+      "pos": "CF"
+    },
+    "Kumar Rocker": {
+      "rank": 291,
+      "pos": "SP"
+    },
+    "Elvis Alvarado": {
+      "rank": 292,
+      "pos": "RP"
+    },
+    "Leo De Vries": {
+      "rank": 293,
+      "pos": "SS"
+    },
+    "David Fry": {
+      "rank": 294,
+      "pos": "DH"
+    },
+    "Camilo Doval": {
+      "rank": 295,
+      "pos": "RP"
+    },
+    "Sean Burke": {
+      "rank": 296,
+      "pos": "SP"
+    },
+    "Cade Povich": {
+      "rank": 297,
+      "pos": "SP"
+    },
+    "Connor Wong": {
+      "rank": 298,
+      "pos": "C"
+    },
+    "Thairo Estrada": {
+      "rank": 299,
+      "pos": "2B"
+    },
+    "Jacob Latz": {
+      "rank": 300,
+      "pos": "RP"
+    },
+    "Lazaro Montes": {
+      "rank": 255,
+      "pos": "RF"
+    },
+    "Davis Schneider": {
+      "rank": 260,
+      "pos": "LF"
+    },
+    "Starling Marte": {
+      "rank": 261,
+      "pos": "DH"
+    },
+    "Andrew McCutchen": {
+      "rank": 264,
+      "pos": "DH"
+    },
+    "Mitch Garver": {
+      "rank": 275,
+      "pos": "C"
+    },
+    "Jake Rogers": {
+      "rank": 277,
+      "pos": "C"
+    },
+    "Austin Wynns": {
+      "rank": 278,
+      "pos": "C"
+    },
+    "Hunter Gaddis": {
+      "rank": 279,
+      "pos": "RP"
+    },
+    "Heston Kjerstad": {
+      "rank": 280,
+      "pos": "LF"
+    },
+    "Stephen Kolek": {
+      "rank": 282,
+      "pos": "SP"
+    },
+    "Matt Strahm": {
+      "rank": 283,
+      "pos": "RP"
+    },
+    "Tyler Rogers": {
+      "rank": 286,
+      "pos": "RP"
+    },
+    "Elmer Rodriguez Cruz": {
+      "rank": 291,
+      "pos": "SP"
+    },
+    "Alan Roden": {
+      "rank": 300,
+      "pos": "LF"
+    },
+    "Eric Wagaman": {
+      "rank": 257,
+      "pos": "1B"
+    },
+    "Anthony Santander": {
+      "rank": 258,
+      "pos": "DH"
+    },
+    "Nick Fortes": {
+      "rank": 267,
+      "pos": "C"
+    },
+    "Kyle Isbel": {
+      "rank": 273,
+      "pos": "CF"
+    },
+    "Luke Raley": {
+      "rank": 274,
+      "pos": "RF"
+    },
+    "Hunter Feduccia": {
+      "rank": 276,
+      "pos": "C"
+    },
+    "J.C. Escarra": {
+      "rank": 277,
+      "pos": "C"
+    },
+    "Andruw Monasterio": {
+      "rank": 284,
+      "pos": "SS"
+    },
+    "Darell Hernaiz": {
+      "rank": 285,
+      "pos": "SS"
+    },
+    "Vaughn Grissom": {
+      "rank": 286,
+      "pos": "2B"
+    },
+    "Angel Martinez": {
+      "rank": 287,
+      "pos": "CF"
+    },
+    "Sawyer Gipson Long": {
+      "rank": 290,
+      "pos": "RP"
+    },
+    "Kutter Crawford": {
+      "rank": 292,
+      "pos": "SP"
+    },
+    "Alexis Diaz": {
+      "rank": 295,
+      "pos": "RP"
+    },
+    "Max Anderson": {
+      "rank": 298,
+      "pos": "2B"
+    },
+    "Ryan Bergert": {
+      "rank": 299,
+      "pos": "SP"
+    },
+    "Ricky Tiedemann": {
+      "rank": 300,
+      "pos": "SP"
+    },
+    "Shawn Armstrong": {
+      "rank": 254,
+      "pos": "RP"
+    },
+    "Danny Coulombe": {
+      "rank": 266,
+      "pos": "RP"
+    },
+    "Brice Matthews": {
+      "rank": 272,
+      "pos": "2B"
+    },
+    "Felix Bautista": {
+      "rank": 280,
+      "pos": "RP"
+    },
+    "Noah Schultz": {
+      "rank": 282,
+      "pos": "SP"
+    },
+    "Daniel Schneemann": {
+      "rank": 294,
+      "pos": "2B"
+    },
+    "Michael Massey": {
+      "rank": 300,
+      "pos": "2B"
+    }
+  }
+}
