@@ -275,9 +275,15 @@ body {
 <script>
 // ── Constants ──────────────────────────────────────────────────────────────
 const BATTER_COLS  = ['C','1B','2B','3B','SS','LF','CF','RF','DH'];
-const PITCHER_COLS = ['SP','CL','RP'];
+const PITCHER_COLS = ['SP1','SP2','SP3','SP4','SP5','CL1','CL2','SU1','SU2'];
 const BATTER_SET   = new Set(BATTER_COLS);
-const PITCHER_SET  = new Set(PITCHER_COLS);
+const PITCHER_SET  = new Set(['SP','CL','RP','P']);
+// Map split pitcher column -> [data key, index]
+const PITCHER_COL_MAP = {
+  SP1:['SP',0], SP2:['SP',1], SP3:['SP',2], SP4:['SP',3], SP5:['SP',4],
+  CL1:['CL',0], CL2:['CL',1],
+  SU1:['RP',0], SU2:['RP',1],
+};
 const OF_SET       = new Set(['LF','CF','RF','OF']);
 const AL_ORDER     = ['BAL','BOS','NYY','TB','TOR','CWS','CLE','DET','KC','MIN','HOU','LAA','OAK','SEA','TEX'];
 
@@ -344,31 +350,34 @@ function renderGrid() {
   teams.forEach(abbr => {
     const team = dc[abbr] || {};
     html += `<tr><td class="team-cell">${abbr}</td>`;
-    const MAX_DEPTH = { SP: 5, CL: 2, RP: 2 };
-    cols.forEach(pos => {
-      const players = (team[pos] || []).slice(0, MAX_DEPTH[pos] ?? 2);
+    cols.forEach(col => {
+      // Resolve to a single player: use PITCHER_COL_MAP for pitcher cols, else first player
+      let p = null;
+      if (PITCHER_COL_MAP[col]) {
+        const [key, idx] = PITCHER_COL_MAP[col];
+        p = (team[key] || [])[idx] || null;
+      } else {
+        p = (team[col] || [])[0] || null;
+      }
       html += '<td>';
-      let shown = 0;
-      players.forEach((p, i) => {
+      if (p) {
         const isDrafted = drafted.has(p.name);
-        if (hideDrafted && isDrafted) return;
-        const depCls  = i === 0 ? 'starter' : 'backup' + (i > 1 ? i : '');
-        const dftCls  = isDrafted ? ' drafted' : '';
-        const injHtml = p.injury
-          ? `<span class="inj-flag" title="${esc(p.injury)}">!</span>`
-          : '';
-        html += `<div class="player-entry ${depCls}${dftCls}"
-                      data-name="${esc(p.name)}" data-injury="${esc(p.injury||'')}">
-                   <input type="checkbox" ${isDrafted?'checked':''}
-                          onclick="toggleDrafted('${esc(p.name)}')">
-                   <span class="p-name" onmouseenter="showTip(event,'${esc(p.name)}','${esc(p.injury||'')}')"
-                         onmouseleave="hideTip()">${esc(p.name)}</span>
-                   ${injHtml}
-                 </div>`;
-        shown++;
-      });
-      if (shown === 0 && hideDrafted) {
-        html += '<span style="color:#c0d0e0;font-size:11px">—</span>';
+        if (!(hideDrafted && isDrafted)) {
+          const dftCls  = isDrafted ? ' drafted' : '';
+          const injHtml = p.injury
+            ? `<span class="inj-flag" title="${esc(p.injury)}">!</span>`
+            : '';
+          html += `<div class="player-entry starter${dftCls}"
+                        data-name="${esc(p.name)}" data-injury="${esc(p.injury||'')}">
+                     <input type="checkbox" ${isDrafted?'checked':''}
+                            onclick="toggleDrafted('${esc(p.name)}')">
+                     <span class="p-name" onmouseenter="showTip(event,'${esc(p.name)}','${esc(p.injury||'')}')"
+                           onmouseleave="hideTip()">${esc(p.name)}</span>
+                     ${injHtml}
+                   </div>`;
+        } else {
+          html += '<span style="color:#c0d0e0;font-size:11px">—</span>';
+        }
       }
       html += '</td>';
     });
