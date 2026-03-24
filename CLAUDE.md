@@ -1,45 +1,106 @@
 # fantasy-bb
 
-## Open Slots Tool
-I need a tool to help me with my fantasy baseball league draft.
+AL-only rotisserie fantasy baseball draft tools. GitHub repo: `jcubb/fantasy-bb`.
+GitHub Pages app: https://jcubb.github.io/fantasy-bb/
 
-Read the rules of the league here: https://www.cbssports.com/fantasy/baseball/games/free/rules
+---
 
-We run an American League Team only league.
+## Open Slots Tool (`fantasy_bb.py` + `fantasy_bb.xlsx`)
 
-Focus on the rules around what batter positions need to be drafted. Note how the rules have special positions that
-are "either/or" for 2B/SS and 1B/3B. 
+Solves: given a partially drafted roster, which positions are currently open (or could be opened by rearranging players)?
 
-Also focus on the rules for position eligibility. The specifics are probably not important, but realize that if I am
-thinking of drafting a player, I need to check the positions he is eligible for, and then check if I have any openings on
-my partially filled roster to add that player in one of his eligible positions.
+### League rules
+- AL teams only
+- Roster slots: C×2, 1B, 2B, 3B, SS, OF×5, MI (2B or SS), CI (1B or 3B), Util (any)
+- Position eligibility: 20+ games at a position in 2025, or 5+ games in 2026
 
-I would like a tool that would tell me what positions I currently have open on my roster. This is tricky because the players
-I have can be arranged in different configurations that align with the roster rules, but may open up different positions.
+### How it works
+Uses **bipartite matching** (augmenting-path DFS). For each output position (C, 1B, 2B, 3B, SS, OF, DH), the algorithm tries removing each slot that could serve that position and checks whether a full matching of the remaining players still holds. If not, that position is open.
 
-Is this a problem that can be solved "analytically" or with some simple functionality in a spreadsheet, or can this only be
-solved by more "brute force" methods of iterating through all of the possible roster configurations with the players I have
-already drafted.
+MI/CI/Util bleed-through is handled correctly:
+- If MI is free → both 2B and SS show as open
+- If CI is free → both 1B and 3B show as open
+- If Util is free → DH shows as open
+- DH-eligible-only players can only go in the Util slot
 
-Let's first discuss the eligibility and roster rules and confirm we have the same understanding.
+### Output
+- Excel file (`fantasy_bb.xlsx`) with a Roster sheet (Open? row + player eligibility grid) and a Candidates sheet (Can Fit? + # Open Positions for any player you're considering)
+- Run: `python fantasy_bb.py`
 
-Then let's talk about how to solve the problem.
+---
 
-## Data Tool
-Next we are going to build a draft day tool (app) and aggregate some data. 
+## Draft Day Web App (`scrape.py` + `docs/`)
 
+### Architecture
+- **`scrape.py`**: Playwright scraper — writes `docs/data.json`
+- **`docs/index.html`**: Static GitHub Pages app — reads `data.json` at runtime
+- **`docs/data.json`**: Scraped data (committed to repo so the app works without running scrape.py)
 
-First, we will scan through these depth charts and build a depth chart grid of teams and starting players for all of the AL teams.
-https://www.cbssports.com/fantasy/baseball/depth-chart/
+### Scraper (`scrape.py`)
 
-Retain any notes there about injuries, etc. These depth charts change, so it should be easy to refresh.
+**Depth charts** — one CBS page per position (`/fantasy/baseball/depth-chart/{POS}/`):
+- Table structure: ROWS = teams, COLS = [Team | Starter | Backup | SP3 | SP4 | SP5]
+- AL table identified by `.TableBase-title` containing "American"
+- Team extracted from `a[href*="/mlb/teams/"]` in cells[0]
+- Players extracted from `.CellPlayerName--long a` in subsequent cells
+- Depth captured: batters = starter + 1 backup; SP = 5; RP = 4 (first 2 → CL, next 2 → SU)
 
-Then using the pages below, build up supporting data for each of the players. Hovering over a players name in the depth chart grid will reveal
-further information.
-https://sabr.app.box.com/s/y1prhc795jk8zvmelfd3jq7tl389y6cd
-https://sabr.app.box.com/s/y1prhc795jk8zvmelfd3jq7tl389y6cd/file/2084259918153
-https://www.cbssports.com/fantasy/baseball/rankings/roto/top300/AL/
+**Rankings** — CBS AL roto top-300 (`/fantasy/baseball/rankings/roto/top300/AL/`):
+- Page renders 4 identical copies of the list (1200 `[class*="player-row"]` elements total)
+- Deduplicated by CBS player ID from href
+- Full name extracted from URL slug (`aaron-judge` → `Aaron Judge`)
+- Post-scrape: names reconciled to canonical depth chart names via normalized matching (handles "Jr." vs "Jr", "deGrom" vs "Degrom", etc.)
 
-Next to each player's name will be a checkbox. When checked, it will indicate the player has been drafted.
+**To refresh data:**
+```
+python scrape.py
+git add docs/data.json && git commit -m "Refresh data" && git push
+```
+Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
-Below the depth chart grid will be a list of all remaining starters who haven't been drafted yet, in rank order.
+**`data.json` structure:**
+```json
+{
+  "scraped_at": "...",
+  "depth_chart": {
+    "NYY": {
+      "C":  [{"name": "Austin Wells", "injury": null}, ...],
+      "SP": [{"name": "Max Fried", "injury": null}, ... ],  // up to 5
+      "CL": [{"name": "David Bednar", "injury": null}, ...], // up to 2
+      "RP": [{"name": "Camilo Doval", "injury": null}, ...]  // up to 2 (setup men)
+    }
+  },
+  "rankings": {
+    "Aaron Judge": {"rank": 1, "pos": "RF"},
+    ...
+  }
+}
+```
+
+### Web App (`docs/index.html`)
+
+**Batters tab** — columns: C, 1B, 2B, 3B, SS, LF, CF, RF, DH
+- Each cell: starter (bold) + 1 backup (gray/small)
+
+**Pitchers tab** — 9 columns: SP1, SP2, SP3, SP4, SP5, CL1, CL2, SU1, SU2
+- Each cell: one player; `PITCHER_COL_MAP` maps column name to `[data_key, index]`
+
+**Features:**
+- Checkbox per player → marks as drafted (persisted in `localStorage`)
+- Injury flag `!` with hover tooltip showing injury note
+- Tooltip also shows CBS AL rank
+- "Hide drafted" toggle for the grid
+- Ranked list below grid: all players sorted by CBS rank, with search, position filter, and hide-drafted toggle
+- Reset Draft button clears all checkboxes
+
+**Teams displayed** (AL_ORDER): BAL, BOS, NYY, TB, TOR, CWS, CLE, DET, KC, MIN, HOU, LAA, OAK, SEA, TEX
+
+---
+
+## Phase 2 (deferred)
+
+- **SABR/Lahman data** for position eligibility calculation
+  - `People.csv` for player ID ↔ name mapping (handle same-name disambiguation by team/age)
+  - `Fielding.csv` for games-by-position in 2025/2026
+  - Data files: https://sabr.app.box.com/s/y1prhc795jk8zvmelfd3jq7tl389y6cd
+- Hovering a player name shows position eligibility (currently placeholder)
