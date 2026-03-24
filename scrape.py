@@ -307,6 +307,19 @@ def _parse_date(raw: str) -> datetime | None:
     return None
 
 
+# Keywords that indicate non-player content to skip
+_NEWS_BLOCKLIST = re.compile(
+    r'\b(tv|stream|streaming|watch|broadcast|radio|cable|podcast|'
+    r'ticket|tickets|schedule|standings|nostalgic|nostalgia|history|'
+    r'anniversary|memories|flashback|jersey|uniform|stadium|ballpark|'
+    r'renovati|mantle|babe ruth|lou gehrig|hall of fame|inductee|'
+    r'hire|fires|fired|manager search|ownership|revenue|payroll|'
+    r'preview(?! of)|breakdown|rankings|power rankings|top \d|'
+    r'best bets|betting|odds|fantasy advice|fantasy rankings|'
+    r'mlb pipeline|prospect rankings|draft|international signing)\b',
+    re.IGNORECASE,
+)
+
 async def scrape_team_news(page, team: str, slug: str, days: int = 7) -> list:
     """
     Scrape recent news for one AL team from mlb.com/{slug}/news.
@@ -405,8 +418,20 @@ async def scrape_team_news(page, team: str, slug: str, days: int = 7) -> list:
         except Exception:
             continue
 
-    print(f'    [{team}] {len(articles)} recent articles')
-    return articles
+    # Deduplicate by normalized headline, filter out non-player content
+    seen_headlines: set[str] = set()
+    filtered = []
+    for a in articles:
+        key = re.sub(r'\W+', '', a['headline'].lower())
+        if key in seen_headlines:
+            continue
+        seen_headlines.add(key)
+        if _NEWS_BLOCKLIST.search(a['headline']):
+            continue
+        filtered.append(a)
+
+    print(f'    [{team}] {len(filtered)} articles (of {len(articles)} scraped)')
+    return filtered
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
