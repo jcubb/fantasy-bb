@@ -232,21 +232,7 @@ body {
     <h2>Available Players — by Rank</h2>
     <div id="list-controls">
       <input type="text" id="search-box" placeholder="Search name..." oninput="renderList()">
-      <select id="pos-filter" onchange="renderList()">
-        <option value="all">All Positions</option>
-        <option value="batter">All Batters</option>
-        <option value="pitcher">All Pitchers</option>
-        <option value="C">C</option>
-        <option value="1B">1B</option>
-        <option value="2B">2B</option>
-        <option value="3B">3B</option>
-        <option value="SS">SS</option>
-        <option value="OF">OF (LF/CF/RF)</option>
-        <option value="DH">DH</option>
-        <option value="SP">SP</option>
-        <option value="CL">CL</option>
-        <option value="RP">RP</option>
-      </select>
+      <select id="pos-filter" onchange="renderList()"></select>
       <label><input type="checkbox" id="list-hide-drafted" onchange="renderList()"> Hide drafted</label>
     </div>
   </div>
@@ -326,13 +312,25 @@ function resetDraft() {
 }
 
 // ── Rendering ──────────────────────────────────────────────────────────────
-function render() { renderGrid(); renderList(); }
+function render() { buildPosFilter(); renderGrid(); renderList(); }
+
+function buildPosFilter() {
+  const sel = document.getElementById('pos-filter');
+  const isBatters = currentTab === 'batters';
+  const options = isBatters
+    ? [['all', 'All'], ['C','C'], ['1B','1B'], ['2B','2B'], ['3B','3B'],
+       ['SS','SS'], ['OF','OF'], ['DH','DH']]
+    : [['all', 'All'], ['SP','SP'], ['CL','CL'], ['RP','RP']];
+  sel.innerHTML = options.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+}
 
 function switchTab(tab, btn) {
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  buildPosFilter();
   renderGrid();
+  renderList();
 }
 
 function renderGrid() {
@@ -428,10 +426,11 @@ function renderList() {
     if (hideDrafted && drafted.has(p.name)) return false;
     if (searchVal && !p.name.toLowerCase().includes(searchVal)) return false;
     const pos = (p.pos || '').toUpperCase();
-    if (posFilter === 'all')     return true;
-    if (posFilter === 'batter')  return BATTER_SET.has(pos);
-    if (posFilter === 'pitcher') return PITCHER_SET.has(pos);
-    if (posFilter === 'OF')      return OF_SET.has(pos);
+    // Restrict to current tab's player type
+    if (currentTab === 'batters'  && !BATTER_SET.has(pos))  return false;
+    if (currentTab === 'pitchers' && !PITCHER_SET.has(pos)) return false;
+    if (posFilter === 'all') return true;
+    if (posFilter === 'OF')  return OF_SET.has(pos);
     return pos === posFilter;
   });
 
