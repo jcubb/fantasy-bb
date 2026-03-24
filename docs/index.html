@@ -141,6 +141,42 @@ body {
 
 .inj-flag { color: #c0392b; font-size: 10px; font-weight: 700; margin-left: 1px; flex-shrink: 0; }
 
+/* ── Injuries section ───────────────────────────────────────────────────── */
+#injuries-section { padding: 0 16px 24px; display: none; }
+#injuries-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0 8px;
+  border-top: 2px solid #c8d3e0;
+  flex-wrap: wrap;
+}
+#injuries-header h2 { font-size: 14px; font-weight: 700; color: #c0392b; }
+#injuries-count { font-size: 12px; color: #7a8ca0; }
+#injuries-table { border-collapse: collapse; width: 100%; max-width: 900px; }
+#injuries-table thead th {
+  background: #6b2020;
+  color: #f8d8d8;
+  padding: 5px 10px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .4px;
+}
+#injuries-table tbody td {
+  padding: 4px 10px;
+  border-bottom: 1px solid #f0dede;
+  font-size: 12px;
+  vertical-align: middle;
+}
+#injuries-table tbody tr:hover td { background: #fff8f8; cursor: default; }
+#injuries-table .rank-num { color: #7a8ca0; text-align: right; width: 36px; }
+.inj-note { color: #c0392b; font-size: 11px; }
+.rep-cell { color: #1a6640; font-size: 12px; }
+.rep-rank { color: #7a8ca0; font-size: 11px; }
+.row-drafted td { opacity: .5; }
+.row-drafted .r-name { text-decoration: line-through; }
+
 /* ── Ranked list ─────────────────────────────────────────────────────────── */
 #ranked-section { padding: 0 16px 24px; }
 #ranked-header {
@@ -219,6 +255,7 @@ body {
 <div id="tabs">
   <button class="tab-btn active" onclick="switchTab('batters',this)">Batters</button>
   <button class="tab-btn" onclick="switchTab('pitchers',this)">Pitchers</button>
+  <button class="tab-btn" onclick="switchTab('injuries',this)">Injuries</button>
 </div>
 
 <!-- Grid -->
@@ -247,6 +284,27 @@ body {
       </tr>
     </thead>
     <tbody id="list-body"></tbody>
+  </table>
+</div>
+
+<!-- Injuries -->
+<div id="injuries-section">
+  <div id="injuries-header">
+    <h2>Injured Players</h2>
+    <span id="injuries-count"></span>
+  </div>
+  <table id="injuries-table">
+    <thead>
+      <tr>
+        <th style="width:36px">Rank</th>
+        <th>Player</th>
+        <th style="width:42px">Team</th>
+        <th style="width:42px">Pos</th>
+        <th>Injury Note</th>
+        <th>Likely Replacement</th>
+      </tr>
+    </thead>
+    <tbody id="injuries-body"></tbody>
   </table>
 </div>
 
@@ -312,7 +370,19 @@ function resetDraft() {
 }
 
 // ── Rendering ──────────────────────────────────────────────────────────────
-function render() { buildPosFilter(); renderGrid(); renderList(); }
+function render() {
+  const isInjuries = currentTab === 'injuries';
+  document.getElementById('grid-wrapper').style.display    = isInjuries ? 'none' : '';
+  document.getElementById('ranked-section').style.display  = isInjuries ? 'none' : '';
+  document.getElementById('injuries-section').style.display = isInjuries ? '' : 'none';
+  if (isInjuries) {
+    renderInjuries();
+  } else {
+    buildPosFilter();
+    renderGrid();
+    renderList();
+  }
+}
 
 function buildPosFilter() {
   const sel = document.getElementById('pos-filter');
@@ -328,9 +398,106 @@ function switchTab(tab, btn) {
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  buildPosFilter();
-  renderGrid();
-  renderList();
+  render();
+}
+
+// ── Injuries ───────────────────────────────────────────────────────────────
+// Positions that can cover for each other (MI/CI groups, OF overlap, CL→SU)
+const POS_OVERLAP = {
+  '2B': ['SS'], 'SS': ['2B'],
+  '1B': ['3B'], '3B': ['1B'],
+  'LF': ['CF','RF'], 'CF': ['LF','RF'], 'RF': ['LF','CF'],
+  'CL': ['RP'],
+};
+
+function findReplacement(injName, team, pos, dc, rankings) {
+  const teamDC = dc[team] || {};
+
+  function firstHealthy(dcKey) {
+    return (teamDC[dcKey] || []).find(p => p.name !== injName && !p.injury) || null;
+  }
+
+  let rep = firstHealthy(pos);
+  let repFromPos = pos;
+
+  if (!rep) {
+    for (const alt of (POS_OVERLAP[pos] || [])) {
+      rep = firstHealthy(alt);
+      if (rep) { repFromPos = alt; break; }
+    }
+  }
+
+  if (!rep) return null;
+  const info = rankings[rep.name] || {};
+  const note = repFromPos !== pos ? ` (via ${repFromPos})` : '';
+  return { name: rep.name, rank: info.rank || null, note };
+}
+
+function renderInjuries() {
+  if (!DATA) return;
+  const dc       = DATA.depth_chart || {};
+  const rankings = DATA.rankings || {};
+  const hideDrafted = document.getElementById('hide-drafted').checked;
+
+  // Collect all players with injury notes from the depth chart
+  const injured = [];
+  const seen    = new Set();
+
+  Object.entries(dc).forEach(([team, positions]) => {
+    Object.entries(positions).forEach(([pos, list]) => {
+      list.forEach(p => {
+        if (!p.injury || seen.has(p.name)) return;
+        seen.add(p.name);
+        const info = rankings[p.name] || {};
+        injured.push({
+          name:   p.name,
+          team,
+          pos:    info.pos || pos,
+          dcPos:  pos,
+          injury: p.injury,
+          rank:   info.rank || 99999,
+        });
+      });
+    });
+  });
+
+  injured.sort((a, b) => a.rank - b.rank);
+
+  document.getElementById('injuries-count').textContent =
+    `${injured.length} player${injured.length !== 1 ? 's' : ''} with injury notes`;
+
+  let html = '';
+  injured.forEach(p => {
+    if (hideDrafted && drafted.has(p.name)) return;
+    const isDrafted = drafted.has(p.name);
+    const dftCls    = isDrafted ? ' row-drafted' : '';
+    const rankStr   = p.rank < 99999 ? p.rank : '—';
+    const rep       = findReplacement(p.name, p.team, p.dcPos, dc, rankings);
+    const repHtml   = rep
+      ? `<span class="rep-cell">${esc(rep.name)}</span>`
+        + (rep.rank ? ` <span class="rep-rank">#${rep.rank}${esc(rep.note)}</span>` : `<span class="rep-rank">${esc(rep.note)}</span>`)
+      : '<span style="color:#aaa">—</span>';
+
+    html += `<tr class="${dftCls}"
+                  onmouseenter="showTip(event,'${esc(p.name)}','${esc(p.injury)}')"
+                  onmouseleave="hideTip()">
+               <td class="rank-num">${rankStr}</td>
+               <td>
+                 <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
+                   <input type="checkbox" ${isDrafted?'checked':''}
+                          onchange="toggleDrafted('${esc(p.name)}')">
+                   <span class="r-name">${esc(p.name)}</span>
+                 </label>
+               </td>
+               <td>${esc(p.team)}</td>
+               <td>${esc(p.pos)}</td>
+               <td><span class="inj-note">${esc(p.injury)}</span></td>
+               <td>${repHtml}</td>
+             </tr>`;
+  });
+
+  document.getElementById('injuries-body').innerHTML =
+    html || '<tr><td colspan="6" style="padding:12px;color:#7a8ca0">No injury notes found.</td></tr>';
 }
 
 function renderGrid() {
