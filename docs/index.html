@@ -374,7 +374,7 @@ function render() {
   const isInjuries = currentTab === 'injuries';
   document.getElementById('grid-wrapper').style.display    = isInjuries ? 'none' : '';
   document.getElementById('ranked-section').style.display  = isInjuries ? 'none' : '';
-  document.getElementById('injuries-section').style.display = isInjuries ? '' : 'none';
+  document.getElementById('injuries-section').style.display = isInjuries ? 'block' : 'none';
   if (isInjuries) {
     renderInjuries();
   } else {
@@ -447,6 +447,10 @@ function renderInjuries() {
     Object.entries(positions).forEach(([pos, list]) => {
       list.forEach(p => {
         if (!p.injury || seen.has(p.name)) return;
+        // Skip CBS news blurbs — real injury notes contain a body part or status keyword
+        const inj = p.injury.toLowerCase();
+        const isRealInjury = /\b(il|injured|injury|out|dtd|day-to-day|questionable|shoulder|elbow|knee|hand|back|hamstring|forearm|calf|thigh|lat|concussion|surgery|strain|sprain|fracture|oblique|quad|hip|wrist|thumb|ankle|foot|rib|chest|season)\b/.test(inj);
+        if (!isRealInjury) return;
         seen.add(p.name);
         const info = rankings[p.name] || {};
         injured.push({
