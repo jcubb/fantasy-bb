@@ -390,7 +390,7 @@ let currentTab  = 'batters';
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
   try {
-    const res = await fetch('data.json');
+    const res = await fetch('data.json?v=' + Date.now());
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     DATA = await res.json();
     const d = new Date(DATA.scraped_at);
