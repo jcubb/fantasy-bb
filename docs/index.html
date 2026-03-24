@@ -329,6 +329,8 @@ const PITCHER_COL_MAP = {
   SU1:['RP',0], SU2:['RP',1],
 };
 const OF_SET       = new Set(['LF','CF','RF','OF']);
+const INJ_RE       = /\b(il|injured|injury|out|dtd|day-to-day|questionable|shoulder|elbow|knee|hand|back|hamstring|forearm|calf|thigh|lat|concussion|surgery|strain|sprain|fracture|oblique|quad|hip|wrist|thumb|ankle|foot|rib|chest|season)\b/i;
+function isRealInjury(note) { return note && INJ_RE.test(note); }
 const AL_ORDER     = ['BAL','BOS','NYY','TB','TOR','CWS','CLE','DET','KC','MIN','HOU','LAA','OAK','SEA','TEX'];
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -447,10 +449,8 @@ function renderInjuries() {
     Object.entries(positions).forEach(([pos, list]) => {
       list.forEach(p => {
         if (!p.injury || seen.has(p.name)) return;
-        // Skip CBS news blurbs — real injury notes contain a body part or status keyword
-        const inj = p.injury.toLowerCase();
-        const isRealInjury = /\b(il|injured|injury|out|dtd|day-to-day|questionable|shoulder|elbow|knee|hand|back|hamstring|forearm|calf|thigh|lat|concussion|surgery|strain|sprain|fracture|oblique|quad|hip|wrist|thumb|ankle|foot|rib|chest|season)\b/.test(inj);
-        if (!isRealInjury) return;
+        // Skip CBS news blurbs — only show real injury notes
+        if (!isRealInjury(p.injury)) return;
         seen.add(p.name);
         const info = rankings[p.name] || {};
         injured.push({
@@ -533,7 +533,7 @@ function renderGrid() {
         const isDrafted = drafted.has(p.name);
         if (!(hideDrafted && isDrafted)) {
           const dftCls  = isDrafted ? ' drafted' : '';
-          const injHtml = p.injury
+          const injHtml = isRealInjury(p.injury)
             ? `<span class="inj-flag" title="${esc(p.injury)}">!</span>`
             : '';
           html += `<div class="player-entry starter${dftCls}"
