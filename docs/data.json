@@ -1,5 +1,5 @@
 {
-  "scraped_at": "2026-03-24T17:34:28.538262+00:00",
+  "scraped_at": "2026-03-24T19:09:02.318999+00:00",
   "depth_chart": {
     "OAK": {
       "C": [
@@ -585,7 +585,7 @@
       "CF": [
         {
           "name": "Steven Kwan",
-          "injury": "Guardians' Steven Kwan: Will play two outfield positions"
+          "injury": null
         },
         {
           "name": "Angel Martinez",
@@ -623,7 +623,7 @@
         },
         {
           "name": "Slade Cecconi",
-          "injury": "Guardians' Slade Cecconi: Ready for regular season"
+          "injury": null
         },
         {
           "name": "Joey Cantillo",
@@ -724,11 +724,11 @@
       ],
       "RF": [
         {
-          "name": "Wenceel Perez",
+          "name": "Matt Vierling",
           "injury": null
         },
         {
-          "name": "Matt Vierling",
+          "name": "Kerry Carpenter",
           "injury": null
         }
       ],
@@ -1817,7 +1817,7 @@
       "RP": [
         {
           "name": "Jalen Beeks",
-          "injury": "Rangers' Carter Baumler: Secures spot on Opening Day roster"
+          "injury": null
         }
       ]
     },
@@ -1835,7 +1835,7 @@
       "1B": [
         {
           "name": "Vladimir Guerrero Jr.",
-          "injury": "Blue Jays' Vladimir Guerrero: Launches first spring homer"
+          "injury": null
         },
         {
           "name": "Kazuma Okamoto",
@@ -2293,11 +2293,11 @@
       "rank": 85,
       "pos": "C"
     },
-    "Carlos Rodon": {
+    "Trey Yesavage": {
       "rank": 86,
       "pos": "SP"
     },
-    "Trey Yesavage": {
+    "Carlos Rodon": {
       "rank": 87,
       "pos": "SP"
     },
@@ -2317,25 +2317,25 @@
       "rank": 91,
       "pos": "CF"
     },
-    "Isaac Paredes": {
+    "Kevin McGonigle": {
       "rank": 92,
+      "pos": "SS"
+    },
+    "Isaac Paredes": {
+      "rank": 93,
       "pos": "3B"
     },
     "Carlos Estevez": {
-      "rank": 93,
-      "pos": "RP"
-    },
-    "Tanner Bibee": {
       "rank": 94,
-      "pos": "SP"
+      "pos": "RP"
     },
     "Munetaka Murakami": {
       "rank": 95,
       "pos": "1B"
     },
-    "Kevin McGonigle": {
+    "Tanner Bibee": {
       "rank": 96,
-      "pos": "SS"
+      "pos": "SP"
     },
     "Colson Montgomery": {
       "rank": 97,
@@ -3312,59 +3312,19 @@
         "headline": "'It's up to us now': How O's can make postseason run in 2026",
         "date": "10:05 AM EDT",
         "blurb": ""
-      },
-      {
-        "headline": "'It's up to us now': How O's can make postseason run in 2026",
-        "date": "",
-        "blurb": ""
-      },
-      {
-        "headline": "Stream O's games through the MLB App",
-        "date": "",
-        "blurb": ""
       }
     ],
     "NYY": [
       {
-        "headline": "Arizona spring game Yanks' first since Mantle was 19, but it's nostalgic for Boone",
-        "date": "March 23, 2026",
-        "blurb": "MESA, Ariz. \u2013 New York\u2019s return to Arizona for Spring Training was 75 years in the making.\n                        Yankees manager Aaron Boone was more than happy to trade the humid Florida sunshine for the desert\u2019s dry heat, and felt right at home at Sloan Park on Monday. He previously called nearb"
-      },
-      {
-        "headline": "Arizona spring game Yanks' first since Mantle was 19, but it's nostalgic for Boone",
-        "date": "",
-        "blurb": ""
-      },
-      {
-        "headline": "Judge could make more home run history in 2026",
-        "date": "March 23, 2026",
-        "blurb": "With each new baseball season, there are always more milestones to look out for -- and 2026 is no exception to that rule.\n                        Here is a look at some major milestones on the horizon for 2026 and beyond, along with a breakdown of each player\u2019s chances of getting there this"
-      },
-      {
-        "headline": "Judge could make more home run history in 2026",
-        "date": "",
+        "headline": "Winquest, Yanks' 1st Rule 5 pick since 2011, makes Opening Day roster",
+        "date": "39 minutes ago",
         "blurb": ""
       }
     ],
     "TB": [
       {
         "headline": "Rays top prospect Williams named starting SS; Pepiot headed to IL",
-        "date": "11:42 AM EDT",
-        "blurb": ""
-      },
-      {
-        "headline": "Rays top prospect Williams named starting SS; Pepiot headed to IL",
-        "date": "",
-        "blurb": ""
-      },
-      {
-        "headline": "NEW for 2026: Stream Rays games on Rays.TV; get a free trial",
-        "date": "March 23, 2026",
-        "blurb": "This year will bring a new way to watch Rays baseball.\n                        The Rays announced on Feb. 2 that their local television broadcasts will be produced and distributed by Major League Baseball, starting this season. Subscriptions to Rays.TV, the new direct-to-consumer streaming platform "
-      },
-      {
-        "headline": "NEW for 2026: Stream Rays games on Rays.TV; get a free trial",
-        "date": "",
+        "date": "1:37 PM EDT",
         "blurb": ""
       }
     ],
@@ -3373,42 +3333,17 @@
         "headline": "Kwan 'more than ready' for new challenge in CF",
         "date": "12:20 AM EDT",
         "blurb": ""
-      },
-      {
-        "headline": "Kwan 'more than ready' for new challenge in CF",
-        "date": "",
-        "blurb": ""
-      },
-      {
-        "headline": "Watch CLEGUARDIANS.TV for $99.99; get a free trial",
-        "date": "March 23, 2026",
-        "blurb": "The countdown to the 2026 season is on, and there's no better place to watch all the action than on CLEGUARDIANS.TV presented by Progressive."
-      },
-      {
-        "headline": "Watch CLEGUARDIANS.TV for $99.99; get a free trial",
-        "date": "",
-        "blurb": ""
       }
     ],
     "DET": [
       {
         "headline": "Tigers reward No. 2 overall prospect McGonigle with roster spot",
-        "date": "an hour ago",
-        "blurb": ""
-      },
-      {
-        "headline": "Tigers reward No. 2 overall prospect McGonigle with roster spot",
-        "date": "",
+        "date": "12:30 PM EDT",
         "blurb": ""
       },
       {
         "headline": "Can the Tigers put a full season together in 2026?",
         "date": "Sep 6, 2024\u00a0\u00b7\u00a00:29",
-        "blurb": ""
-      },
-      {
-        "headline": "Can the Tigers put a full season together in 2026?",
-        "date": "",
         "blurb": ""
       },
       {
@@ -3422,21 +3357,6 @@
         "headline": "Royals' predictions for 2026 with talented core ready to roll",
         "date": "9:34 AM CDT",
         "blurb": ""
-      },
-      {
-        "headline": "Royals' predictions for 2026 with talented core ready to roll",
-        "date": "",
-        "blurb": ""
-      },
-      {
-        "headline": "NEW for 2026: Stream KC games on Royals.TV; get a free trial",
-        "date": "March 23, 2026",
-        "blurb": "A new era of watching Royals baseball is here, and Royals.TV has you covered all season long."
-      },
-      {
-        "headline": "NEW for 2026: Stream KC games on Royals.TV; get a free trial",
-        "date": "",
-        "blurb": ""
       }
     ],
     "MIN": [
@@ -3444,65 +3364,25 @@
         "headline": "Opening Day FAQ: Twins vs. Orioles (Thurs., 2 p.m. CT)",
         "date": "March 23, 2026",
         "blurb": "BALTIMORE -- After both missed the postseason in 2025, the Twins and Orioles are aiming for a better showing in \u201826. However, only one of these American League foes will begin 1-0.\n                        On Thursday, Minnesota (70-92 last season) and Baltimore (75-87) will face off in an Opening Da"
-      },
-      {
-        "headline": "Opening Day FAQ: Twins vs. Orioles (Thurs., 2 p.m. CT)",
-        "date": "",
-        "blurb": ""
-      },
-      {
-        "headline": "Watch TWINS.TV for $99.99; get a free trial",
-        "date": "March 23, 2026",
-        "blurb": "The countdown to the 2026 season is on, and there's no better place to watch all the action than on TWINS.TV presented by Progressive."
-      },
-      {
-        "headline": "Watch TWINS.TV for $99.99; get a free trial",
-        "date": "",
-        "blurb": ""
       }
     ],
     "HOU": [
       {
         "headline": "Angels-Astros 2026 Opening Day FAQ (Thurs., 3:10 p.m. CT)",
-        "date": "43 minutes ago",
+        "date": "11:50 AM CDT",
         "blurb": "HOUSTON -- It was the Angels who helped make sure the Astros didn\u2019t reach the playoffs for the first time in eight seasons last September when they rallied from three runs down to beat Houston in the third-from-last game of the regular season."
-      },
-      {
-        "headline": "Angels-Astros 2026 Opening Day FAQ (Thurs., 3:10 p.m. CT)",
-        "date": "",
-        "blurb": ""
       },
       {
         "headline": "Astros option Arrighetti, give McCullers fifth rotation spot",
         "date": "March 23, 2026",
-        "blurb": ""
-      },
-      {
-        "headline": "Astros option Arrighetti, give McCullers fifth rotation spot",
-        "date": "",
         "blurb": ""
       }
     ],
     "LAA": [
       {
         "headline": "Angels-Astros 2026 Opening Day FAQ (Thurs., 1:10 p.m. PT)",
-        "date": "44 minutes ago",
+        "date": "9:50 AM PDT",
         "blurb": "HOUSTON -- It was the Angels who helped make sure the Astros didn\u2019t reach the playoffs for the first time in eight seasons last September when they rallied from three runs down to beat Houston in the third-from-last game of the regular season."
-      },
-      {
-        "headline": "Angels-Astros 2026 Opening Day FAQ (Thurs., 1:10 p.m. PT)",
-        "date": "",
-        "blurb": ""
-      },
-      {
-        "headline": "NEW for 2026: Stream Halos games on Angels.TV; get a free trial",
-        "date": "March 23, 2026",
-        "blurb": "A new era of watching Angels baseball is here, and Angels.TV has you covered all season long."
-      },
-      {
-        "headline": "NEW for 2026: Stream Halos games on Angels.TV; get a free trial",
-        "date": "",
-        "blurb": ""
       }
     ],
     "OAK": [
@@ -3510,37 +3390,12 @@
         "headline": "Next generation of lefty prospects among standouts at Athletics camp",
         "date": "8:13 AM PDT",
         "blurb": ""
-      },
-      {
-        "headline": "Next generation of lefty prospects among standouts at Athletics camp",
-        "date": "",
-        "blurb": ""
-      },
-      {
-        "headline": "Back for 2026, stream games on ATHLETICS.TV",
-        "date": "",
-        "blurb": ""
       }
     ],
     "SEA": [
       {
         "headline": "What's in store for AL West champs in 2026?",
         "date": "7:29 AM PDT",
-        "blurb": ""
-      },
-      {
-        "headline": "What's in store for AL West champs in 2026?",
-        "date": "",
-        "blurb": ""
-      },
-      {
-        "headline": "NEW for 2026: Stream Mariners games on Mariners.TV; get a free trial",
-        "date": "March 23, 2026",
-        "blurb": "A new era of watching Mariners baseball is here, and Mariners.TV has you covered all season long."
-      },
-      {
-        "headline": "NEW for 2026: Stream Mariners games on Mariners.TV; get a free trial",
-        "date": "",
         "blurb": ""
       }
     ],
@@ -3551,18 +3406,8 @@
         "blurb": ""
       },
       {
-        "headline": "Best mound visit of Baumler's life -- finding out he's a Major Leaguer!",
-        "date": "",
-        "blurb": ""
-      },
-      {
         "headline": "Cutch makes Rangers' Opening Day roster to start 18th season",
         "date": "Mar 19, 2026\u00a0\u00b7\u00a00:22",
-        "blurb": ""
-      },
-      {
-        "headline": "Cutch makes Rangers' Opening Day roster to start 18th season",
-        "date": "",
         "blurb": ""
       },
       {
@@ -3572,5 +3417,5 @@
       }
     ]
   },
-  "news_scraped_at": "2026-03-24T17:34:28.538262+00:00"
+  "news_scraped_at": "2026-03-24T19:09:02.318999+00:00"
 }
