@@ -15,7 +15,7 @@ Usage: python scrape.py
 import asyncio
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from playwright.async_api import async_playwright
@@ -68,6 +68,15 @@ POSITION_URLS = {
 }
 
 RANKINGS_URL = 'https://www.cbssports.com/fantasy/baseball/rankings/roto/top300/AL/'
+
+MLB_NEWS_BASE = 'https://www.mlb.com'
+MLB_NEWS_SLUGS = {
+    'BAL': 'orioles',   'BOS': 'red-sox',  'NYY': 'yankees',
+    'TB':  'rays',      'TOR': 'blue-jays','CWS': 'white-sox',
+    'CLE': 'guardians', 'DET': 'tigers',   'KC':  'royals',
+    'MIN': 'twins',     'HOU': 'astros',   'LAA': 'angels',
+    'OAK': 'athletics', 'SEA': 'mariners', 'TEX': 'rangers',
+}
 
 
 def norm(abbr: str) -> str:
@@ -273,6 +282,133 @@ async def scrape_rankings(page) -> dict:
     return rankings
 
 
+# ── News ──────────────────────────────────────────────────────────────────────
+
+def _parse_date(raw: str) -> datetime | None:
+    """Try to parse a date string into an aware datetime."""
+    if not raw:
+        return None
+    raw = raw.strip()
+    for fmt in (
+        '%Y-%m-%dT%H:%M:%SZ',
+        '%Y-%m-%dT%H:%M:%S%z',
+        '%Y-%m-%dT%H:%M%z',
+        '%B %d, %Y',
+        '%b %d, %Y',
+        '%b. %d, %Y',
+    ):
+        try:
+            dt = datetime.strptime(raw, fmt)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt
+        except ValueError:
+            continue
+    return None
+
+
+async def scrape_team_news(page, team: str, slug: str, days: int = 7) -> list:
+    """
+    Scrape recent news for one AL team from mlb.com/{slug}/news.
+    Returns list of {headline, date, blurb} sorted newest-first,
+    limited to articles within the last `days` days.
+    """
+    url = f'{MLB_NEWS_BASE}/{slug}/news'
+    try:
+        await page.goto(url, wait_until='load', timeout=45000)
+    except Exception as e:
+        print(f'    [{team}] Warning: {e}')
+        return []
+
+    # Wait for article content to appear
+    for sel in ('[data-testid="article-item"]', '[class*="article-item"]',
+                'article', '[class*="NewsCard"]'):
+        try:
+            await page.wait_for_selector(sel, timeout=6000)
+            break
+        except Exception:
+            continue
+
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    articles = []
+
+    # MLB.com selector candidates (try in order)
+    container_sels = [
+        '[data-testid="article-item"]',
+        '[class*="article-item"]',
+        '[class*="ArticleCard"]',
+        '[class*="news-card"]',
+        '[class*="NewsCard"]',
+        'article',
+        '.article',
+    ]
+    items = []
+    for sel in container_sels:
+        items = await page.query_selector_all(sel)
+        if len(items) >= 3:
+            break
+
+    if not items:
+        print(f'    [{team}] No article elements found')
+        return []
+
+    for item in items[:30]:
+        try:
+            # ── Headline ──────────────────────────────────────────────────────
+            headline = ''
+            for h_sel in ['h1', 'h2', 'h3',
+                          '[class*="headline"]', '[class*="title"]',
+                          '[class*="Headline"]', '[class*="Title"]']:
+                el = await item.query_selector(h_sel)
+                if el:
+                    headline = (await el.text_content() or '').strip()
+                    if headline:
+                        break
+            if not headline:
+                continue
+
+            # ── Date ──────────────────────────────────────────────────────────
+            date_iso = ''
+            article_date = None
+            for d_sel in ['time[datetime]', 'time', '[class*="date"]',
+                          '[class*="timestamp"]', '[class*="Date"]']:
+                el = await item.query_selector(d_sel)
+                if el:
+                    raw = (await el.get_attribute('datetime') or
+                           await el.text_content() or '').strip()
+                    if raw:
+                        article_date = _parse_date(raw)
+                        date_iso = raw
+                        break
+
+            # Skip articles older than cutoff (only if we could parse the date)
+            if article_date and article_date < cutoff:
+                continue
+
+            # ── Blurb ─────────────────────────────────────────────────────────
+            blurb = ''
+            for b_sel in ['p', '[class*="blurb"]', '[class*="description"]',
+                          '[class*="Blurb"]', '[class*="Description"]',
+                          '[class*="summary"]']:
+                el = await item.query_selector(b_sel)
+                if el:
+                    txt = (await el.text_content() or '').strip()
+                    if txt and txt != headline and len(txt) > 20:
+                        blurb = txt[:300]
+                        break
+
+            articles.append({
+                'headline': headline,
+                'date':     date_iso,
+                'blurb':    blurb,
+            })
+        except Exception:
+            continue
+
+    print(f'    [{team}] {len(articles)} recent articles')
+    return articles
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 async def main():
@@ -325,8 +461,17 @@ async def main():
         print(f'  AL teams with data: {sorted(depth_chart.keys())}')
 
         # ── Rankings ──────────────────────────────────────────────────────────
-        print('\n[2/2] Rankings')
+        print('\n[2/3] Rankings')
         rankings = await scrape_rankings(page)
+
+        # ── Team news ─────────────────────────────────────────────────────────
+        print('\n[3/3] Team news (MLB.com — last 7 days)')
+        news = {}
+        for team, slug in MLB_NEWS_SLUGS.items():
+            print(f'  Scraping {team}...')
+            articles = await scrape_team_news(page, team, slug)
+            if articles:
+                news[team] = articles
 
         await browser.close()
 
@@ -338,10 +483,13 @@ async def main():
     if depth_chart and rankings:
         rankings = reconcile_rankings(rankings, depth_chart)
 
+    now = datetime.now(timezone.utc).isoformat()
     output = {
-        'scraped_at': datetime.now(timezone.utc).isoformat(),
-        'depth_chart': depth_chart,
-        'rankings': rankings,
+        'scraped_at':      now,
+        'depth_chart':     depth_chart,
+        'rankings':        rankings,
+        'news':            news,
+        'news_scraped_at': now,
     }
 
     OUT_FILE.write_text(json.dumps(output, indent=2), encoding='utf-8')
