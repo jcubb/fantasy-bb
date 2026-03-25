@@ -62,16 +62,23 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 ```json
 {
   "scraped_at": "...",
+  "news_scraped_at": "...",
   "depth_chart": {
     "NYY": {
       "C":  [{"name": "Austin Wells", "injury": null}, ...],
-      "SP": [{"name": "Max Fried", "injury": null}, ... ],  // up to 5
+      "SP": [{"name": "Max Fried", "injury": null}, ...],   // up to 5
       "CL": [{"name": "David Bednar", "injury": null}, ...], // up to 2
       "RP": [{"name": "Camilo Doval", "injury": null}, ...]  // up to 2 (setup men)
     }
   },
   "rankings": {
     "Aaron Judge": {"rank": 1, "pos": "RF"},
+    ...
+  },
+  "news": {
+    "NYY": [
+      {"headline": "Yankees option Smith to Triple-A", "date": "2026-03-23T...", "blurb": ""}
+    ],
     ...
   }
 }
@@ -87,10 +94,14 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
 **Features:**
 - Checkbox per player → marks as drafted (persisted in `localStorage`)
-- Injury flag `!` with hover tooltip showing injury note
-- Tooltip also shows CBS AL rank
+- Injury `!` flag in grid — only shown for real injuries (keyword-matched); all notes still appear in hover tooltip
+- Tooltip shows CBS AL rank + injury note
 - "Hide drafted" toggle for the grid
-- Ranked list below grid: all players sorted by CBS rank, with search, position filter, and hide-drafted toggle
+- Ranked list below grid: filtered to current tab (batters on Batters tab, pitchers on Pitchers tab), with search, position filter, and hide-drafted toggle
+- Position filter rebuilds on tab switch (only shows relevant positions)
+- **Injuries tab**: lists all players with real injury notes, sorted by CBS rank; shows likely replacement (first healthy player at same position, with MI/CI/OF/CL overlaps)
+- **Last Week tab**: MLB.com news from the past 7 days, organized by team; only player-relevant headlines (blocklist filters out TV/streaming/tickets/nostalgia/odds); deduplicated by normalized headline; shows "as of" timestamp
+- **Run Scraper** button in header → opens GitHub Actions page to trigger a fresh scrape
 - Reset Draft button clears all checkboxes
 
 **Teams displayed** (AL_ORDER): BAL, BOS, NYY, TB, TOR, CWS, CLE, DET, KC, MIN, HOU, LAA, OAK, SEA, TEX
@@ -104,3 +115,23 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
   - `Fielding.csv` for games-by-position in 2025/2026
   - Data files: https://sabr.app.box.com/s/y1prhc795jk8zvmelfd3jq7tl389y6cd
 - Hovering a player name shows position eligibility (currently placeholder)
+
+
+### News scraper (`scrape_team_news` in `scrape.py`)
+
+Scrapes `https://www.mlb.com/{slug}/news` for each AL team using Playwright.
+
+- `MLB_NEWS_SLUGS` maps team abbr → MLB.com slug (e.g. `NYY` → `yankees`)
+- Captures up to 30 most recent articles per team, filters to last 7 days by parsed date
+- **Deduplication**: normalizes headline (lowercase, strip punctuation) and skips repeats
+- **Blocklist** (`_NEWS_BLOCKLIST` regex): skips TV/streaming, tickets, nostalgic/historical, odds/betting, fantasy rankings, draft, etc. — only player-action stories pass through
+- Dates from MLB.com are sometimes just times ("10:05 AM EDT") rather than full ISO dates; date parsing handles multiple formats with a fallback
+- Blurbs often empty (MLB.com DOM structure); headlines are the primary content
+
+### GitHub Actions (`/.github/workflows/scrape.yml`)
+
+- Triggers: `workflow_dispatch` (manual, via Run Scraper button) + daily cron at 11am UTC (7am ET)
+- Runs on `ubuntu-latest`: installs Python 3.11, playwright + chromium, runs `scrape.py`
+- Commits updated `docs/data.json` with message `Auto-refresh data YYYY-MM-DD HH:MM UTC`
+- Does `git pull --rebase` before pushing to avoid race condition when local changes were pushed since the workflow started
+
