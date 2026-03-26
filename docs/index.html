@@ -277,6 +277,9 @@ body {
 .tt-name  { font-weight: 700; margin-bottom: 3px; font-size: 13px; }
 .tt-row   { color: #90b4d8; font-size: 11px; }
 .tt-inj   { color: #f08080; font-size: 11px; }
+.tt-proj  { color: #a8d0f0; font-size: 11px; margin-top: 4px;
+             border-top: 1px solid rgba(255,255,255,.12); padding-top: 4px;
+             font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
@@ -358,6 +361,7 @@ body {
   <div class="tt-row"  id="tt-rank"></div>
   <div class="tt-row"  id="tt-elig">Pos Eligibility: <em>(Phase 2)</em></div>
   <div class="tt-inj"  id="tt-inj" style="display:none"></div>
+  <div class="tt-proj" id="tt-proj" style="display:none"></div>
 </div>
 
 <script>
@@ -782,6 +786,20 @@ function showTip(e, name, injury) {
     injEl.style.display = '';
   } else {
     injEl.style.display = 'none';
+  }
+
+  // Projected stats
+  const projEl   = document.getElementById('tt-proj');
+  const projData = DATA?.projections || {};
+  const bStats   = (projData.batters  || {})[name];
+  const pStats   = (projData.pitchers || {})[name];
+  const stats    = bStats || pStats;
+  if (stats) {
+    const cols = bStats ? BATTER_PROJ_COLS : PITCHER_PROJ_COLS;
+    projEl.textContent = cols.map(c => `${c}: ${stats[c] ?? '—'}`).join('  ');
+    projEl.style.display = '';
+  } else {
+    projEl.style.display = 'none';
   }
 
   const tip = document.getElementById('tooltip');
