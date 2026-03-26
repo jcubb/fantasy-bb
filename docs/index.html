@@ -621,16 +621,19 @@ function renderList() {
   const hasProj     = Object.keys(projMap).length > 0;
 
   // ── Rebuild thead ────────────────────────────────────────────────────────
+  const eligData  = (DATA.eligibility?.positions_2025) || {};
+  const hasElig   = isBatters && Object.keys(eligData).length > 0;
   const projHeads = hasProj
     ? projCols.map(c => `<th class="proj-col" style="width:42px">${c}</th>`).join('')
     : '';
-  const totalCols = 5 + (hasProj ? projCols.length : 0);
+  const totalCols = 5 + (hasElig ? 1 : 0) + (hasProj ? projCols.length : 0);
   document.getElementById('list-head').innerHTML =
     `<tr>
        <th style="width:36px">Rank</th>
        <th>Name</th>
        <th style="width:42px">Team</th>
        <th style="width:42px">Pos</th>
+       ${hasElig ? '<th style="width:90px">Eligible</th>' : ''}
        ${projHeads}
        <th>Injury / Note</th>
      </tr>`;
@@ -715,6 +718,13 @@ function renderList() {
                </td>
                <td>${esc(p.team||'')}</td>
                <td>${esc(p.pos||'')}</td>
+               ${hasElig ? (() => {
+                   const ep = eligData[p.name];
+                   if (!ep) return '<td style="color:#c0ccd8">—</td>';
+                   const nonDH = ep.filter(x => x !== 'DH');
+                   const txt   = nonDH.length > 0 ? nonDH.join(', ') : 'DH-only';
+                   return `<td style="font-size:11px;color:#2a4a6a">${txt}</td>`;
+                 })() : ''}
                ${projCells}
                <td>${injHtml}</td>
              </tr>`;
