@@ -80,6 +80,15 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
       {"headline": "Yankees option Smith to Triple-A", "date": "2026-03-23T...", "blurb": ""}
     ],
     ...
+  },
+  "projections": {
+    "batters":  {"Aaron Judge": {"AB": "522", "R": "124", "HR": "50", ...}, ...},
+    "pitchers": {"Tarik Skubal": {"INNs": "180", "W": "14", "ERA": "2.85", ...}, ...}
+  },
+  "eligibility": {
+    "positions_2025": {"Aaron Judge": ["OF", "DH"], "Jose Ramirez": ["3B", "DH"], ...},
+    "games_2025":     {"Aaron Judge": {"OF": 140}, ...},
+    "games_2024":     {"Aaron Judge": {"OF": 130}, ...}
   }
 }
 ```
@@ -95,10 +104,12 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 **Features:**
 - Checkbox per player → marks as drafted (persisted in `localStorage`)
 - Injury `!` flag in grid — only shown for real injuries (keyword-matched); all notes still appear in hover tooltip
-- Tooltip shows CBS AL rank + injury note
+- Tooltip shows CBS AL rank, projection stats, eligibility, and injury note
 - "Hide drafted" toggle for the grid
 - Ranked list below grid: filtered to current tab (batters on Batters tab, pitchers on Pitchers tab), with search, position filter, and hide-drafted toggle
 - Position filter rebuilds on tab switch (only shows relevant positions)
+- Batter ranked list columns: Rank, Name, Pos, Eligible (with 2025 games count), AVG, HR, RBI, SB, R, Injury
+- Pitcher ranked list columns: Rank, Name, Pos, ERA, W, S, WHIP, K, Injury
 - **Injuries tab**: lists all players with real injury notes, sorted by CBS rank; shows likely replacement (first healthy player at same position, with MI/CI/OF/CL overlaps)
 - **Last Week tab**: MLB.com news from the past 7 days, organized by team; only player-relevant headlines (blocklist filters out TV/streaming/tickets/nostalgia/odds); deduplicated by normalized headline; shows "as of" timestamp
 - **Run Scraper** button in header → opens GitHub Actions page to trigger a fresh scrape
@@ -108,14 +119,62 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
 ---
 
-## Phase 2 (deferred)
+## One-Time Data Scripts (run locally, do NOT add to daily scrape)
 
-- **SABR/Lahman data** for position eligibility calculation
-  - `People.csv` for player ID ↔ name mapping (handle same-name disambiguation by team/age)
-  - `Fielding.csv` for games-by-position in 2025/2026
-  - Data files: https://sabr.app.box.com/s/y1prhc795jk8zvmelfd3jq7tl389y6cd
-- Hovering a player name shows position eligibility (currently placeholder)
+### Projections (`parse_projections.py`)
 
+Parses tab-separated text copied from CBS projected stats pages into `data.json`.
+
+**Setup:**
+1. Go to https://pochicago.baseball.cbssports.com/stats/stats-main
+2. Click Projections → set Timeframe = Rest of Season, Categories = Standard
+3. Run "All Players - Batters" → select all → copy → paste into `batters2026.txt`
+4. Run "All Players - P" → select all → copy → paste into `pitchers2026.txt`
+
+**Run:**
+```
+python parse_projections.py
+git add docs/data.json && git commit -m "Add projections" && git push
+```
+
+Row format in the text files: `{action}\t{Name POS • TEAM}\t{stat1}\t...\t{Rank}`
+- Batter columns: AB, R, H, 1B, 2B, 3B, HR, RBI, BB, K, SB, CS, AVG, OBP, SLG, Rank
+- Pitcher columns: INNs, APP, GS, QS, CG, W, L, S, BS, HD, K, BB, H, ERA, WHIP, Rank
+- Rank is excluded from stored stats (already in CBS rankings)
+
+Note: `scrape_projections.py` is a Playwright-based alternative that was attempted but abandoned — CBS page JS polluted the columns. Use `parse_projections.py` (text copy-paste approach) instead.
+
+### Position Eligibility (`build_eligibility.py`)
+
+Builds position eligibility from Lahman/SABR data and merges into `data.json`.
+
+**One-time download** (not committed to repo): https://sabr.app.box.com/s/y1prhc795jk8zvmelfd3jq7tl389y6cd
+Place `People.csv` and `Fielding.csv` in the project root.
+
+**Run:**
+```
+python build_eligibility.py
+git add docs/data.json && git commit -m "Update eligibility" && git push
+```
+
+**Eligibility rules:**
+- 20+ games at a position in 2025 → eligible there
+- LF / CF / RF / OF all collapse to OF
+- Everyone is eligible at DH
+- If no position reaches the threshold in 2025 → DH-only
+- 2024 game counts are stored in `data.json` for future use (e.g. injury exceptions) but do NOT affect current eligibility logic
+
+**Name matching** (CBS names → Lahman playerIDs):
+- `norm()`: NFKD unicode normalization (ñ→n, é→e), strip Jr./Sr./II/III/IV suffixes, replace all non-alphanumeric with spaces, collapse whitespace — handles accents, initials (C.J., J.P.), hyphens (Kiner-Falefa)
+- Two-pass: primary search (players with 2024/2025 fielding data), secondary fallback (all of People.csv) — handles pitchers and recent acquisitions with no fielding data
+- `best_candidate()`: prefers players with recent data, eliminates already-claimed PIDs, tries team match
+- `NAME_OVERRIDES` dict for cases `norm()` can't resolve (nicknames, middle initials):
+  - `'Joshua Lowe'` → `'lowejo01'` (Lahman: "Josh Lowe")
+  - `'Jt Ginn'` → `'ginnjt01'` (Lahman: "J. T. Ginn")
+  - `'Josh H. Smith'` → `'smithjo09'` (TEX infielder; middle initial needed to disambiguate)
+- Lahman team map: NYA→NYY, TBA→TB, CHA→CWS, KCA→KC, ATH→OAK
+
+---
 
 ### News scraper (`scrape_team_news` in `scrape.py`)
 
@@ -134,4 +193,4 @@ Scrapes `https://www.mlb.com/{slug}/news` for each AL team using Playwright.
 - Runs on `ubuntu-latest`: installs Python 3.11, playwright + chromium, runs `scrape.py`
 - Commits updated `docs/data.json` with message `Auto-refresh data YYYY-MM-DD HH:MM UTC`
 - Does `git pull --rebase` before pushing to avoid race condition when local changes were pushed since the workflow started
-
+- Does NOT run `parse_projections.py` or `build_eligibility.py` — those are one-time local scripts
