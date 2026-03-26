@@ -359,7 +359,7 @@ body {
 <div id="tooltip">
   <div class="tt-name" id="tt-name"></div>
   <div class="tt-row"  id="tt-rank"></div>
-  <div class="tt-row"  id="tt-elig">Pos Eligibility: <em>(Phase 2)</em></div>
+  <div class="tt-row"  id="tt-elig" style="display:none"></div>
   <div class="tt-inj"  id="tt-inj" style="display:none"></div>
   <div class="tt-proj" id="tt-proj" style="display:none"></div>
 </div>
@@ -786,6 +786,16 @@ function showTip(e, name, injury) {
     injEl.style.display = '';
   } else {
     injEl.style.display = 'none';
+  }
+
+  // Position eligibility
+  const eligEl  = document.getElementById('tt-elig');
+  const eligPos = (DATA?.eligibility?.positions_2025 || {})[name];
+  if (eligPos) {
+    eligEl.textContent = 'Eligible: ' + eligPos.join(', ');
+    eligEl.style.display = '';
+  } else {
+    eligEl.style.display = 'none';
   }
 
   // Projected stats
