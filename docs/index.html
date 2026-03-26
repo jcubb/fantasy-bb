@@ -368,8 +368,8 @@ body {
 // ── Constants ──────────────────────────────────────────────────────────────
 const BATTER_COLS       = ['C','1B','2B','3B','SS','LF','CF','RF','DH'];
 const PITCHER_COLS      = ['SP1','SP2','SP3','SP4','SP5','CL1','CL2','SU1','SU2'];
-const BATTER_PROJ_COLS  = ['R','HR','RBI','SB','AVG'];
-const PITCHER_PROJ_COLS = ['W','ERA','WHIP','K','S'];
+const BATTER_PROJ_COLS  = ['AVG','HR','RBI','SB','R'];
+const PITCHER_PROJ_COLS = ['ERA','W','S','WHIP','K'];
 const BATTER_SET   = new Set(BATTER_COLS);
 const PITCHER_SET  = new Set(['SP','CL','RP','P']);
 // Map split pitcher column -> [data key, index]
