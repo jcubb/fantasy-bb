@@ -11316,6 +11316,8 @@
         "DH"
       ],
       "Angel Martinez": [
+        "2B",
+        "OF",
         "DH"
       ],
       "Anthony Banda": [
@@ -11481,6 +11483,7 @@
         "DH"
       ],
       "Carlos Narvaez": [
+        "C",
         "DH"
       ],
       "Carlos Rodon": [
@@ -11892,6 +11895,7 @@
         "DH"
       ],
       "Jasson Dominguez": [
+        "OF",
         "DH"
       ],
       "Javier Baez": [
@@ -11986,6 +11990,10 @@
         "DH"
       ],
       "Jose Caballero": [
+        "2B",
+        "3B",
+        "SS",
+        "OF",
         "DH"
       ],
       "Jose Ferrer": [
@@ -12166,6 +12174,7 @@
         "DH"
       ],
       "Luisangel Acuna": [
+        "2B",
         "DH"
       ],
       "Luke Keaschall": [
@@ -12565,6 +12574,7 @@
         "DH"
       ],
       "Wenceel Perez": [
+        "OF",
         "DH"
       ],
       "Will Vest": [
@@ -12678,6 +12688,10 @@
         "OF": 1,
         "SS": 1
       },
+      "Angel Martinez": {
+        "2B": 37,
+        "OF": 118
+      },
       "Anthony Santander": {
         "1B": 1,
         "OF": 24
@@ -12774,6 +12788,9 @@
       "Carlos Cortes": {
         "3B": 1,
         "OF": 29
+      },
+      "Carlos Narvaez": {
+        "C": 112
       },
       "Carson Williams": {
         "SS": 32
@@ -12986,6 +13003,9 @@
       "Jarren Duran": {
         "OF": 169
       },
+      "Jasson Dominguez": {
+        "OF": 100
+      },
       "Javier Baez": {
         "2B": 10,
         "3B": 23,
@@ -13038,6 +13058,12 @@
       "Jose Altuve": {
         "2B": 66,
         "OF": 47
+      },
+      "Jose Caballero": {
+        "2B": 23,
+        "3B": 37,
+        "OF": 50,
+        "SS": 43
       },
       "Jose Ramirez": {
         "3B": 134
@@ -13099,6 +13125,12 @@
       },
       "Logan O'Hoppe": {
         "C": 99
+      },
+      "Luisangel Acuna": {
+        "2B": 81,
+        "3B": 6,
+        "OF": 2,
+        "SS": 7
       },
       "Luke Keaschall": {
         "2B": 41
@@ -13296,6 +13328,9 @@
       "Vladimir Guerrero Jr.": {
         "1B": 133
       },
+      "Wenceel Perez": {
+        "OF": 113
+      },
       "Willson Contreras": {
         "1B": 120
       },
@@ -13379,6 +13414,11 @@
         "OF": 6,
         "SS": 5
       },
+      "Angel Martinez": {
+        "2B": 1,
+        "3B": 3,
+        "OF": 43
+      },
       "Anthony Santander": {
         "1B": 1,
         "OF": 130
@@ -13451,6 +13491,9 @@
       },
       "Carlos Correa": {
         "SS": 84
+      },
+      "Carlos Narvaez": {
+        "C": 6
       },
       "Ceddanne Rafaela": {
         "2B": 10,
@@ -13619,6 +13662,9 @@
       "Jarren Duran": {
         "OF": 188
       },
+      "Jasson Dominguez": {
+        "OF": 17
+      },
       "Javier Baez": {
         "SS": 80
       },
@@ -13665,6 +13711,11 @@
       },
       "Jose Altuve": {
         "2B": 147
+      },
+      "Jose Caballero": {
+        "2B": 30,
+        "3B": 37,
+        "SS": 88
       },
       "Jose Ramirez": {
         "3B": 126
@@ -13719,6 +13770,10 @@
       },
       "Logan O'Hoppe": {
         "C": 127
+      },
+      "Luisangel Acuna": {
+        "2B": 1,
+        "SS": 12
       },
       "Luke Raley": {
         "1B": 41,
@@ -13890,6 +13945,9 @@
       "Vladimir Guerrero Jr.": {
         "1B": 121,
         "3B": 12
+      },
+      "Wenceel Perez": {
+        "OF": 116
       },
       "Willson Contreras": {
         "C": 51

@@ -22,6 +22,7 @@ Usage: python build_eligibility.py
 import csv
 import json
 import re
+import unicodedata
 from collections import defaultdict
 from pathlib import Path
 
@@ -46,16 +47,20 @@ LAHMAN_TEAM = {
 }
 
 # Manual overrides: CBS name → Lahman playerID
-# Add entries here for any name the fuzzy matcher can't resolve:
-#   - "Jr."/"Sr." suffixes (stripped by CBS but kept in Lahman)
-#   - Accented characters (ñ, é, etc.) that differ between CBS and Lahman
+# Add entries here only for cases the fuzzy matcher still can't resolve
+# (norm() now handles Jr./Sr./accents automatically).
 NAME_OVERRIDES: dict[str, str] = {
-    'Vladimir Guerrero Jr.': 'guerrvl02',  # Lahman omits "Jr."
-    'Jeremy Pena':           'penaje02',   # CBS drops tilde; Lahman: "Peña"
 }
 
 
+_SUFFIX_RE = re.compile(r'\b(jr|sr|ii|iii|iv)\b\.?', re.IGNORECASE)
+
 def norm(name: str) -> str:
+    # Decompose accented chars to base + diacritic, then drop diacritics (ñ→n, é→e, etc.)
+    name = unicodedata.normalize('NFKD', name)
+    name = name.encode('ascii', 'ignore').decode('ascii')
+    # Strip generational suffixes
+    name = _SUFFIX_RE.sub('', name)
     return re.sub(r'[^a-z0-9 ]', '', name.lower()).strip()
 
 
