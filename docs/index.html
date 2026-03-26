@@ -721,9 +721,12 @@ function renderList() {
                ${hasElig ? (() => {
                    const ep = eligData[p.name];
                    if (!ep) return '<td style="color:#c0ccd8">—</td>';
-                   const nonDH = ep.filter(x => x !== 'DH');
-                   const txt   = nonDH.length > 0 ? nonDH.join(', ') : 'DH-only';
-                   return `<td style="font-size:11px;color:#2a4a6a">${txt}</td>`;
+                   const nonDH  = ep.filter(x => x !== 'DH');
+                   const posStr = nonDH.length > 0 ? nonDH.join(', ') : 'DH-only';
+                   const g2025  = DATA.eligibility?.games_2025?.[p.name] || {};
+                   const totalG = Object.values(g2025).reduce((s, v) => s + v, 0);
+                   const gStr   = totalG > 0 ? ` <span style="color:#9ab0c8">(${totalG}g)</span>` : '';
+                   return `<td style="font-size:11px;color:#2a4a6a">${posStr}${gStr}</td>`;
                  })() : ''}
                ${projCells}
                <td>${injHtml}</td>

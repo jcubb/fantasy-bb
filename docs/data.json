@@ -12627,6 +12627,702 @@
         "DH"
       ]
     },
+    "games_2025": {
+      "Aaron Judge": {
+        "OF": 95
+      },
+      "Adam Frazier": {
+        "2B": 79,
+        "OF": 43,
+        "3B": 7
+      },
+      "Addison Barger": {
+        "3B": 91,
+        "OF": 57
+      },
+      "Adley Rutschman": {
+        "C": 73
+      },
+      "Alejandro Kirk": {
+        "C": 118
+      },
+      "Amed Rosario": {
+        "2B": 17,
+        "3B": 33,
+        "OF": 6,
+        "SS": 1
+      },
+      "Andres Gimenez": {
+        "2B": 87,
+        "SS": 15
+      },
+      "Andrew Benintendi": {
+        "OF": 69
+      },
+      "Andrew McCutchen": {
+        "OF": 7
+      },
+      "Andruw Monasterio": {
+        "1B": 15,
+        "2B": 10,
+        "3B": 8,
+        "OF": 2,
+        "SS": 37
+      },
+      "Andy Ibanez": {
+        "1B": 4,
+        "2B": 11,
+        "3B": 68,
+        "OF": 1,
+        "SS": 1
+      },
+      "Anthony Santander": {
+        "1B": 1,
+        "OF": 24
+      },
+      "Anthony Volpe": {
+        "SS": 153
+      },
+      "Austin Hays": {
+        "OF": 61
+      },
+      "Austin Hedges": {
+        "C": 67
+      },
+      "Austin Martin": {
+        "2B": 4,
+        "OF": 48
+      },
+      "Austin Wells": {
+        "C": 122
+      },
+      "Austin Wynns": {
+        "1B": 1,
+        "C": 35
+      },
+      "Ben Rice": {
+        "1B": 50,
+        "C": 36
+      },
+      "Ben Williamson": {
+        "3B": 85
+      },
+      "Blaze Alexander": {
+        "2B": 14,
+        "3B": 54,
+        "OF": 7
+      },
+      "Bo Naylor": {
+        "C": 119
+      },
+      "Bobby Witt": {
+        "SS": 154
+      },
+      "Brandon Nimmo": {
+        "OF": 155
+      },
+      "Brayan Rocchio": {
+        "2B": 50,
+        "SS": 72
+      },
+      "Brendan Donovan": {
+        "2B": 100,
+        "OF": 18,
+        "SS": 6
+      },
+      "Brent Rooker": {
+        "OF": 28
+      },
+      "Brice Matthews": {
+        "2B": 13,
+        "3B": 1
+      },
+      "Brooks Baldwin": {
+        "2B": 10,
+        "3B": 15,
+        "OF": 83,
+        "SS": 10
+      },
+      "Brooks Lee": {
+        "2B": 37,
+        "3B": 43,
+        "SS": 77
+      },
+      "Bryce Teodosio": {
+        "OF": 50
+      },
+      "Byron Buxton": {
+        "OF": 118
+      },
+      "Cal Raleigh": {
+        "C": 121
+      },
+      "Caleb Durbin": {
+        "2B": 10,
+        "3B": 131,
+        "SS": 3
+      },
+      "Cam Smith": {
+        "OF": 132
+      },
+      "Carlos Correa": {
+        "SS": 97,
+        "3B": 48
+      },
+      "Carlos Cortes": {
+        "3B": 1,
+        "OF": 29
+      },
+      "Carson Williams": {
+        "SS": 32
+      },
+      "Carter Jensen": {
+        "C": 10
+      },
+      "Ceddanne Rafaela": {
+        "2B": 24,
+        "OF": 141
+      },
+      "Cedric Mullins": {
+        "OF": 130
+      },
+      "Chandler Simpson": {
+        "OF": 112
+      },
+      "Chase Meidroth": {
+        "2B": 61,
+        "SS": 76
+      },
+      "Christian Moore": {
+        "2B": 53
+      },
+      "Christian Vazquez": {
+        "C": 64
+      },
+      "Christian Walker": {
+        "1B": 152
+      },
+      "Coby Mayo": {
+        "1B": 70,
+        "3B": 3
+      },
+      "Cody Bellinger": {
+        "1B": 7,
+        "OF": 178
+      },
+      "Cody Freeman": {
+        "2B": 24,
+        "3B": 6,
+        "OF": 9
+      },
+      "Colby Thomas": {
+        "OF": 48
+      },
+      "Cole Young": {
+        "2B": 73,
+        "SS": 1
+      },
+      "Colson Montgomery": {
+        "3B": 12,
+        "SS": 60
+      },
+      "Colt Keith": {
+        "1B": 18,
+        "2B": 26,
+        "3B": 37
+      },
+      "Colton Cowser": {
+        "OF": 93
+      },
+      "Connor Wong": {
+        "1B": 1,
+        "C": 61
+      },
+      "Corey Seager": {
+        "SS": 97
+      },
+      "Curtis Mead": {
+        "1B": 32,
+        "2B": 17,
+        "3B": 29
+      },
+      "Daniel Schneemann": {
+        "2B": 74,
+        "3B": 27,
+        "OF": 44,
+        "SS": 11
+      },
+      "Danny Jansen": {
+        "C": 93
+      },
+      "Darell Hernaiz": {
+        "2B": 14,
+        "3B": 20,
+        "SS": 23
+      },
+      "Daulton Varsho": {
+        "OF": 68
+      },
+      "Davis Schneider": {
+        "2B": 24,
+        "3B": 1,
+        "OF": 59
+      },
+      "Denzel Clarke": {
+        "OF": 47
+      },
+      "Derek Hill": {
+        "OF": 54
+      },
+      "Dillon Dingler": {
+        "C": 118
+      },
+      "Dominic Canzone": {
+        "OF": 70
+      },
+      "Dylan Beavers": {
+        "OF": 41
+      },
+      "Edgar Quero": {
+        "C": 72
+      },
+      "Eric Wagaman": {
+        "1B": 117,
+        "3B": 3,
+        "OF": 22
+      },
+      "Ernie Clement": {
+        "1B": 15,
+        "2B": 60,
+        "3B": 89,
+        "SS": 29
+      },
+      "Evan Carter": {
+        "OF": 60
+      },
+      "Ezequiel Duran": {
+        "1B": 25,
+        "2B": 17,
+        "3B": 11,
+        "OF": 11,
+        "SS": 30
+      },
+      "Gabriel Arias": {
+        "2B": 28,
+        "3B": 8,
+        "SS": 106
+      },
+      "Gavin Lux": {
+        "2B": 17,
+        "3B": 6,
+        "OF": 54
+      },
+      "George Springer": {
+        "OF": 67
+      },
+      "George Valera": {
+        "OF": 5
+      },
+      "Giancarlo Stanton": {
+        "OF": 20
+      },
+      "Gleyber Torres": {
+        "2B": 134
+      },
+      "Gunnar Henderson": {
+        "SS": 145
+      },
+      "Heston Kjerstad": {
+        "OF": 53
+      },
+      "Hunter Feduccia": {
+        "1B": 1,
+        "C": 34
+      },
+      "Isaac Collins": {
+        "2B": 1,
+        "3B": 2,
+        "OF": 116
+      },
+      "Isaac Paredes": {
+        "3B": 89
+      },
+      "Isiah Kiner-Falefa": {
+        "3B": 32,
+        "SS": 95,
+        "2B": 13
+      },
+      "Jac Caglianone": {
+        "1B": 10,
+        "OF": 52
+      },
+      "Jackson Holliday": {
+        "2B": 139,
+        "SS": 8
+      },
+      "Jacob Melton": {
+        "OF": 31
+      },
+      "Jacob Wilson": {
+        "SS": 124
+      },
+      "Jake Burger": {
+        "1B": 91
+      },
+      "Jake Fraley": {
+        "OF": 69
+      },
+      "Jake Meyers": {
+        "OF": 103
+      },
+      "Jake Rogers": {
+        "C": 41
+      },
+      "James Outman": {
+        "OF": 64
+      },
+      "Jarren Duran": {
+        "OF": 169
+      },
+      "Javier Baez": {
+        "2B": 10,
+        "3B": 23,
+        "OF": 53,
+        "SS": 62
+      },
+      "Jazz Chisholm": {
+        "2B": 100,
+        "3B": 29
+      },
+      "Jeff McNeil": {
+        "1B": 2,
+        "2B": 79,
+        "OF": 51
+      },
+      "Jesus Sanchez": {
+        "OF": 138
+      },
+      "Jo Adell": {
+        "OF": 158
+      },
+      "Joc Pederson": {
+        "1B": 4,
+        "OF": 1
+      },
+      "Joey Loperfido": {
+        "OF": 41
+      },
+      "Jonathan Aranda": {
+        "1B": 93
+      },
+      "Jonathan India": {
+        "2B": 76,
+        "3B": 20,
+        "OF": 21
+      },
+      "Jonny DeLuca": {
+        "OF": 19
+      },
+      "Jordan Westburg": {
+        "2B": 17,
+        "3B": 52
+      },
+      "Jorge Soler": {
+        "OF": 40
+      },
+      "Jose Altuve": {
+        "2B": 66,
+        "OF": 47
+      },
+      "Jose Ramirez": {
+        "3B": 134
+      },
+      "Josh Bell": {
+        "1B": 33
+      },
+      "Josh Jung": {
+        "3B": 126
+      },
+      "Josh Naylor": {
+        "1B": 129
+      },
+      "Julio Rodriguez": {
+        "OF": 159
+      },
+      "Junior Caminero": {
+        "1B": 1,
+        "3B": 148
+      },
+      "Kerry Carpenter": {
+        "OF": 79
+      },
+      "Kody Clemens": {
+        "2B": 51,
+        "OF": 23,
+        "1B": 58
+      },
+      "Kristian Campbell": {
+        "2B": 59,
+        "OF": 9
+      },
+      "Kyle Higashioka": {
+        "C": 71
+      },
+      "Kyle Isbel": {
+        "OF": 135
+      },
+      "Kyle Manzardo": {
+        "1B": 56
+      },
+      "Kyle Teel": {
+        "C": 61,
+        "OF": 1
+      },
+      "Lane Thomas": {
+        "OF": 40
+      },
+      "Lawrence Butler": {
+        "OF": 151
+      },
+      "Lenyn Sosa": {
+        "1B": 42,
+        "2B": 99,
+        "3B": 3
+      },
+      "Leody Taveras": {
+        "OF": 57
+      },
+      "Logan O'Hoppe": {
+        "C": 99
+      },
+      "Luke Keaschall": {
+        "2B": 41
+      },
+      "Luke Raley": {
+        "1B": 31,
+        "OF": 44
+      },
+      "Maikel Garcia": {
+        "2B": 11,
+        "3B": 136,
+        "OF": 7,
+        "SS": 17
+      },
+      "Marcelo Mayer": {
+        "2B": 8,
+        "3B": 39,
+        "SS": 2
+      },
+      "Masataka Yoshida": {
+        "OF": 6
+      },
+      "Matt Vierling": {
+        "3B": 3,
+        "OF": 29
+      },
+      "Matt Wallner": {
+        "OF": 85
+      },
+      "Max Muncy": {
+        "2B": 23,
+        "3B": 32,
+        "SS": 7
+      },
+      "Michael Massey": {
+        "2B": 60,
+        "OF": 14
+      },
+      "Miguel Vargas": {
+        "1B": 63,
+        "3B": 79,
+        "OF": 1
+      },
+      "Mike Trout": {
+        "OF": 22
+      },
+      "Mitch Garver": {
+        "C": 43
+      },
+      "Myles Straw": {
+        "2B": 1,
+        "OF": 142
+      },
+      "Nathan Lukes": {
+        "OF": 159
+      },
+      "Nick Fortes": {
+        "C": 91
+      },
+      "Nick Kurtz": {
+        "1B": 112
+      },
+      "Nick Loftin": {
+        "1B": 5,
+        "2B": 16,
+        "3B": 14,
+        "OF": 38
+      },
+      "Nolan Schanuel": {
+        "1B": 131
+      },
+      "Oswald Peraza": {
+        "2B": 17,
+        "3B": 64,
+        "SS": 13,
+        "1B": 17
+      },
+      "Parker Meadows": {
+        "OF": 57
+      },
+      "Paul Goldschmidt": {
+        "1B": 139,
+        "OF": 1
+      },
+      "Pete Alonso": {
+        "1B": 160
+      },
+      "Randy Arozarena": {
+        "OF": 158
+      },
+      "Rhys Hoskins": {
+        "1B": 82
+      },
+      "Riley Greene": {
+        "OF": 141
+      },
+      "Rob Refsnyder": {
+        "OF": 45
+      },
+      "Roman Anthony": {
+        "OF": 55
+      },
+      "Romy Gonzalez": {
+        "1B": 58,
+        "2B": 42,
+        "3B": 2
+      },
+      "Royce Lewis": {
+        "3B": 99
+      },
+      "Ryan Bliss": {
+        "2B": 11
+      },
+      "Ryan Jeffers": {
+        "C": 88
+      },
+      "Ryan McMahon": {
+        "3B": 154
+      },
+      "Ryan Mountcastle": {
+        "1B": 56
+      },
+      "Salvador Perez": {
+        "1B": 30,
+        "C": 92
+      },
+      "Samuel Basallo": {
+        "1B": 2,
+        "C": 22
+      },
+      "Shea Langeliers": {
+        "C": 108
+      },
+      "Spencer Torkelson": {
+        "1B": 145
+      },
+      "Starling Marte": {
+        "OF": 12
+      },
+      "Steven Kwan": {
+        "OF": 153
+      },
+      "Taylor Walls": {
+        "2B": 5,
+        "3B": 1,
+        "SS": 94
+      },
+      "Taylor Ward": {
+        "OF": 153
+      },
+      "Thairo Estrada": {
+        "2B": 39
+      },
+      "Travis d'Arnaud": {
+        "C": 58
+      },
+      "Trent Grisham": {
+        "OF": 140
+      },
+      "Trevor Larnach": {
+        "OF": 63
+      },
+      "Trevor Story": {
+        "SS": 156
+      },
+      "Tristan Gray": {
+        "1B": 5,
+        "2B": 12,
+        "3B": 5,
+        "SS": 9
+      },
+      "Triston Casas": {
+        "1B": 28
+      },
+      "Tyler Heineman": {
+        "C": 61
+      },
+      "Tyler O'Neill": {
+        "OF": 39
+      },
+      "Tyler Soderstrom": {
+        "1B": 49,
+        "OF": 108
+      },
+      "Victor Caratini": {
+        "1B": 15,
+        "C": 49
+      },
+      "Victor Robles": {
+        "OF": 32
+      },
+      "Vinnie Pasquantino": {
+        "1B": 126
+      },
+      "Willson Contreras": {
+        "1B": 120
+      },
+      "Wilyer Abreu": {
+        "OF": 104
+      },
+      "Wyatt Langford": {
+        "OF": 149
+      },
+      "Yainer Diaz": {
+        "C": 113
+      },
+      "Yandy Diaz": {
+        "1B": 37
+      },
+      "Yoan Moncada": {
+        "3B": 76
+      },
+      "Yordan Alvarez": {
+        "OF": 15
+      },
+      "Zach Cole": {
+        "OF": 17
+      },
+      "Zach McKinstry": {
+        "1B": 1,
+        "2B": 6,
+        "3B": 85,
+        "OF": 45,
+        "SS": 40
+      },
+      "Zack Gelof": {
+        "2B": 30
+      }
+    },
     "games_2024": {
       "Aaron Judge": {
         "OF": 118

@@ -181,7 +181,8 @@ def main():
 
     # ── Match & compute eligibility ────────────────────────────────────────
     print('\nMatching names and computing eligibility...')
-    positions_2025: dict[str, list[str]] = {}
+    positions_2025:  dict[str, list[str]]       = {}
+    games_2025_named: dict[str, dict[str, int]] = {}
     games_2024_named: dict[str, dict[str, int]] = {}
 
     unmatched: list[str] = []
@@ -215,6 +216,10 @@ def main():
 
         elig.append('DH')   # everyone gets DH; if elig was empty → DH only
         positions_2025[name] = elig
+
+        # 2025 raw game counts (used to display total games played)
+        if g2025:
+            games_2025_named[name] = {p: int(g) for p, g in g2025.items()}
 
         # 2024 raw game counts (stored for future use)
         g2024 = games_2024.get(pid, {})
@@ -255,6 +260,7 @@ def main():
     # ── Save ───────────────────────────────────────────────────────────────
     existing['eligibility'] = {
         'positions_2025': positions_2025,
+        'games_2025':     games_2025_named,
         'games_2024':     games_2024_named,
     }
     OUT_FILE.write_text(json.dumps(existing, indent=2), encoding='utf-8')
