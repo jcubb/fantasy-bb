@@ -11444,6 +11444,7 @@
         "DH"
       ],
       "C.J. Kayfus": [
+        "OF",
         "DH"
       ],
       "Cade Povich": [
@@ -11817,6 +11818,8 @@
         "DH"
       ],
       "Isiah Kiner Falefa": [
+        "3B",
+        "SS",
         "DH"
       ],
       "Isiah Kiner-Falefa": [
@@ -11825,9 +11828,11 @@
         "DH"
       ],
       "J.C. Escarra": [
+        "C",
         "DH"
       ],
       "J.P. Crawford": [
+        "SS",
         "DH"
       ],
       "Jac Caglianone": [
@@ -12011,6 +12016,9 @@
         "DH"
       ],
       "Josh H. Smith": [
+        "1B",
+        "3B",
+        "SS",
         "DH"
       ],
       "Josh Hader": [
@@ -12771,6 +12779,10 @@
       "Byron Buxton": {
         "OF": 118
       },
+      "C.J. Kayfus": {
+        "1B": 17,
+        "OF": 29
+      },
       "Cal Raleigh": {
         "C": 121
       },
@@ -12967,10 +12979,23 @@
       "Isaac Paredes": {
         "3B": 89
       },
+      "Isiah Kiner Falefa": {
+        "3B": 32,
+        "SS": 95,
+        "2B": 13
+      },
       "Isiah Kiner-Falefa": {
         "3B": 32,
         "SS": 95,
         "2B": 13
+      },
+      "J.C. Escarra": {
+        "1B": 6,
+        "3B": 2,
+        "C": 30
+      },
+      "J.P. Crawford": {
+        "SS": 157
       },
       "Jac Caglianone": {
         "1B": 10,
@@ -13071,6 +13096,13 @@
       },
       "Josh Bell": {
         "1B": 33
+      },
+      "Josh H. Smith": {
+        "1B": 27,
+        "2B": 4,
+        "3B": 32,
+        "OF": 17,
+        "SS": 60
       },
       "Josh Jung": {
         "3B": 126
@@ -13634,11 +13666,20 @@
         "1B": 17,
         "3B": 128
       },
+      "Isiah Kiner Falefa": {
+        "2B": 56,
+        "3B": 48,
+        "OF": 1,
+        "SS": 43
+      },
       "Isiah Kiner-Falefa": {
         "2B": 56,
         "3B": 48,
         "OF": 1,
         "SS": 43
+      },
+      "J.P. Crawford": {
+        "SS": 104
       },
       "Jackson Holliday": {
         "2B": 56,
@@ -13726,6 +13767,12 @@
       },
       "Josh Bell": {
         "1B": 98
+      },
+      "Josh H. Smith": {
+        "2B": 1,
+        "3B": 83,
+        "OF": 5,
+        "SS": 49
       },
       "Josh Jung": {
         "3B": 40

@@ -52,19 +52,23 @@ LAHMAN_TEAM = {
 #   - Hyphenated names CBS drops the hyphen from
 #   - Middle initials present in one source but not the other
 NAME_OVERRIDES: dict[str, str] = {
-    'Joshua Lowe':          'lowejo01',  # Lahman: "Josh Lowe"
+    'Joshua Lowe':  'lowejo01',  # Lahman: "Josh Lowe"
+    'Jt Ginn':      'ginnjt01',  # Lahman: "J. T. Ginn"
+    'Josh H. Smith': 'smithjo09', # Lahman: "Josh Smith" (TEX infielder; middle initial needed)
 }
 
 
 _SUFFIX_RE = re.compile(r'\b(jr|sr|ii|iii|iv)\b\.?', re.IGNORECASE)
 
 def norm(name: str) -> str:
-    # Decompose accented chars to base + diacritic, then drop diacritics (ñ→n, é→e, etc.)
+    # Decompose accented chars to base + diacritic, then drop diacritics (n~->n, e'->e, etc.)
     name = unicodedata.normalize('NFKD', name)
     name = name.encode('ascii', 'ignore').decode('ascii')
     # Strip generational suffixes
     name = _SUFFIX_RE.sub('', name)
-    return re.sub(r'[^a-z0-9 ]', '', name.lower()).strip()
+    # Replace all non-alphanumeric chars with spaces (handles C.J., J.P., Kiner-Falefa, etc.)
+    name = re.sub(r'[^a-z0-9]', ' ', name.lower())
+    return re.sub(r'\s+', ' ', name).strip()
 
 
 def sort_positions(positions: list[str]) -> list[str]:
