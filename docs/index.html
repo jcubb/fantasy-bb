@@ -792,7 +792,10 @@ function showTip(e, name, injury) {
   const eligEl  = document.getElementById('tt-elig');
   const eligPos = (DATA?.eligibility?.positions_2025 || {})[name];
   if (eligPos) {
-    eligEl.textContent = 'Eligible: ' + eligPos.join(', ');
+    const nonDH = eligPos.filter(p => p !== 'DH');
+    eligEl.textContent = nonDH.length > 0
+      ? 'Eligible: ' + nonDH.join(', ')
+      : 'DH-only';
     eligEl.style.display = '';
   } else {
     eligEl.style.display = 'none';
