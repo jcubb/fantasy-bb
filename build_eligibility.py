@@ -45,6 +45,15 @@ LAHMAN_TEAM = {
     'OAK': 'OAK', 'ATH': 'OAK', 'SEA': 'SEA', 'TEX': 'TEX',
 }
 
+# Manual overrides: CBS name → Lahman playerID
+# Add entries here for any name the fuzzy matcher can't resolve:
+#   - "Jr."/"Sr." suffixes (stripped by CBS but kept in Lahman)
+#   - Accented characters (ñ, é, etc.) that differ between CBS and Lahman
+NAME_OVERRIDES: dict[str, str] = {
+    'Vladimir Guerrero Jr.': 'guerrvl02',  # Lahman omits "Jr."
+    'Jeremy Pena':           'penaje02',   # CBS drops tilde; Lahman: "Peña"
+}
+
 
 def norm(name: str) -> str:
     return re.sub(r'[^a-z0-9 ]', '', name.lower()).strip()
@@ -127,6 +136,8 @@ def build_norm_index(id_to_name: dict, relevant_ids: set) -> dict[str, list[tupl
 def resolve(cbs_name: str, norm_index: dict, cbs_team: str,
             teams_2025: dict) -> str | None:
     """Return best-matching Lahman playerID for a CBS player name."""
+    if cbs_name in NAME_OVERRIDES:
+        return NAME_OVERRIDES[cbs_name]
     candidates = norm_index.get(norm(cbs_name), [])
     if not candidates:
         return None

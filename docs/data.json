@@ -11917,6 +11917,7 @@
         "DH"
       ],
       "Jeremy Pena": [
+        "SS",
         "DH"
       ],
       "Jesus Sanchez": [
@@ -12557,6 +12558,7 @@
         "DH"
       ],
       "Vladimir Guerrero Jr.": [
+        "1B",
         "DH"
       ],
       "Walker Jenkins": [
@@ -12999,6 +13001,9 @@
         "2B": 79,
         "OF": 51
       },
+      "Jeremy Pena": {
+        "SS": 124
+      },
       "Jesus Sanchez": {
         "OF": 138
       },
@@ -13287,6 +13292,9 @@
       },
       "Vinnie Pasquantino": {
         "1B": 126
+      },
+      "Vladimir Guerrero Jr.": {
+        "1B": 133
       },
       "Willson Contreras": {
         "1B": 120
@@ -13623,6 +13631,9 @@
         "2B": 110,
         "OF": 32
       },
+      "Jeremy Pena": {
+        "SS": 157
+      },
       "Jesus Sanchez": {
         "OF": 125
       },
@@ -13875,6 +13886,10 @@
       },
       "Vinnie Pasquantino": {
         "1B": 103
+      },
+      "Vladimir Guerrero Jr.": {
+        "1B": 121,
+        "3B": 12
       },
       "Willson Contreras": {
         "C": 51
