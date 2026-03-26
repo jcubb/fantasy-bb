@@ -805,10 +805,11 @@ function showTip(e, name, injury) {
   const eligEl  = document.getElementById('tt-elig');
   const eligPos = (DATA?.eligibility?.positions_2025 || {})[name];
   if (eligPos) {
-    const nonDH = eligPos.filter(p => p !== 'DH');
-    eligEl.textContent = nonDH.length > 0
-      ? 'Eligible: ' + nonDH.join(', ')
-      : 'DH-only';
+    const nonDH  = eligPos.filter(p => p !== 'DH');
+    const g2025  = DATA?.eligibility?.games_2025?.[name] || {};
+    const totalG = Object.values(g2025).reduce((s, v) => s + v, 0);
+    const gStr   = totalG > 0 ? ` (${totalG}g)` : '';
+    eligEl.textContent = (nonDH.length > 0 ? 'Eligible: ' + nonDH.join(', ') : 'DH-only') + gStr;
     eligEl.style.display = '';
   } else {
     eligEl.style.display = 'none';
