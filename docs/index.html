@@ -12,6 +12,7 @@ body {
   font-size: 13px;
   background: #f0f4f8;
   color: #1a2035;
+  margin-right: 220px;
 }
 
 /* ── Header ────────────────────────────────────────────────────────────── */
@@ -280,6 +281,117 @@ body {
 .tt-proj  { color: #a8d0f0; font-size: 11px; margin-top: 4px;
              border-top: 1px solid rgba(255,255,255,.12); padding-top: 4px;
              font-variant-numeric: tabular-nums; }
+
+/* ── Roster panel ─────────────────────────────────────────────────────────── */
+#roster-panel {
+  position: fixed; right: 0; top: 0; bottom: 0; width: 220px;
+  background: #1a2e45; color: #cfe0f8;
+  overflow-y: auto; z-index: 50;
+  box-shadow: -2px 0 8px rgba(0,0,0,.3);
+  display: flex; flex-direction: column;
+}
+#roster-panel-header {
+  background: #111f30; padding: 8px 10px;
+  font-size: 12px; font-weight: 700; letter-spacing: .4px;
+  border-bottom: 1px solid #2a4060;
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between;
+}
+#roster-count { font-size: 11px; font-weight: 400; opacity: .65; }
+.roster-sec {
+  font-size: 10px; font-weight: 700; letter-spacing: .6px;
+  color: #5a88b0; padding: 6px 10px 2px; text-transform: uppercase;
+}
+.roster-slot {
+  display: flex; align-items: center; gap: 5px;
+  padding: 2px 10px; min-height: 22px;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.slot-label {
+  font-size: 10px; font-weight: 700; color: #5a88b0;
+  width: 28px; flex-shrink: 0; text-transform: uppercase;
+}
+.slot-player {
+  font-size: 11px; color: #cfe0f8; cursor: pointer; flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.slot-player:hover { color: #7dd3fc; text-decoration: underline; }
+.slot-empty { font-size: 11px; color: #2a4060; font-style: italic; }
+.slot-unassigned .slot-player { color: #f0d060; }
+#roster-clear-btn {
+  display: block; width: calc(100% - 20px); margin: 8px 10px;
+  padding: 5px; font-size: 11px; background: #c0392b; color: white;
+  border: none; border-radius: 4px; cursor: pointer;
+}
+#roster-clear-btn:hover { background: #a93226; }
+
+/* ── Search overlay ───────────────────────────────────────────────────────── */
+#search-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  z-index: 400; display: flex; align-items: flex-start;
+  justify-content: center; padding-top: 100px;
+}
+#search-float-box {
+  background: white; border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  width: 340px; overflow: hidden;
+}
+#search-float-input {
+  width: 100%; padding: 12px 16px; font-size: 15px;
+  border: none; outline: none; border-bottom: 1px solid #e0e8f0;
+}
+#search-float-results { max-height: 280px; overflow-y: auto; }
+.search-result {
+  padding: 7px 14px; cursor: pointer;
+  border-bottom: 1px solid #f0f4f8;
+  display: flex; gap: 8px; align-items: center;
+}
+.search-result:hover, .search-result.sr-hl { background: #eaf4ff; }
+.sr-name { font-size: 13px; font-weight: 600; color: #1a2035; flex: 1; }
+.sr-meta { font-size: 11px; color: #7a8ca0; }
+.sr-tag {
+  font-size: 10px; padding: 1px 5px; border-radius: 3px;
+  background: #e8f8ee; color: #27ae60;
+}
+.sr-tag.rostered { background: #fff0e0; color: #c06010; }
+
+/* ── Assign modal ─────────────────────────────────────────────────────────── */
+#assign-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55);
+  z-index: 500; display: flex; align-items: center; justify-content: center;
+}
+#assign-box {
+  background: white; border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  width: 380px; padding: 18px 20px;
+}
+#assign-title { font-size: 15px; font-weight: 700; color: #1a2035; margin-bottom: 3px; }
+#assign-elig  { font-size: 11px; color: #4a7aaa; margin-bottom: 12px; }
+#assign-sec   { font-size: 10px; font-weight: 700; color: #7a8ca0; letter-spacing: .5px; margin: 8px 0 4px; text-transform: uppercase; }
+#assign-slots { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+.aslot-btn {
+  min-width: 44px; padding: 4px 6px; font-size: 11px; font-weight: 700;
+  border-radius: 5px; cursor: pointer; border: 2px solid transparent;
+  text-align: center; line-height: 1.3;
+}
+.aslot-btn small { display: block; font-weight: 400; font-size: 9px; color: inherit; opacity: .8; }
+.aslot-btn.ae  { background: #e8f4ff; border-color: #4a90d9; color: #1e3a5f; }
+.aslot-btn.ae:hover { background: #c8e4ff; }
+.aslot-btn.af  { background: #fff0e0; border-color: #e08030; color: #7a3000; }
+.aslot-btn.af:hover { background: #ffe0c0; }
+.aslot-btn.ai  { background: #f4f4f4; border-color: #d8d8d8; color: #aaa; }
+.aslot-btn.ac  { background: #1e3a5f; border-color: #1e3a5f; color: white; }
+.aslot-btn.au  { background: #f8f8e0; border-color: #c8c840; color: #606000; }
+.aslot-btn.au:hover { background: #f0f0c0; }
+#assign-legend { font-size: 10px; color: #9ab0c8; margin-bottom: 10px; }
+#assign-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.assign-act-btn {
+  padding: 6px 14px; border-radius: 5px; font-size: 12px; cursor: pointer;
+}
+#assign-cancel-btn { border: 1px solid #c0ccd8; background: white; color: #555; }
+#assign-cancel-btn:hover { background: #f0f4f8; }
+#assign-remove-btn { border: none; background: #c0392b; color: white; }
+#assign-remove-btn:hover { background: #a93226; }
 </style>
 </head>
 <body>
@@ -355,6 +467,39 @@ body {
   </table>
 </div>
 
+<!-- Roster Panel -->
+<div id="roster-panel">
+  <div id="roster-panel-header">
+    My Roster <span id="roster-count">0/23</span>
+  </div>
+  <div id="roster-body"></div>
+  <button id="roster-clear-btn" onclick="clearRoster()">Clear roster</button>
+</div>
+
+<!-- Search Overlay (press /) -->
+<div id="search-overlay" style="display:none" onclick="searchOverlayClick(event)">
+  <div id="search-float-box">
+    <input id="search-float-input" placeholder="Search player name..." autocomplete="off"
+           oninput="doFloatSearch()" onkeydown="handleSearchKey(event)">
+    <div id="search-float-results"></div>
+  </div>
+</div>
+
+<!-- Assign/Roster Modal -->
+<div id="assign-overlay" style="display:none" onclick="assignOverlayClick(event)">
+  <div id="assign-box">
+    <div id="assign-title"></div>
+    <div id="assign-elig"></div>
+    <div id="assign-slots"></div>
+    <div id="assign-legend"></div>
+    <div id="assign-actions">
+      <button id="assign-remove-btn" class="assign-act-btn" style="display:none"
+              onclick="doRemoveFromRoster()">Remove from roster</button>
+      <button id="assign-cancel-btn" class="assign-act-btn" onclick="closeAssign()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- Tooltip -->
 <div id="tooltip">
   <div class="tt-name" id="tt-name"></div>
@@ -383,10 +528,41 @@ const INJ_RE       = /\b(il|injured|injury|out|dtd|day-to-day|questionable|shoul
 function isRealInjury(note) { return note && INJ_RE.test(note); }
 const AL_ORDER     = ['BAL','BOS','NYY','TB','TOR','CWS','CLE','DET','KC','MIN','HOU','LAA','OAK','SEA','TEX'];
 
+// ── Roster slot definitions ─────────────────────────────────────────────────
+const ROSTER_SLOTS = [
+  // Batters
+  {id:'C1',   label:'C',    type:'b', elig:['C']},
+  {id:'C2',   label:'C',    type:'b', elig:['C']},
+  {id:'1B',   label:'1B',   type:'b', elig:['1B']},
+  {id:'2B',   label:'2B',   type:'b', elig:['2B']},
+  {id:'3B',   label:'3B',   type:'b', elig:['3B']},
+  {id:'SS',   label:'SS',   type:'b', elig:['SS']},
+  {id:'OF1',  label:'OF',   type:'b', elig:['OF']},
+  {id:'OF2',  label:'OF',   type:'b', elig:['OF']},
+  {id:'OF3',  label:'OF',   type:'b', elig:['OF']},
+  {id:'OF4',  label:'OF',   type:'b', elig:['OF']},
+  {id:'OF5',  label:'OF',   type:'b', elig:['OF']},
+  {id:'MI',   label:'MI',   type:'b', elig:['2B','SS']},
+  {id:'CI',   label:'CI',   type:'b', elig:['1B','3B']},
+  {id:'Util', label:'Util', type:'b', elig:['C','1B','2B','3B','SS','OF','DH']},
+  // Pitchers
+  {id:'SP1',  label:'SP',   type:'p', elig:['SP']},
+  {id:'SP2',  label:'SP',   type:'p', elig:['SP']},
+  {id:'SP3',  label:'SP',   type:'p', elig:['SP']},
+  {id:'SP4',  label:'SP',   type:'p', elig:['SP']},
+  {id:'SP5',  label:'SP',   type:'p', elig:['SP']},
+  {id:'CL1',  label:'CL',   type:'p', elig:['CL']},
+  {id:'CL2',  label:'CL',   type:'p', elig:['CL']},
+  {id:'SU1',  label:'SU',   type:'p', elig:['RP','CL']},
+  {id:'SU2',  label:'SU',   type:'p', elig:['RP','CL']},
+];
+
 // ── State ──────────────────────────────────────────────────────────────────
 let DATA        = null;
 let drafted     = new Set(JSON.parse(localStorage.getItem('ff_drafted') || '[]'));
 let currentTab  = 'batters';
+let roster      = JSON.parse(localStorage.getItem('ff_roster') || 'null')
+                  || { slots: {}, unassigned: [] };
 
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
@@ -398,6 +574,7 @@ async function init() {
     document.getElementById('meta').textContent =
       'Scraped: ' + d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
     render();
+    renderRoster();
   } catch (e) {
     document.getElementById('grid-body').innerHTML =
       `<tr><td colspan="20" style="padding:20px;color:#c0392b">
@@ -414,11 +591,28 @@ function toggleDrafted(name) {
   render();
 }
 
+// Called by checkboxes — checking opens the assign modal; unchecking also removes from roster
+function handleCheck(cb, name) {
+  if (cb.checked) {
+    drafted.add(name);
+    localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
+    if (!isOnRoster(name)) { rosterAdd(name, '__unassigned', true); saveRoster(); }
+    openAssign(name);
+  } else {
+    drafted.delete(name);
+    localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
+    rosterRemove(name);
+    render(); renderRoster();
+  }
+}
+
 function resetDraft() {
-  if (!confirm('Clear all drafted players?')) return;
+  if (!confirm('Clear all drafted players and roster?')) return;
   drafted.clear();
   localStorage.removeItem('ff_drafted');
-  render();
+  roster = { slots: {}, unassigned: [] };
+  localStorage.removeItem('ff_roster');
+  render(); renderRoster();
 }
 
 // ── Rendering ──────────────────────────────────────────────────────────────
@@ -538,7 +732,7 @@ function renderInjuries() {
                <td>
                  <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
                    <input type="checkbox" ${isDrafted?'checked':''}
-                          onchange="toggleDrafted('${esc(p.name)}')">
+                          onchange="handleCheck(this,'${esc(p.name)}')">
                    <span class="r-name">${esc(p.name)}</span>
                  </label>
                </td>
@@ -588,7 +782,7 @@ function renderGrid() {
           html += `<div class="player-entry starter${dftCls}"
                         data-name="${esc(p.name)}" data-injury="${esc(p.injury||'')}">
                      <input type="checkbox" ${isDrafted?'checked':''}
-                            onclick="toggleDrafted('${esc(p.name)}')">
+                            onchange="handleCheck(this,'${esc(p.name)}')">
                      <span class="p-name" onmouseenter="showTip(event,'${esc(p.name)}','${esc(p.injury||'')}')"
                            onmouseleave="hideTip()">${esc(p.name)}</span>
                      ${injHtml}
@@ -712,7 +906,7 @@ function renderList() {
                <td>
                  <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
                    <input type="checkbox" ${isDrafted?'checked':''}
-                          onchange="toggleDrafted('${esc(p.name)}')">
+                          onchange="handleCheck(this,'${esc(p.name)}')">
                    <span class="r-name">${esc(p.name)}</span>
                  </label>
                </td>
@@ -846,6 +1040,278 @@ function hideTip() { document.getElementById('tooltip').style.display = 'none'; 
 
 document.addEventListener('mousemove', e => {
   if (document.getElementById('tooltip').style.display !== 'none') positionTip(e);
+});
+
+// ── Roster management ──────────────────────────────────────────────────────
+function saveRoster() { localStorage.setItem('ff_roster', JSON.stringify(roster)); }
+
+function getRosteredSlot(name) {
+  for (const [id, n] of Object.entries(roster.slots)) if (n === name) return id;
+  if (roster.unassigned.includes(name)) return '__unassigned';
+  return null;
+}
+function isOnRoster(name) { return getRosteredSlot(name) !== null; }
+
+function rosterAdd(name, slotId, skipSave) {
+  // Remove from wherever they currently are
+  for (const [id, n] of Object.entries(roster.slots)) if (n === name) delete roster.slots[id];
+  roster.unassigned = roster.unassigned.filter(n => n !== name);
+
+  if (slotId === '__unassigned') {
+    roster.unassigned.push(name);
+  } else {
+    const existing = roster.slots[slotId];
+    if (existing && existing !== name) roster.unassigned.push(existing); // bump displaced player
+    roster.slots[slotId] = name;
+  }
+  if (!skipSave) saveRoster();
+}
+
+function rosterRemove(name) {
+  for (const [id, n] of Object.entries(roster.slots)) if (n === name) { delete roster.slots[id]; break; }
+  roster.unassigned = roster.unassigned.filter(n => n !== name);
+  saveRoster();
+}
+
+function clearRoster() {
+  if (!confirm('Clear roster assignments? (Drafted marks stay.)')) return;
+  roster = { slots: {}, unassigned: [] };
+  saveRoster();
+  renderRoster();
+}
+
+// ── Roster panel render ─────────────────────────────────────────────────────
+function renderRoster() {
+  const total = Object.keys(roster.slots).length + roster.unassigned.length;
+  document.getElementById('roster-count').textContent = `${total}/23`;
+
+  let html = '<div class="roster-sec">Batters</div>';
+  ROSTER_SLOTS.filter(s => s.type === 'b').forEach(slot => {
+    const p = roster.slots[slot.id];
+    html += `<div class="roster-slot">
+      <span class="slot-label">${slot.label}</span>
+      ${p ? `<span class="slot-player" onclick="openAssign('${esc(p)}')" title="${esc(p)}">${esc(p)}</span>`
+          : '<span class="slot-empty">—</span>'}
+    </div>`;
+  });
+
+  html += '<div class="roster-sec" style="margin-top:4px">Pitchers</div>';
+  ROSTER_SLOTS.filter(s => s.type === 'p').forEach(slot => {
+    const p = roster.slots[slot.id];
+    html += `<div class="roster-slot">
+      <span class="slot-label">${slot.label}</span>
+      ${p ? `<span class="slot-player" onclick="openAssign('${esc(p)}')" title="${esc(p)}">${esc(p)}</span>`
+          : '<span class="slot-empty">—</span>'}
+    </div>`;
+  });
+
+  if (roster.unassigned.length) {
+    html += '<div class="roster-sec" style="margin-top:4px;color:#b0a020">Unassigned</div>';
+    roster.unassigned.forEach(name => {
+      html += `<div class="roster-slot slot-unassigned">
+        <span class="slot-player" onclick="openAssign('${esc(name)}')" title="${esc(name)}">${esc(name)}</span>
+      </div>`;
+    });
+  }
+
+  document.getElementById('roster-body').innerHTML = html;
+}
+
+// ── Assign modal ────────────────────────────────────────────────────────────
+let assignTarget = null;
+
+function playerEligSlots(name) {
+  // Returns array of position strings that match roster slot eligibility
+  const rankings = DATA?.rankings || {};
+  const cbsPos   = (rankings[name]?.pos || '').toUpperCase();
+  const isPitch  = ['SP','CL','RP','P'].includes(cbsPos);
+  if (isPitch) {
+    if (cbsPos === 'SP')  return ['SP'];
+    if (cbsPos === 'CL')  return ['CL', 'RP'];
+    return ['RP', 'CL'];
+  }
+  // Batter: use eligibility data
+  const eligPos = (DATA?.eligibility?.positions_2025 || {})[name] || [];
+  const nonDH   = eligPos.filter(p => p !== 'DH');
+  if (nonDH.length === 0 && eligPos.includes('DH')) return ['DH'];
+  return nonDH.length ? nonDH : [];
+}
+
+function openAssign(name) {
+  assignTarget = { name, prevSlot: getRosteredSlot(name) };
+  const elig   = playerEligSlots(name);
+  const isPitch = ['SP','CL','RP','P'].includes((DATA?.rankings?.[name]?.pos||'').toUpperCase());
+
+  document.getElementById('assign-title').textContent = name;
+  document.getElementById('assign-elig').textContent  =
+    elig.length ? 'Eligible: ' + elig.join(', ') : '';
+  document.getElementById('assign-remove-btn').style.display =
+    assignTarget.prevSlot ? '' : 'none';
+
+  // Build slot buttons — batters first, pitchers second
+  let html = '';
+  ['b','p'].forEach(type => {
+    const slots = ROSTER_SLOTS.filter(s => s.type === type);
+    if (!slots.length) return;
+    html += `<div style="font-size:10px;font-weight:700;color:#9ab0c8;letter-spacing:.5px;
+                         text-transform:uppercase;width:100%;margin-top:${type==='p'?'8px':'0'}">
+               ${type==='b' ? 'Batter Slots' : 'Pitcher Slots'}
+             </div>`;
+    slots.forEach(slot => {
+      const isCurrent  = slot.id === assignTarget.prevSlot;
+      const filled     = roster.slots[slot.id];
+      const isElig     = slot.elig.some(e => elig.includes(e)) ||
+                         (elig.includes('DH') && slot.id === 'Util');
+      const lastName   = filled ? filled.split(' ').pop() : '';
+      let cls = 'aslot-btn ';
+      if (isCurrent)           cls += 'ac';
+      else if (isElig && !filled) cls += 'ae';
+      else if (isElig && filled)  cls += 'af';
+      else                     cls += 'ai';
+      html += `<button class="${cls}" onclick="confirmAssign('${esc(slot.id)}')"
+                       title="${slot.label}${filled ? ' — ' + filled : ''}">
+                 ${slot.label}${lastName ? `<small>${esc(lastName)}</small>` : ''}
+               </button>`;
+    });
+  });
+
+  // Unassigned button
+  const isUnassigned = assignTarget.prevSlot === '__unassigned';
+  html += `<div style="font-size:10px;font-weight:700;color:#9ab0c8;letter-spacing:.5px;
+                       text-transform:uppercase;width:100%;margin-top:8px">Other</div>
+           <button class="aslot-btn ${isUnassigned ? 'ac' : 'au'}"
+                   onclick="confirmAssign('__unassigned')">?<small>TBD</small></button>`;
+
+  document.getElementById('assign-slots').innerHTML = html;
+  document.getElementById('assign-legend').textContent =
+    'Blue = eligible & open  •  Orange = eligible but filled (will displace)';
+  document.getElementById('assign-overlay').style.display = 'flex';
+}
+
+function confirmAssign(slotId) {
+  if (!assignTarget) return;
+  const { name } = assignTarget;
+  drafted.add(name);
+  localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
+  rosterAdd(name, slotId);
+  closeAssign();
+  render();
+  renderRoster();
+}
+
+function doRemoveFromRoster() {
+  if (!assignTarget) return;
+  rosterRemove(assignTarget.name);
+  closeAssign();
+  renderRoster();
+  render();
+}
+
+function closeAssign() {
+  document.getElementById('assign-overlay').style.display = 'none';
+  assignTarget = null;
+}
+
+function assignOverlayClick(e) {
+  if (e.target === document.getElementById('assign-overlay')) closeAssign();
+}
+
+// ── Floating search (press /) ───────────────────────────────────────────────
+let floatResults = [];
+let floatHL      = -1;
+
+function openSearch() {
+  document.getElementById('search-overlay').style.display = 'flex';
+  const inp = document.getElementById('search-float-input');
+  inp.value = '';
+  document.getElementById('search-float-results').innerHTML = '';
+  floatResults = []; floatHL = -1;
+  setTimeout(() => inp.focus(), 30);
+}
+
+function searchOverlayClick(e) {
+  if (e.target === document.getElementById('search-overlay'))
+    document.getElementById('search-overlay').style.display = 'none';
+}
+
+function doFloatSearch() {
+  const q = document.getElementById('search-float-input').value.trim().toLowerCase();
+  if (!q || !DATA) {
+    document.getElementById('search-float-results').innerHTML = '';
+    floatResults = []; return;
+  }
+  const rankings = DATA.rankings || {};
+  const dc = DATA.depth_chart || {};
+  const all = {};
+  Object.entries(dc).forEach(([team, pos]) =>
+    Object.entries(pos).forEach(([p, list]) =>
+      list.forEach(pl => { if (!all[pl.name]) all[pl.name] = { name: pl.name, team, pos: p }; })));
+  Object.entries(rankings).forEach(([name, info]) => {
+    if (!all[name]) all[name] = { name, team: info.team||'', pos: info.pos||'' };
+  });
+  floatResults = Object.values(all)
+    .filter(p => p.name.toLowerCase().includes(q))
+    .sort((a, b) => {
+      const as = a.name.toLowerCase().startsWith(q) ? 0 : 1;
+      const bs = b.name.toLowerCase().startsWith(q) ? 0 : 1;
+      if (as !== bs) return as - bs;
+      return (rankings[a.name]?.rank || 99999) - (rankings[b.name]?.rank || 99999);
+    })
+    .slice(0, 8);
+  floatHL = floatResults.length ? 0 : -1;
+  renderFloatResults();
+}
+
+function renderFloatResults() {
+  let html = '';
+  floatResults.forEach((p, i) => {
+    const onR  = isOnRoster(p.name);
+    const dft  = drafted.has(p.name);
+    const rank = DATA.rankings?.[p.name]?.rank;
+    const hl   = i === floatHL ? ' sr-hl' : '';
+    const tag  = onR ? '<span class="sr-tag rostered">rostered</span>'
+               : dft ? '<span class="sr-tag">drafted</span>' : '';
+    html += `<div class="search-result${hl}" onclick="selectFloat(${i})">
+               <span class="sr-name">${esc(p.name)}</span>
+               <span class="sr-meta">${esc(p.team)} ${esc(p.pos)}${rank ? ' #'+rank : ''}</span>
+               ${tag}
+             </div>`;
+  });
+  document.getElementById('search-float-results').innerHTML =
+    html || '<div style="padding:12px 16px;color:#999;font-size:12px">No players found</div>';
+}
+
+function selectFloat(i) {
+  const p = floatResults[i];
+  if (!p) return;
+  document.getElementById('search-overlay').style.display = 'none';
+  if (!isOnRoster(p.name)) {
+    // Pre-add to unassigned so cancel is safe
+    drafted.add(p.name);
+    localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
+    rosterAdd(p.name, '__unassigned', true);
+    saveRoster();
+  }
+  openAssign(p.name);
+}
+
+function handleSearchKey(e) {
+  if (e.key === 'Escape') {
+    document.getElementById('search-overlay').style.display = 'none'; return;
+  }
+  if (e.key === 'ArrowDown') { floatHL = Math.min(floatHL + 1, floatResults.length - 1); renderFloatResults(); }
+  else if (e.key === 'ArrowUp')  { floatHL = Math.max(floatHL - 1, 0); renderFloatResults(); }
+  else if (e.key === 'Enter' && floatHL >= 0) selectFloat(floatHL);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && !['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) {
+    e.preventDefault(); openSearch();
+  }
+  if (e.key === 'Escape') {
+    document.getElementById('search-overlay').style.display = 'none';
+    closeAssign();
+  }
 });
 
 // ── Utils ──────────────────────────────────────────────────────────────────
