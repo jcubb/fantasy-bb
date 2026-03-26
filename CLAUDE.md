@@ -102,7 +102,8 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 - Each cell: one player; `PITCHER_COL_MAP` maps column name to `[data_key, index]`
 
 **Features:**
-- Checkbox per player → marks as drafted (persisted in `localStorage`)
+- Checkbox per player → marks as drafted + opens Assign modal to place on roster
+- Unchecking a checkbox → undrafts and removes from roster
 - Injury `!` flag in grid — only shown for real injuries (keyword-matched); all notes still appear in hover tooltip
 - Tooltip shows CBS AL rank, projection stats, eligibility, and injury note
 - "Hide drafted" toggle for the grid
@@ -113,9 +114,48 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 - **Injuries tab**: lists all players with real injury notes, sorted by CBS rank; shows likely replacement (first healthy player at same position, with MI/CI/OF/CL overlaps)
 - **Last Week tab**: MLB.com news from the past 7 days, organized by team; only player-relevant headlines (blocklist filters out TV/streaming/tickets/nostalgia/odds); deduplicated by normalized headline; shows "as of" timestamp
 - **Run Scraper** button in header → opens GitHub Actions page to trigger a fresh scrape
-- Reset Draft button clears all checkboxes
+- **Reset Draft** button clears all drafted marks and the full roster
 
 **Teams displayed** (AL_ORDER): BAL, BOS, NYY, TB, TOR, CWS, CLE, DET, KC, MIN, HOU, LAA, OAK, SEA, TEX
+
+### Roster Panel
+
+Fixed 220px panel on the right side of the screen showing your roster in progress.
+
+**Slots (23 total):**
+- Batters: C, C, 1B, 2B, 3B, SS, OF, OF, OF, OF, OF, MI, CI, Util
+- Pitchers: SP, SP, SP, SP, SP, CL, CL, SU, SU
+- Unassigned section at the bottom for players not yet placed
+
+**Interactions:**
+- Click a player name in the panel → opens Assign modal for reassignment
+- **Clear Roster** button in panel removes all slot assignments (keeps drafted marks)
+- Roster state persisted in `localStorage` (`ff_roster` key): `{ slots: {slotId: name}, unassigned: [name, ...] }`
+- `ROSTER_SLOTS` constant defines all slots with `{id, label, type, elig}` — `elig` lists which positions can play that slot (used to color-code the assign modal)
+
+### Quick Search (`/` key)
+
+Press `/` anywhere (not while typing in another input) to open the floating search overlay.
+
+- Type part of a player name; results update instantly (up to 8 matches)
+- Results show team, position, CBS rank, and drafted/rostered status tags
+- ↑/↓ to navigate, Enter to select; Escape to close
+- Selecting a player: marks as drafted, pre-adds to Unassigned, opens Assign modal
+
+### Assign Modal
+
+Opens when: checking a checkbox, selecting from quick search, or clicking a name in the roster panel.
+
+- Shows player name and position eligibility at the top
+- Batter slots and pitcher slots shown in separate groups
+- **Slot color coding:**
+  - Blue = eligible for this slot and currently empty (best pick)
+  - Orange = eligible but slot is occupied (will bump that player to Unassigned)
+  - Grey = player is not eligible for this slot (still clickable for flexibility)
+  - Dark blue = player's current slot (when reassigning)
+  - Yellow `?/TBD` = Unassigned (always available)
+- **Remove from roster** button visible only when reassigning an already-rostered player (keeps drafted mark, removes slot assignment)
+- Cancel is always safe — player stays in their current state
 
 ---
 
