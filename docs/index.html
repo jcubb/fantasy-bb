@@ -235,7 +235,7 @@ body {
 }
 #search-box { width: 140px; }
 
-#ranked-table { border-collapse: collapse; width: 100%; max-width: 680px; }
+#ranked-table { border-collapse: collapse; width: 100%; max-width: 960px; }
 #ranked-table thead th {
   background: #1e3a5f;
   color: #cfe0f8;
@@ -245,6 +245,7 @@ body {
   font-weight: 700;
   letter-spacing: .4px;
 }
+#ranked-table thead th.proj-col { text-align: right; }
 #ranked-table tbody td {
   padding: 4px 10px;
   border-bottom: 1px solid #e8eef5;
@@ -255,6 +256,8 @@ body {
 .row-drafted td { opacity: .5; }
 .row-drafted .r-name { text-decoration: line-through; }
 .r-injury { color: #c0392b; font-size: 11px; }
+.proj-val { text-align: right; color: #2a4a6a; font-variant-numeric: tabular-nums; }
+.proj-val.missing { color: #c0ccd8; }
 
 /* ── Tooltip ─────────────────────────────────────────────────────────────── */
 #tooltip {
@@ -314,15 +317,7 @@ body {
     </div>
   </div>
   <table id="ranked-table">
-    <thead>
-      <tr>
-        <th style="width:36px">Rank</th>
-        <th>Name</th>
-        <th style="width:42px">Team</th>
-        <th style="width:42px">Pos</th>
-        <th>Injury / Note</th>
-      </tr>
-    </thead>
+    <thead id="list-head"></thead>
     <tbody id="list-body"></tbody>
   </table>
 </div>
@@ -367,8 +362,10 @@ body {
 
 <script>
 // ── Constants ──────────────────────────────────────────────────────────────
-const BATTER_COLS  = ['C','1B','2B','3B','SS','LF','CF','RF','DH'];
-const PITCHER_COLS = ['SP1','SP2','SP3','SP4','SP5','CL1','CL2','SU1','SU2'];
+const BATTER_COLS       = ['C','1B','2B','3B','SS','LF','CF','RF','DH'];
+const PITCHER_COLS      = ['SP1','SP2','SP3','SP4','SP5','CL1','CL2','SU1','SU2'];
+const BATTER_PROJ_COLS  = ['R','HR','RBI','SB','AVG'];
+const PITCHER_PROJ_COLS = ['W','ERA','WHIP','K','S'];
 const BATTER_SET   = new Set(BATTER_COLS);
 const PITCHER_SET  = new Set(['SP','CL','RP','P']);
 // Map split pitcher column -> [data key, index]
@@ -613,8 +610,28 @@ function renderList() {
   const searchVal   = document.getElementById('search-box').value.trim().toLowerCase();
   const rankings    = DATA.rankings || {};
   const dc          = DATA.depth_chart || {};
+  const projections = DATA.projections || {};
+  const isBatters   = currentTab === 'batters';
+  const projMap     = isBatters ? (projections.batters || {}) : (projections.pitchers || {});
+  const projCols    = isBatters ? BATTER_PROJ_COLS : PITCHER_PROJ_COLS;
+  const hasProj     = Object.keys(projMap).length > 0;
 
-  // Build player map: merge depth chart positions with rankings data
+  // ── Rebuild thead ────────────────────────────────────────────────────────
+  const projHeads = hasProj
+    ? projCols.map(c => `<th class="proj-col" style="width:42px">${c}</th>`).join('')
+    : '';
+  const totalCols = 5 + (hasProj ? projCols.length : 0);
+  document.getElementById('list-head').innerHTML =
+    `<tr>
+       <th style="width:36px">Rank</th>
+       <th>Name</th>
+       <th style="width:42px">Team</th>
+       <th style="width:42px">Pos</th>
+       ${projHeads}
+       <th>Injury / Note</th>
+     </tr>`;
+
+  // ── Build player map ─────────────────────────────────────────────────────
   const players = {};
 
   // Start from depth chart — primary source of team/pos/injury
@@ -640,12 +657,20 @@ function renderList() {
     }
   });
 
-  // Filter
+  // Add any projection-only players not in depth chart or rankings
+  if (hasProj) {
+    Object.keys(projMap).forEach(name => {
+      if (!players[name]) {
+        players[name] = { name, team: '', pos: '', injury: null, rank: 99999 };
+      }
+    });
+  }
+
+  // ── Filter ───────────────────────────────────────────────────────────────
   let list = Object.values(players).filter(p => {
     if (hideDrafted && drafted.has(p.name)) return false;
     if (searchVal && !p.name.toLowerCase().includes(searchVal)) return false;
     const pos = (p.pos || '').toUpperCase();
-    // Restrict to current tab's player type
     if (currentTab === 'batters'  && !BATTER_SET.has(pos))  return false;
     if (currentTab === 'pitchers' && !PITCHER_SET.has(pos)) return false;
     if (posFilter === 'all') return true;
@@ -655,13 +680,24 @@ function renderList() {
 
   list.sort((a, b) => a.rank - b.rank);
 
+  // ── Render rows ──────────────────────────────────────────────────────────
   let html = '';
   list.forEach(p => {
-    const isDrafted  = drafted.has(p.name);
-    const dftCls     = isDrafted ? ' row-drafted' : '';
-    const rankStr    = p.rank < 99999 ? p.rank : '—';
-    const injHtml    = p.injury
-      ? `<span class="r-injury">${esc(p.injury)}</span>` : '';
+    const isDrafted = drafted.has(p.name);
+    const dftCls    = isDrafted ? ' row-drafted' : '';
+    const rankStr   = p.rank < 99999 ? p.rank : '—';
+    const injHtml   = p.injury ? `<span class="r-injury">${esc(p.injury)}</span>` : '';
+
+    let projCells = '';
+    if (hasProj) {
+      const pStats = projMap[p.name] || {};
+      projCells = projCols.map(col => {
+        const val = pStats[col];
+        const cls = val ? 'proj-val' : 'proj-val missing';
+        return `<td class="${cls}">${val ? esc(val) : '—'}</td>`;
+      }).join('');
+    }
+
     html += `<tr class="${dftCls}"
                  onmouseenter="showTip(event,'${esc(p.name)}','${esc(p.injury||'')}')"
                  onmouseleave="hideTip()">
@@ -675,12 +711,13 @@ function renderList() {
                </td>
                <td>${esc(p.team||'')}</td>
                <td>${esc(p.pos||'')}</td>
+               ${projCells}
                <td>${injHtml}</td>
              </tr>`;
   });
 
   document.getElementById('list-body').innerHTML =
-    html || '<tr><td colspan="5" style="padding:12px;color:#7a8ca0">No players match.</td></tr>';
+    html || `<tr><td colspan="${totalCols}" style="padding:12px;color:#7a8ca0">No players match.</td></tr>`;
 }
 
 // ── News ───────────────────────────────────────────────────────────────────

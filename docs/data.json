@@ -1,5 +1,5 @@
 {
-  "scraped_at": "2026-03-24T19:09:02.318999+00:00",
+  "scraped_at": "2026-03-26T11:26:04.656929+00:00",
   "depth_chart": {
     "OAK": {
       "C": [
@@ -107,7 +107,7 @@
         },
         {
           "name": "Luis Morales",
-          "injury": "Athletics' Luis Morales: Struggles with control"
+          "injury": null
         },
         {
           "name": "Aaron Civale",
@@ -179,7 +179,7 @@
         },
         {
           "name": "Jackson Holliday",
-          "injury": "Hand: Expected to be out until at least Apr 10"
+          "injury": "Orioles' Jackson Holliday: Hitting shelf to begin season"
         }
       ],
       "LF": [
@@ -189,7 +189,7 @@
         },
         {
           "name": "Dylan Beavers",
-          "injury": null
+          "injury": "Orioles' Dylan Beavers: Feels ready for Opening Day"
         }
       ],
       "CF": [
@@ -205,7 +205,7 @@
       "RF": [
         {
           "name": "Dylan Beavers",
-          "injury": null
+          "injury": "Orioles' Dylan Beavers: Feels ready for Opening Day"
         },
         {
           "name": "Tyler O'Neill",
@@ -247,17 +247,17 @@
       "CL": [
         {
           "name": "Ryan Helsley",
-          "injury": "Shoulder: Out for the season"
+          "injury": "Shoulder: Expected to be out until at least Feb 1"
         },
         {
           "name": "Andrew Kittredge",
-          "injury": "Shoulder: Expected to be out until at least Apr 10"
+          "injury": "Shoulder: Expected to be out until at least Apr 6"
         }
       ],
       "RP": [
         {
           "name": "Keegan Akin",
-          "injury": "Thigh: Questionable for start of season"
+          "injury": "Groin: Expected to be out until at least Apr 6"
         }
       ]
     },
@@ -279,7 +279,7 @@
         },
         {
           "name": "Triston Casas",
-          "injury": "Red Sox's Triston Casas: Staying in Florida"
+          "injury": "Knee: Expected to be out until at least May 1"
         }
       ],
       "2B": [
@@ -371,7 +371,7 @@
         },
         {
           "name": "Connelly Early",
-          "injury": "Red Sox's Connelly Early: Wins spot in Boston rotation"
+          "injury": null
         }
       ],
       "CL": [
@@ -387,7 +387,7 @@
       "RP": [
         {
           "name": "Justin Slaten",
-          "injury": "Red Sox's Johan Oviedo: Opening season in bullpen"
+          "injury": null
         }
       ]
     },
@@ -395,7 +395,7 @@
       "C": [
         {
           "name": "Kyle Teel",
-          "injury": "Hamstring: Expected to be out until at least Apr 14"
+          "injury": "White Sox's Kyle Teel: Moved to 10-day injured list"
         },
         {
           "name": "Edgar Quero",
@@ -409,7 +409,7 @@
         },
         {
           "name": "Lenyn Sosa",
-          "injury": null
+          "injury": "White Sox's Lenyn Sosa: Out of Opening Day lineup"
         }
       ],
       "2B": [
@@ -428,7 +428,7 @@
           "injury": null
         },
         {
-          "name": "Curtis Mead",
+          "name": "Munetaka Murakami",
           "injury": null
         }
       ],
@@ -469,13 +469,13 @@
         },
         {
           "name": "Brooks Baldwin",
-          "injury": "Elbow: Questionable for start of season"
+          "injury": "Elbow: Expected to be out until at least May 1"
         }
       ],
       "DH": [
         {
           "name": "Lenyn Sosa",
-          "injury": null
+          "injury": "White Sox's Lenyn Sosa: Out of Opening Day lineup"
         },
         {
           "name": "Edgar Quero",
@@ -517,7 +517,7 @@
       "RP": [
         {
           "name": "Grant Taylor",
-          "injury": "Elbow: Expected to be out until at least May 1"
+          "injury": "White Sox's Prelander Berroa: Goes on 15-day IL"
         }
       ]
     },
@@ -529,7 +529,7 @@
         },
         {
           "name": "Austin Hedges",
-          "injury": "Guardians' Austin Hedges: Day-to-day after clean X-ray"
+          "injury": "Hand: Probable for Mar 26"
         }
       ],
       "1B": [
@@ -641,7 +641,7 @@
         },
         {
           "name": "Hunter Gaddis",
-          "injury": "Guardians' Hunter Gaddis: Pitching in spring game Tuesday"
+          "injury": "Forearm: Expected to be out until at least Apr 10"
         }
       ],
       "RP": [
@@ -659,7 +659,7 @@
         },
         {
           "name": "Jake Rogers",
-          "injury": "Tigers' Jake Rogers: Cleared for Opening Day"
+          "injury": null
         }
       ],
       "1B": [
@@ -669,7 +669,7 @@
         },
         {
           "name": "Colt Keith",
-          "injury": null
+          "injury": "Tigers' Colt Keith: Could be set for timeshare"
         }
       ],
       "2B": [
@@ -685,7 +685,7 @@
       "3B": [
         {
           "name": "Colt Keith",
-          "injury": null
+          "injury": "Tigers' Colt Keith: Could be set for timeshare"
         },
         {
           "name": "Zach McKinstry",
@@ -695,7 +695,7 @@
       "SS": [
         {
           "name": "Kevin McGonigle",
-          "injury": "Tigers' Kevin McGonigle: Makes Opening Day roster"
+          "injury": null
         },
         {
           "name": "Javier Baez",
@@ -739,7 +739,7 @@
         },
         {
           "name": "Colt Keith",
-          "injury": null
+          "injury": "Tigers' Colt Keith: Could be set for timeshare"
         }
       ],
       "SP": [
@@ -777,7 +777,7 @@
       "RP": [
         {
           "name": "Kyle Finnegan",
-          "injury": "Groin: Expected to be out until at least May 26"
+          "injury": "Elbow: Expected to be out until at least Apr 24"
         }
       ]
     },
@@ -785,11 +785,11 @@
       "C": [
         {
           "name": "Yainer Diaz",
-          "injury": null
+          "injury": "Astros' Yainer Diaz: Two RBI in final tuneup"
         },
         {
-          "name": "Cesar Salazar",
-          "injury": null
+          "name": "Christian Vazquez",
+          "injury": "Astros' Christian Vazquez: Contract selected"
         }
       ],
       "1B": [
@@ -825,7 +825,7 @@
       "SS": [
         {
           "name": "Jeremy Pena",
-          "injury": "Finger: Questionable for start of season"
+          "injury": null
         },
         {
           "name": "Carlos Correa",
@@ -834,11 +834,11 @@
       ],
       "LF": [
         {
-          "name": "Zach Cole",
+          "name": "Joey Loperfido",
           "injury": null
         },
         {
-          "name": "Joey Loperfido",
+          "name": "Yordan Alvarez",
           "injury": null
         }
       ],
@@ -848,7 +848,7 @@
           "injury": null
         },
         {
-          "name": "Zach Cole",
+          "name": "Joey Loperfido",
           "injury": null
         }
       ],
@@ -907,7 +907,7 @@
       "RP": [
         {
           "name": "Bryan King",
-          "injury": null
+          "injury": "Knee: Expected to be out until at least Apr 10"
         }
       ]
     },
@@ -939,7 +939,7 @@
         },
         {
           "name": "Michael Massey",
-          "injury": "Calf: Questionable for start of season"
+          "injury": "Calf: Expected to be out until at least Apr 1"
         }
       ],
       "3B": [
@@ -1009,7 +1009,7 @@
         },
         {
           "name": "Michael Wacha",
-          "injury": "Royals' Michael Wacha: Tosses five frames in exhibition"
+          "injury": null
         },
         {
           "name": "Seth Lugo",
@@ -1037,7 +1037,7 @@
       "RP": [
         {
           "name": "Matt Strahm",
-          "injury": "Elbow: Questionable for start of season"
+          "injury": "Elbow: Expected to be out until at least May 1"
         }
       ]
     },
@@ -1079,7 +1079,7 @@
         },
         {
           "name": "Vaughn Grissom",
-          "injury": "Hand: Questionable for start of season"
+          "injury": "Wrist: Expected to be out until at least Apr 1"
         }
       ],
       "SS": [
@@ -1147,7 +1147,7 @@
         },
         {
           "name": "Grayson Rodriguez",
-          "injury": "Arm: Expected to be out until at least Apr 8"
+          "injury": "Shoulder: Expected to be out until at least Apr 6"
         },
         {
           "name": "Jack Kochanowicz",
@@ -1156,17 +1156,17 @@
       ],
       "CL": [
         {
-          "name": "Kirby Yates",
-          "injury": "Shoulder: Expected to be out until at least Apr 7"
+          "name": "Jordan Romano",
+          "injury": "Knee: Expected to be out until at least Apr 6"
         },
         {
-          "name": "Drew Pomeranz",
+          "name": "Ryan Zeferjahn",
           "injury": null
         }
       ],
       "RP": [
         {
-          "name": "Ryan Zeferjahn",
+          "name": "Joey Lucchesi",
           "injury": null
         }
       ]
@@ -1209,7 +1209,7 @@
         },
         {
           "name": "Brooks Lee",
-          "injury": "Twins' Brooks Lee: Hitting for averge this spring"
+          "injury": null
         }
       ],
       "SS": [
@@ -1272,11 +1272,11 @@
           "injury": null
         },
         {
-          "name": "Simeon Woods Richardson",
+          "name": "Taj Bradley",
           "injury": null
         },
         {
-          "name": "Taj Bradley",
+          "name": "Simeon Woods Richardson",
           "injury": null
         },
         {
@@ -1290,14 +1290,14 @@
           "injury": null
         },
         {
-          "name": "Anthony Banda",
+          "name": "Justin Topa",
           "injury": null
         }
       ],
       "RP": [
         {
-          "name": "Kody Funderburk",
-          "injury": "Elbow: Expected to be out until at least Apr 10"
+          "name": "Anthony Banda",
+          "injury": "Triceps: Expected to be out until at least Apr 10"
         }
       ]
     },
@@ -1325,7 +1325,7 @@
       "2B": [
         {
           "name": "Jazz Chisholm",
-          "injury": null
+          "injury": "Yankees' Jazz Chisholm: Logs steal in win"
         },
         {
           "name": "Amed Rosario",
@@ -1395,7 +1395,7 @@
       "SP": [
         {
           "name": "Max Fried",
-          "injury": null
+          "injury": "Yankees' Max Fried: Dominant in Opening Day win"
         },
         {
           "name": "Gerrit Cole",
@@ -1427,7 +1427,7 @@
       "RP": [
         {
           "name": "Fernando Cruz",
-          "injury": "Yankees' Cade Winquest: Makes Yankees' roster"
+          "injury": null
         }
       ]
     },
@@ -1439,7 +1439,7 @@
         },
         {
           "name": "Mitch Garver",
-          "injury": "Mariners' Mitch Garver: Set to win No. 2 job"
+          "injury": "Mariners' Mitch Garver: Added to roster"
         }
       ],
       "1B": [
@@ -1475,11 +1475,11 @@
       "SS": [
         {
           "name": "J.P. Crawford",
-          "injury": "Shoulder: Questionable for start of season"
+          "injury": "Mariners' J.P. Crawford: Goes on IL with shoulder injury"
         },
         {
           "name": "Leonardo Rivas",
-          "injury": null
+          "injury": "Mariners' Leo Rivas: Will be Opening Day shortstop"
         }
       ],
       "LF": [
@@ -1541,7 +1541,7 @@
         },
         {
           "name": "Bryce Miller",
-          "injury": "Oblique: Expected to be out until at least Apr 16"
+          "injury": "Oblique: Expected to be out until at least Apr 24"
         }
       ],
       "CL": [
@@ -1605,7 +1605,7 @@
       "SS": [
         {
           "name": "Carson Williams",
-          "injury": "Rays' Carson Williams: Wins Rays' shortstop job"
+          "injury": null
         },
         {
           "name": "Taylor Walls",
@@ -1659,7 +1659,7 @@
         },
         {
           "name": "Ryan Pepiot",
-          "injury": "Rays' Ryan Pepiot: Lands on IL with hip inflammation"
+          "injury": "Rays' Ryan Pepiot: Will resume throwing this weekend"
         },
         {
           "name": "Shane McClanahan",
@@ -1671,13 +1671,13 @@
         },
         {
           "name": "Nick Martinez",
-          "injury": "Rays' Nick Martinez: Pushed back with hamstring issue"
+          "injury": "Hamstring: Expected to be out until at least Mar 30"
         }
       ],
       "CL": [
         {
           "name": "Griffin Jax",
-          "injury": "Shoulder: Expected to be out until at least Apr 10"
+          "injury": "Shoulder: Expected to be out until at least Apr 20"
         },
         {
           "name": "Bryan Baker",
@@ -1687,7 +1687,7 @@
       "RP": [
         {
           "name": "Cole Sulser",
-          "injury": "Back: Expected to be out until at least Apr 10"
+          "injury": "Back: Expected to be out until at least May 29"
         }
       ]
     },
@@ -1719,7 +1719,7 @@
         },
         {
           "name": "Cody Freeman",
-          "injury": "Back: Expected to be out until at least Apr 5"
+          "injury": "Back: Expected to be out until at least May 1"
         }
       ],
       "3B": [
@@ -1729,7 +1729,7 @@
         },
         {
           "name": "Cody Freeman",
-          "injury": "Back: Expected to be out until at least Apr 5"
+          "injury": "Back: Expected to be out until at least May 1"
         }
       ],
       "SS": [
@@ -1779,7 +1779,7 @@
         },
         {
           "name": "Andrew McCutchen",
-          "injury": null
+          "injury": "Rangers' Andrew McCutchen: Added to roster"
         }
       ],
       "SP": [
@@ -1797,7 +1797,7 @@
         },
         {
           "name": "Jack Leiter",
-          "injury": null
+          "injury": "Rangers' Jack Leiter: Shines in final spring outing"
         },
         {
           "name": "Kumar Rocker",
@@ -1889,7 +1889,7 @@
         },
         {
           "name": "Myles Straw",
-          "injury": "Blue Jays' Myles Straw: Breaks camp with big club"
+          "injury": null
         }
       ],
       "RF": [
@@ -1923,11 +1923,11 @@
         },
         {
           "name": "Shane Bieber",
-          "injury": "Forearm: Expected to be out until at least Apr 30"
+          "injury": "Blue Jays' Shane Bieber: Placement on IL made official"
         },
         {
           "name": "Trey Yesavage",
-          "injury": "Shoulder: Expected to be out until at least Apr 14"
+          "injury": "Blue Jays' Trey Yesavage: Opening season on IL"
         },
         {
           "name": "Cody Ponce",
@@ -1940,14 +1940,14 @@
           "injury": null
         },
         {
-          "name": "Tyler Rogers",
-          "injury": null
+          "name": "Yimi Garcia",
+          "injury": "Blue Jays' Yimi Garcia: Heads to IL"
         }
       ],
       "RP": [
         {
-          "name": "Yimi Garcia",
-          "injury": "Elbow: Expected to be out until at least Apr 10"
+          "name": "Tyler Rogers",
+          "injury": null
         }
       ]
     }
@@ -3309,113 +3309,3514 @@
   "news": {
     "BAL": [
       {
-        "headline": "'It's up to us now': How O's can make postseason run in 2026",
-        "date": "10:05 AM EDT",
+        "headline": "O's finalize 2026 Opening Day roster; Jackson earns final bench spot",
+        "date": "March 25, 2026",
         "blurb": ""
       }
     ],
     "NYY": [
       {
-        "headline": "Winquest, Yanks' 1st Rule 5 pick since 2011, makes Opening Day roster",
-        "date": "39 minutes ago",
+        "headline": "Yanks live up to Opening Night fanfare with shutout win over Giants",
+        "date": "1:27 AM EDT",
+        "blurb": ""
+      },
+      {
+        "headline": "Jazz brings 'One Piece' to Opening Night with anime-inspired cleats, glove",
+        "date": "Mar 25, 2026\u00a0\u00b7\u00a07:33",
+        "blurb": ""
+      },
+      {
+        "headline": "Jazz Chisholm Jr. mic'd up on Opening Night",
+        "date": "Mar 25, 2026\u00a0\u00b7\u00a07:33",
         "blurb": ""
       }
     ],
     "TB": [
       {
-        "headline": "Rays top prospect Williams named starting SS; Pepiot headed to IL",
-        "date": "1:37 PM EDT",
+        "headline": "After slew of late injuries, Rays set Opening Day roster",
+        "date": "March 25, 2026",
         "blurb": ""
       }
     ],
     "CLE": [
       {
-        "headline": "Kwan 'more than ready' for new challenge in CF",
-        "date": "12:20 AM EDT",
-        "blurb": ""
+        "headline": "Guardians-Mariners 2026 Opening Day FAQ (10:10 p.m. ET)",
+        "date": "March 24, 2026",
+        "blurb": "SEATTLE -- Baseball will be played at T-Mobile Park this Thursday for the first time since Game 5 of last year\u2019s American League Championship Series, where some of the most iconic moments of the entire season took place.\n                        The Mariners are returning to their home crowd followin"
       }
     ],
     "DET": [
       {
-        "headline": "Tigers reward No. 2 overall prospect McGonigle with roster spot",
-        "date": "12:30 PM EDT",
-        "blurb": ""
-      },
-      {
-        "headline": "Can the Tigers put a full season together in 2026?",
-        "date": "Sep 6, 2024\u00a0\u00b7\u00a00:29",
-        "blurb": ""
-      },
-      {
-        "headline": "Parker Meadows' go-ahead grand slam (6)",
-        "date": "Sep 6, 2024\u00a0\u00b7\u00a00:29",
-        "blurb": ""
+        "headline": "What to know about Tigers-Padres Opening Day (4:10 p.m. ET)",
+        "date": "March 24, 2026",
+        "blurb": "SAN DIEGO -- Surely, the Tigers and Padres would be happy enough if their seasons were to end with a 1984 World Series rematch. At the very least, their 2026 seasons will start that way.\n                        Detroit and San Diego square off in a three-game series beginning Thursday afternoon at P"
       }
     ],
     "KC": [
       {
-        "headline": "Royals' predictions for 2026 with talented core ready to roll",
-        "date": "9:34 AM CDT",
-        "blurb": ""
+        "headline": "What to know about Royals-Braves Opening Day (Fri., 6:15 p.m. CT)",
+        "date": "March 24, 2026",
+        "blurb": "Ronald Acu\u00f1a Jr.. and his cousin Maikel Garcia are still riding high after helping Venezuela win the World Baseball Classic. The two will now enjoy the experience of playing in the same Opening Day game.\n                        Acu\u00f1a\u2019s Braves will host Garcia\u2019s Royals to begin the 2026 season. Both "
       }
     ],
     "MIN": [
       {
-        "headline": "Opening Day FAQ: Twins vs. Orioles (Thurs., 2 p.m. CT)",
+        "headline": "Opening Day FAQ: Twins vs. Orioles (2 p.m. CT)",
         "date": "March 23, 2026",
         "blurb": "BALTIMORE -- After both missed the postseason in 2025, the Twins and Orioles are aiming for a better showing in \u201826. However, only one of these American League foes will begin 1-0.\n                        On Thursday, Minnesota (70-92 last season) and Baltimore (75-87) will face off in an Opening Da"
       }
     ],
     "HOU": [
       {
-        "headline": "Angels-Astros 2026 Opening Day FAQ (Thurs., 3:10 p.m. CT)",
-        "date": "11:50 AM CDT",
+        "headline": "Angels-Astros 2026 Opening Day FAQ (3:10 p.m. CT)",
+        "date": "March 25, 2026",
         "blurb": "HOUSTON -- It was the Angels who helped make sure the Astros didn\u2019t reach the playoffs for the first time in eight seasons last September when they rallied from three runs down to beat Houston in the third-from-last game of the regular season."
       },
       {
-        "headline": "Astros option Arrighetti, give McCullers fifth rotation spot",
-        "date": "March 23, 2026",
+        "headline": "Pe\u00f1a, Matthews, V\u00e1zquez make Astros' Opening Day roster",
+        "date": "March 25, 2026",
         "blurb": ""
       }
     ],
     "LAA": [
       {
-        "headline": "Angels-Astros 2026 Opening Day FAQ (Thurs., 1:10 p.m. PT)",
-        "date": "9:50 AM PDT",
+        "headline": "Angels-Astros 2026 Opening Day FAQ (1:10 p.m. PT)",
+        "date": "March 25, 2026",
         "blurb": "HOUSTON -- It was the Angels who helped make sure the Astros didn\u2019t reach the playoffs for the first time in eight seasons last September when they rallied from three runs down to beat Houston in the third-from-last game of the regular season."
       }
     ],
     "OAK": [
       {
-        "headline": "Next generation of lefty prospects among standouts at Athletics camp",
-        "date": "8:13 AM PDT",
-        "blurb": ""
+        "headline": "What to know about A's-Blue Jays Opening Day (Fri., 4 p.m. PT)",
+        "date": "March 23, 2026",
+        "blurb": "While the Blue Jays raise a banner and celebrate the 2025 AL Champions on Opening Day at Rogers Centre, the young A\u2019s will be trying to show the rest of the league that they\u2019re ready to be one of baseball\u2019s up-and-coming contenders."
       }
     ],
     "SEA": [
       {
-        "headline": "What's in store for AL West champs in 2026?",
-        "date": "7:29 AM PDT",
-        "blurb": ""
+        "headline": "Guardians-Mariners 2026 Opening Day FAQ (7:10 p.m. PT)",
+        "date": "March 24, 2026",
+        "blurb": "SEATTLE -- Baseball will be played at T-Mobile Park this Thursday for the first time since Game 5 of last year\u2019s American League Championship Series, where some of the most iconic moments of the entire season took place.\n                        The Mariners are returning to their home crowd followin"
       }
     ],
     "TEX": [
       {
-        "headline": "Best mound visit of Baumler's life -- finding out he's a Major Leaguer!",
-        "date": "March 23, 2026",
-        "blurb": ""
+        "headline": "Everything you need to know about Rangers-Phillies on Opening Day (3:15 p.m. CT)",
+        "date": "March 24, 2026",
+        "blurb": "PHILADELPHIA -- Three days after Adolis Garc\u00eda signed a one-year, $10 million contract with the Phillies in mid-December, he checked the 2026 schedule.\n                        Oh, that\u2019s funny. The Phils were playing the Rangers on Opening Day.\n                        Garc\u00eda played for the Rangers f"
       },
       {
-        "headline": "Cutch makes Rangers' Opening Day roster to start 18th season",
-        "date": "Mar 19, 2026\u00a0\u00b7\u00a00:22",
-        "blurb": ""
-      },
-      {
-        "headline": "Andrew McCutchen's three-run homer",
-        "date": "Mar 19, 2026\u00a0\u00b7\u00a00:22",
+        "headline": "Rangers predictions for 2026 with postseason aspirations",
+        "date": "March 25, 2026",
         "blurb": ""
       }
     ]
   },
-  "news_scraped_at": "2026-03-24T19:09:02.318999+00:00"
+  "news_scraped_at": "2026-03-26T11:26:04.656929+00:00",
+  "projections": {
+    "batters": {
+      "Aaron Judge": {
+        "AB": "522",
+        "R": "124",
+        "H": "172",
+        "1B": "88",
+        "2B": "32",
+        "3B": "2",
+        "HR": "50",
+        "RBI": "120",
+        "BB": "104",
+        "K": "168",
+        "SB": "11",
+        "CS": "3",
+        "AVG": ".330",
+        "OBP": ".446",
+        "SLG": ".686"
+      },
+      "Byron Buxton": {
+        "AB": "569",
+        "R": "110",
+        "H": "164",
+        "1B": "79",
+        "2B": "30",
+        "3B": "10",
+        "HR": "45",
+        "RBI": "100",
+        "BB": "45",
+        "K": "167",
+        "SB": "24",
+        "CS": "2",
+        "AVG": ".288",
+        "OBP": ".348",
+        "SLG": ".613"
+      },
+      "Bobby Witt": {
+        "AB": "584",
+        "R": "101",
+        "H": "185",
+        "1B": "106",
+        "2B": "45",
+        "3B": "8",
+        "HR": "26",
+        "RBI": "89",
+        "BB": "54",
+        "K": "121",
+        "SB": "34",
+        "CS": "10",
+        "AVG": ".317",
+        "OBP": ".378",
+        "SLG": ".555"
+      },
+      "Jose Ramirez": {
+        "AB": "554",
+        "R": "98",
+        "H": "164",
+        "1B": "96",
+        "2B": "33",
+        "3B": "4",
+        "HR": "31",
+        "RBI": "85",
+        "BB": "62",
+        "K": "86",
+        "SB": "36",
+        "CS": "8",
+        "AVG": ".296",
+        "OBP": ".372",
+        "SLG": ".538"
+      },
+      "Nick Kurtz": {
+        "AB": "544",
+        "R": "106",
+        "H": "162",
+        "1B": "82",
+        "2B": "35",
+        "3B": "4",
+        "HR": "41",
+        "RBI": "105",
+        "BB": "72",
+        "K": "176",
+        "SB": "4",
+        "CS": "1",
+        "AVG": ".298",
+        "OBP": ".381",
+        "SLG": ".603"
+      },
+      "Cal Raleigh": {
+        "AB": "510",
+        "R": "96",
+        "H": "129",
+        "1B": "59",
+        "2B": "24",
+        "3B": "0",
+        "HR": "46",
+        "RBI": "110",
+        "BB": "84",
+        "K": "153",
+        "SB": "11",
+        "CS": "2",
+        "AVG": ".253",
+        "OBP": ".366",
+        "SLG": ".571"
+      },
+      "George Springer": {
+        "AB": "546",
+        "R": "109",
+        "H": "155",
+        "1B": "91",
+        "2B": "26",
+        "3B": "3",
+        "HR": "35",
+        "RBI": "89",
+        "BB": "67",
+        "K": "129",
+        "SB": "16",
+        "CS": "2",
+        "AVG": ".284",
+        "OBP": ".368",
+        "SLG": ".535"
+      },
+      "Julio Rodriguez": {
+        "AB": "580",
+        "R": "95",
+        "H": "167",
+        "1B": "97",
+        "2B": "32",
+        "3B": "10",
+        "HR": "28",
+        "RBI": "94",
+        "BB": "44",
+        "K": "136",
+        "SB": "26",
+        "CS": "6",
+        "AVG": ".288",
+        "OBP": ".349",
+        "SLG": ".522"
+      },
+      "Jazz Chisholm": {
+        "AB": "491",
+        "R": "82",
+        "H": "126",
+        "1B": "74",
+        "2B": "17",
+        "3B": "4",
+        "HR": "31",
+        "RBI": "82",
+        "BB": "56",
+        "K": "147",
+        "SB": "36",
+        "CS": "8",
+        "AVG": ".257",
+        "OBP": ".341",
+        "SLG": ".497"
+      },
+      "Vladimir Guerrero Jr.": {
+        "AB": "557",
+        "R": "100",
+        "H": "174",
+        "1B": "108",
+        "2B": "35",
+        "3B": "0",
+        "HR": "31",
+        "RBI": "96",
+        "BB": "75",
+        "K": "93",
+        "SB": "4",
+        "CS": "2",
+        "AVG": ".312",
+        "OBP": ".397",
+        "SLG": ".542"
+      },
+      "Junior Caminero": {
+        "AB": "561",
+        "R": "89",
+        "H": "155",
+        "1B": "86",
+        "2B": "30",
+        "3B": "1",
+        "HR": "38",
+        "RBI": "106",
+        "BB": "44",
+        "K": "115",
+        "SB": "7",
+        "CS": "2",
+        "AVG": ".276",
+        "OBP": ".330",
+        "SLG": ".536"
+      },
+      "Brent Rooker": {
+        "AB": "559",
+        "R": "89",
+        "H": "164",
+        "1B": "90",
+        "2B": "36",
+        "3B": "4",
+        "HR": "34",
+        "RBI": "99",
+        "BB": "58",
+        "K": "148",
+        "SB": "8",
+        "CS": "2",
+        "AVG": ".293",
+        "OBP": ".364",
+        "SLG": ".555"
+      },
+      "Jeremy Pena": {
+        "AB": "562",
+        "R": "86",
+        "H": "177",
+        "1B": "116",
+        "2B": "36",
+        "3B": "4",
+        "HR": "21",
+        "RBI": "76",
+        "BB": "42",
+        "K": "109",
+        "SB": "24",
+        "CS": "3",
+        "AVG": ".315",
+        "OBP": ".374",
+        "SLG": ".505"
+      },
+      "Gunnar Henderson": {
+        "AB": "539",
+        "R": "94",
+        "H": "155",
+        "1B": "93",
+        "2B": "32",
+        "3B": "6",
+        "HR": "24",
+        "RBI": "75",
+        "BB": "65",
+        "K": "140",
+        "SB": "25",
+        "CS": "5",
+        "AVG": ".288",
+        "OBP": ".369",
+        "SLG": ".503"
+      },
+      "Zachary Neto": {
+        "AB": "563",
+        "R": "92",
+        "H": "151",
+        "1B": "89",
+        "2B": "34",
+        "3B": "2",
+        "HR": "26",
+        "RBI": "74",
+        "BB": "39",
+        "K": "156",
+        "SB": "28",
+        "CS": "8",
+        "AVG": ".268",
+        "OBP": ".330",
+        "SLG": ".474"
+      },
+      "Yordan Alvarez": {
+        "AB": "524",
+        "R": "74",
+        "H": "164",
+        "1B": "99",
+        "2B": "31",
+        "3B": "2",
+        "HR": "32",
+        "RBI": "89",
+        "BB": "75",
+        "K": "100",
+        "SB": "6",
+        "CS": "2",
+        "AVG": ".313",
+        "OBP": ".401",
+        "SLG": ".563"
+      },
+      "Cody Bellinger": {
+        "AB": "552",
+        "R": "87",
+        "H": "154",
+        "1B": "97",
+        "2B": "26",
+        "3B": "4",
+        "HR": "27",
+        "RBI": "94",
+        "BB": "50",
+        "K": "96",
+        "SB": "11",
+        "CS": "2",
+        "AVG": ".279",
+        "OBP": ".337",
+        "SLG": ".487"
+      },
+      "Riley Greene": {
+        "AB": "557",
+        "R": "83",
+        "H": "155",
+        "1B": "86",
+        "2B": "33",
+        "3B": "3",
+        "HR": "33",
+        "RBI": "98",
+        "BB": "50",
+        "K": "176",
+        "SB": "3",
+        "CS": "1",
+        "AVG": ".278",
+        "OBP": ".342",
+        "SLG": ".526"
+      },
+      "Lawrence Butler": {
+        "AB": "564",
+        "R": "90",
+        "H": "147",
+        "1B": "85",
+        "2B": "32",
+        "3B": "4",
+        "HR": "26",
+        "RBI": "74",
+        "BB": "54",
+        "K": "164",
+        "SB": "23",
+        "CS": "6",
+        "AVG": ".261",
+        "OBP": ".325",
+        "SLG": ".470"
+      },
+      "Daulton Varsho": {
+        "AB": "554",
+        "R": "94",
+        "H": "137",
+        "1B": "70",
+        "2B": "27",
+        "3B": "8",
+        "HR": "32",
+        "RBI": "97",
+        "BB": "46",
+        "K": "159",
+        "SB": "8",
+        "CS": "3",
+        "AVG": ".247",
+        "OBP": ".310",
+        "SLG": ".498"
+      },
+      "Josh Naylor": {
+        "AB": "485",
+        "R": "72",
+        "H": "144",
+        "1B": "96",
+        "2B": "26",
+        "3B": "1",
+        "HR": "21",
+        "RBI": "85",
+        "BB": "45",
+        "K": "84",
+        "SB": "19",
+        "CS": "2",
+        "AVG": ".297",
+        "OBP": ".360",
+        "SLG": ".484"
+      },
+      "Trevor Story": {
+        "AB": "505",
+        "R": "74",
+        "H": "139",
+        "1B": "94",
+        "2B": "25",
+        "3B": "0",
+        "HR": "20",
+        "RBI": "78",
+        "BB": "28",
+        "K": "143",
+        "SB": "27",
+        "CS": "3",
+        "AVG": ".275",
+        "OBP": ".321",
+        "SLG": ".444"
+      },
+      "Wyatt Langford": {
+        "AB": "503",
+        "R": "81",
+        "H": "133",
+        "1B": "77",
+        "2B": "28",
+        "3B": "3",
+        "HR": "25",
+        "RBI": "74",
+        "BB": "71",
+        "K": "151",
+        "SB": "23",
+        "CS": "6",
+        "AVG": ".264",
+        "OBP": ".360",
+        "SLG": ".481"
+      },
+      "Corey Seager": {
+        "AB": "542",
+        "R": "86",
+        "H": "152",
+        "1B": "90",
+        "2B": "28",
+        "3B": "0",
+        "HR": "34",
+        "RBI": "80",
+        "BB": "77",
+        "K": "123",
+        "SB": "3",
+        "CS": "1",
+        "AVG": ".280",
+        "OBP": ".375",
+        "SLG": ".520"
+      },
+      "Giancarlo Stanton": {
+        "AB": "478",
+        "R": "67",
+        "H": "126",
+        "1B": "66",
+        "2B": "23",
+        "3B": "0",
+        "HR": "37",
+        "RBI": "108",
+        "BB": "44",
+        "K": "175",
+        "SB": "1",
+        "CS": "0",
+        "AVG": ".264",
+        "OBP": ".328",
+        "SLG": ".544"
+      },
+      "Pete Alonso": {
+        "AB": "534",
+        "R": "78",
+        "H": "142",
+        "1B": "74",
+        "2B": "33",
+        "3B": "1",
+        "HR": "34",
+        "RBI": "100",
+        "BB": "55",
+        "K": "161",
+        "SB": "2",
+        "CS": "1",
+        "AVG": ".266",
+        "OBP": ".343",
+        "SLG": ".522"
+      },
+      "Jose Altuve": {
+        "AB": "551",
+        "R": "82",
+        "H": "162",
+        "1B": "110",
+        "2B": "27",
+        "3B": "1",
+        "HR": "24",
+        "RBI": "72",
+        "BB": "52",
+        "K": "103",
+        "SB": "14",
+        "CS": "6",
+        "AVG": ".294",
+        "OBP": ".358",
+        "SLG": ".477"
+      },
+      "Tyler Soderstrom": {
+        "AB": "519",
+        "R": "76",
+        "H": "148",
+        "1B": "87",
+        "2B": "31",
+        "3B": "2",
+        "HR": "28",
+        "RBI": "88",
+        "BB": "48",
+        "K": "134",
+        "SB": "8",
+        "CS": "4",
+        "AVG": ".285",
+        "OBP": ".356",
+        "SLG": ".514"
+      },
+      "Maikel Garcia": {
+        "AB": "555",
+        "R": "76",
+        "H": "161",
+        "1B": "102",
+        "2B": "35",
+        "3B": "6",
+        "HR": "18",
+        "RBI": "71",
+        "BB": "60",
+        "K": "93",
+        "SB": "22",
+        "CS": "7",
+        "AVG": ".290",
+        "OBP": ".358",
+        "SLG": ".472"
+      },
+      "Jarren Duran": {
+        "AB": "551",
+        "R": "83",
+        "H": "154",
+        "1B": "88",
+        "2B": "37",
+        "3B": "13",
+        "HR": "16",
+        "RBI": "71",
+        "BB": "47",
+        "K": "138",
+        "SB": "24",
+        "CS": "6",
+        "AVG": ".280",
+        "OBP": ".347",
+        "SLG": ".481"
+      },
+      "Randy Arozarena": {
+        "AB": "528",
+        "R": "87",
+        "H": "130",
+        "1B": "76",
+        "2B": "32",
+        "3B": "1",
+        "HR": "21",
+        "RBI": "67",
+        "BB": "59",
+        "K": "157",
+        "SB": "27",
+        "CS": "6",
+        "AVG": ".246",
+        "OBP": ".347",
+        "SLG": ".430"
+      },
+      "Colson Montgomery": {
+        "AB": "524",
+        "R": "81",
+        "H": "133",
+        "1B": "73",
+        "2B": "21",
+        "3B": "7",
+        "HR": "32",
+        "RBI": "86",
+        "BB": "46",
+        "K": "156",
+        "SB": "7",
+        "CS": "1",
+        "AVG": ".254",
+        "OBP": ".317",
+        "SLG": ".504"
+      },
+      "Jacob Wilson": {
+        "AB": "563",
+        "R": "78",
+        "H": "176",
+        "1B": "125",
+        "2B": "33",
+        "3B": "1",
+        "HR": "17",
+        "RBI": "79",
+        "BB": "36",
+        "K": "73",
+        "SB": "9",
+        "CS": "3",
+        "AVG": ".313",
+        "OBP": ".363",
+        "SLG": ".465"
+      },
+      "Roman Anthony": {
+        "AB": "547",
+        "R": "91",
+        "H": "156",
+        "1B": "99",
+        "2B": "34",
+        "3B": "5",
+        "HR": "18",
+        "RBI": "74",
+        "BB": "62",
+        "K": "158",
+        "SB": "13",
+        "CS": "3",
+        "AVG": ".285",
+        "OBP": ".368",
+        "SLG": ".464"
+      },
+      "Kerry Carpenter": {
+        "AB": "507",
+        "R": "78",
+        "H": "139",
+        "1B": "75",
+        "2B": "26",
+        "3B": "6",
+        "HR": "32",
+        "RBI": "81",
+        "BB": "35",
+        "K": "133",
+        "SB": "3",
+        "CS": "1",
+        "AVG": ".274",
+        "OBP": ".328",
+        "SLG": ".538"
+      },
+      "Yandy Diaz": {
+        "AB": "530",
+        "R": "73",
+        "H": "167",
+        "1B": "114",
+        "2B": "30",
+        "3B": "2",
+        "HR": "21",
+        "RBI": "85",
+        "BB": "52",
+        "K": "81",
+        "SB": "2",
+        "CS": "1",
+        "AVG": ".315",
+        "OBP": ".379",
+        "SLG": ".498"
+      },
+      "Vinnie Pasquantino": {
+        "AB": "558",
+        "R": "67",
+        "H": "151",
+        "1B": "88",
+        "2B": "32",
+        "3B": "1",
+        "HR": "30",
+        "RBI": "102",
+        "BB": "50",
+        "K": "106",
+        "SB": "1",
+        "CS": "0",
+        "AVG": ".271",
+        "OBP": ".332",
+        "SLG": ".493"
+      },
+      "Wilyer Abreu": {
+        "AB": "477",
+        "R": "73",
+        "H": "125",
+        "1B": "73",
+        "2B": "24",
+        "3B": "1",
+        "HR": "27",
+        "RBI": "87",
+        "BB": "45",
+        "K": "126",
+        "SB": "10",
+        "CS": "4",
+        "AVG": ".262",
+        "OBP": ".327",
+        "SLG": ".486"
+      },
+      "Jo Adell": {
+        "AB": "496",
+        "R": "66",
+        "H": "120",
+        "1B": "67",
+        "2B": "20",
+        "3B": "1",
+        "HR": "32",
+        "RBI": "95",
+        "BB": "36",
+        "K": "146",
+        "SB": "9",
+        "CS": "5",
+        "AVG": ".242",
+        "OBP": ".305",
+        "SLG": ".480"
+      },
+      "Steven Kwan": {
+        "AB": "555",
+        "R": "87",
+        "H": "165",
+        "1B": "120",
+        "2B": "28",
+        "3B": "3",
+        "HR": "14",
+        "RBI": "56",
+        "BB": "54",
+        "K": "61",
+        "SB": "18",
+        "CS": "5",
+        "AVG": ".297",
+        "OBP": ".362",
+        "SLG": ".434"
+      },
+      "Jonathan Aranda": {
+        "AB": "505",
+        "R": "76",
+        "H": "153",
+        "1B": "98",
+        "2B": "33",
+        "3B": "1",
+        "HR": "21",
+        "RBI": "84",
+        "BB": "54",
+        "K": "130",
+        "SB": "2",
+        "CS": "0",
+        "AVG": ".303",
+        "OBP": ".382",
+        "SLG": ".497"
+      },
+      "Mike Trout": {
+        "AB": "523",
+        "R": "87",
+        "H": "131",
+        "1B": "77",
+        "2B": "22",
+        "3B": "2",
+        "HR": "30",
+        "RBI": "83",
+        "BB": "89",
+        "K": "184",
+        "SB": "3",
+        "CS": "0",
+        "AVG": ".251",
+        "OBP": ".363",
+        "SLG": ".472"
+      },
+      "Ben Rice": {
+        "AB": "505",
+        "R": "81",
+        "H": "135",
+        "1B": "72",
+        "2B": "32",
+        "3B": "3",
+        "HR": "28",
+        "RBI": "79",
+        "BB": "53",
+        "K": "123",
+        "SB": "4",
+        "CS": "2",
+        "AVG": ".267",
+        "OBP": ".343",
+        "SLG": ".509"
+      },
+      "Chandler Simpson": {
+        "AB": "477",
+        "R": "67",
+        "H": "145",
+        "1B": "113",
+        "2B": "21",
+        "3B": "6",
+        "HR": "5",
+        "RBI": "42",
+        "BB": "33",
+        "K": "69",
+        "SB": "41",
+        "CS": "13",
+        "AVG": ".304",
+        "OBP": ".349",
+        "SLG": ".405"
+      },
+      "Taylor Ward": {
+        "AB": "456",
+        "R": "73",
+        "H": "119",
+        "1B": "61",
+        "2B": "28",
+        "3B": "2",
+        "HR": "28",
+        "RBI": "86",
+        "BB": "58",
+        "K": "129",
+        "SB": "4",
+        "CS": "2",
+        "AVG": ".261",
+        "OBP": ".345",
+        "SLG": ".515"
+      },
+      "Luke Keaschall": {
+        "AB": "478",
+        "R": "67",
+        "H": "135",
+        "1B": "89",
+        "2B": "30",
+        "3B": "1",
+        "HR": "15",
+        "RBI": "68",
+        "BB": "44",
+        "K": "91",
+        "SB": "22",
+        "CS": "6",
+        "AVG": ".282",
+        "OBP": ".351",
+        "SLG": ".444"
+      },
+      "Willson Contreras": {
+        "AB": "443",
+        "R": "73",
+        "H": "124",
+        "1B": "68",
+        "2B": "31",
+        "3B": "2",
+        "HR": "23",
+        "RBI": "77",
+        "BB": "44",
+        "K": "138",
+        "SB": "5",
+        "CS": "1",
+        "AVG": ".280",
+        "OBP": ".371",
+        "SLG": ".515"
+      },
+      "Shea Langeliers": {
+        "AB": "465",
+        "R": "69",
+        "H": "126",
+        "1B": "69",
+        "2B": "29",
+        "3B": "0",
+        "HR": "28",
+        "RBI": "69",
+        "BB": "38",
+        "K": "108",
+        "SB": "6",
+        "CS": "2",
+        "AVG": ".271",
+        "OBP": ".327",
+        "SLG": ".514"
+      },
+      "Jose Caballero": {
+        "AB": "373",
+        "R": "60",
+        "H": "92",
+        "1B": "58",
+        "2B": "23",
+        "3B": "1",
+        "HR": "10",
+        "RBI": "51",
+        "BB": "41",
+        "K": "111",
+        "SB": "43",
+        "CS": "11",
+        "AVG": ".247",
+        "OBP": ".329",
+        "SLG": ".394"
+      },
+      "Christian Walker": {
+        "AB": "510",
+        "R": "69",
+        "H": "134",
+        "1B": "81",
+        "2B": "25",
+        "3B": "1",
+        "HR": "27",
+        "RBI": "86",
+        "BB": "42",
+        "K": "146",
+        "SB": "2",
+        "CS": "1",
+        "AVG": ".263",
+        "OBP": ".328",
+        "SLG": ".474"
+      },
+      "Ceddanne Rafaela": {
+        "AB": "536",
+        "R": "83",
+        "H": "136",
+        "1B": "85",
+        "2B": "30",
+        "3B": "5",
+        "HR": "16",
+        "RBI": "62",
+        "BB": "32",
+        "K": "125",
+        "SB": "20",
+        "CS": "5",
+        "AVG": ".254",
+        "OBP": ".306",
+        "SLG": ".418"
+      },
+      "Andrew Benintendi": {
+        "AB": "493",
+        "R": "70",
+        "H": "128",
+        "1B": "76",
+        "2B": "21",
+        "3B": "4",
+        "HR": "27",
+        "RBI": "79",
+        "BB": "43",
+        "K": "103",
+        "SB": "3",
+        "CS": "1",
+        "AVG": ".260",
+        "OBP": ".321",
+        "SLG": ".483"
+      },
+      "Trent Grisham": {
+        "AB": "479",
+        "R": "81",
+        "H": "113",
+        "1B": "65",
+        "2B": "15",
+        "3B": "4",
+        "HR": "29",
+        "RBI": "75",
+        "BB": "66",
+        "K": "144",
+        "SB": "4",
+        "CS": "1",
+        "AVG": ".236",
+        "OBP": ".333",
+        "SLG": ".466"
+      },
+      "Carlos Correa": {
+        "AB": "518",
+        "R": "73",
+        "H": "166",
+        "1B": "119",
+        "2B": "30",
+        "3B": "1",
+        "HR": "16",
+        "RBI": "66",
+        "BB": "49",
+        "K": "101",
+        "SB": "1",
+        "CS": "0",
+        "AVG": ".321",
+        "OBP": ".379",
+        "SLG": ".475"
+      },
+      "Evan Carter": {
+        "AB": "454",
+        "R": "68",
+        "H": "116",
+        "1B": "72",
+        "2B": "23",
+        "3B": "5",
+        "HR": "16",
+        "RBI": "60",
+        "BB": "45",
+        "K": "110",
+        "SB": "24",
+        "CS": "5",
+        "AVG": ".256",
+        "OBP": ".333",
+        "SLG": ".434"
+      },
+      "Brendan Donovan": {
+        "AB": "520",
+        "R": "76",
+        "H": "150",
+        "1B": "98",
+        "2B": "33",
+        "3B": "2",
+        "HR": "17",
+        "RBI": "69",
+        "BB": "54",
+        "K": "82",
+        "SB": "5",
+        "CS": "4",
+        "AVG": ".288",
+        "OBP": ".368",
+        "SLG": ".458"
+      },
+      "Brandon Nimmo": {
+        "AB": "499",
+        "R": "72",
+        "H": "125",
+        "1B": "81",
+        "2B": "23",
+        "3B": "1",
+        "HR": "20",
+        "RBI": "77",
+        "BB": "52",
+        "K": "130",
+        "SB": "11",
+        "CS": "1",
+        "AVG": ".251",
+        "OBP": ".326",
+        "SLG": ".421"
+      },
+      "Kazuma Okamoto": {
+        "AB": "480",
+        "R": "71",
+        "H": "128",
+        "1B": "81",
+        "2B": "26",
+        "3B": "2",
+        "HR": "19",
+        "RBI": "70",
+        "BB": "44",
+        "K": "100",
+        "SB": "9",
+        "CS": "2",
+        "AVG": ".267",
+        "OBP": ".333",
+        "SLG": ".448"
+      },
+      "Matt Wallner": {
+        "AB": "431",
+        "R": "62",
+        "H": "107",
+        "1B": "47",
+        "2B": "24",
+        "3B": "5",
+        "HR": "31",
+        "RBI": "62",
+        "BB": "54",
+        "K": "148",
+        "SB": "6",
+        "CS": "3",
+        "AVG": ".248",
+        "OBP": ".345",
+        "SLG": ".543"
+      },
+      "Kevin McGonigle": {
+        "AB": "477",
+        "R": "68",
+        "H": "127",
+        "1B": "82",
+        "2B": "25",
+        "3B": "4",
+        "HR": "16",
+        "RBI": "61",
+        "BB": "39",
+        "K": "124",
+        "SB": "16",
+        "CS": "4",
+        "AVG": ".266",
+        "OBP": ".326",
+        "SLG": ".436"
+      },
+      "Spencer Torkelson": {
+        "AB": "497",
+        "R": "73",
+        "H": "125",
+        "1B": "70",
+        "2B": "28",
+        "3B": "1",
+        "HR": "26",
+        "RBI": "72",
+        "BB": "60",
+        "K": "149",
+        "SB": "2",
+        "CS": "1",
+        "AVG": ".252",
+        "OBP": ".342",
+        "SLG": ".469"
+      },
+      "Nolan Schanuel": {
+        "AB": "552",
+        "R": "75",
+        "H": "150",
+        "1B": "101",
+        "2B": "31",
+        "3B": "1",
+        "HR": "17",
+        "RBI": "70",
+        "BB": "63",
+        "K": "102",
+        "SB": "6",
+        "CS": "1",
+        "AVG": ".272",
+        "OBP": ".353",
+        "SLG": ".424"
+      },
+      "Jonny DeLuca": {
+        "AB": "421",
+        "R": "51",
+        "H": "121",
+        "1B": "85",
+        "2B": "18",
+        "3B": "7",
+        "HR": "11",
+        "RBI": "52",
+        "BB": "30",
+        "K": "92",
+        "SB": "27",
+        "CS": "5",
+        "AVG": ".287",
+        "OBP": ".340",
+        "SLG": ".442"
+      },
+      "Dylan Beavers": {
+        "AB": "460",
+        "R": "71",
+        "H": "117",
+        "1B": "69",
+        "2B": "24",
+        "3B": "4",
+        "HR": "20",
+        "RBI": "64",
+        "BB": "59",
+        "K": "137",
+        "SB": "11",
+        "CS": "8",
+        "AVG": ".254",
+        "OBP": ".344",
+        "SLG": ".454"
+      },
+      "Addison Barger": {
+        "AB": "482",
+        "R": "69",
+        "H": "123",
+        "1B": "68",
+        "2B": "31",
+        "3B": "2",
+        "HR": "22",
+        "RBI": "75",
+        "BB": "44",
+        "K": "124",
+        "SB": "5",
+        "CS": "1",
+        "AVG": ".255",
+        "OBP": ".321",
+        "SLG": ".465"
+      },
+      "C.J. Kayfus": {
+        "AB": "453",
+        "R": "63",
+        "H": "114",
+        "1B": "63",
+        "2B": "26",
+        "3B": "5",
+        "HR": "20",
+        "RBI": "64",
+        "BB": "46",
+        "K": "123",
+        "SB": "14",
+        "CS": "3",
+        "AVG": ".252",
+        "OBP": ".318",
+        "SLG": ".464"
+      },
+      "Cedric Mullins": {
+        "AB": "448",
+        "R": "64",
+        "H": "107",
+        "1B": "67",
+        "2B": "22",
+        "3B": "3",
+        "HR": "15",
+        "RBI": "59",
+        "BB": "49",
+        "K": "111",
+        "SB": "24",
+        "CS": "5",
+        "AVG": ".239",
+        "OBP": ".317",
+        "SLG": ".402"
+      },
+      "Dominic Canzone": {
+        "AB": "470",
+        "R": "62",
+        "H": "135",
+        "1B": "90",
+        "2B": "26",
+        "3B": "1",
+        "HR": "18",
+        "RBI": "60",
+        "BB": "40",
+        "K": "111",
+        "SB": "8",
+        "CS": "3",
+        "AVG": ".287",
+        "OBP": ".349",
+        "SLG": ".462"
+      },
+      "Denzel Clarke": {
+        "AB": "471",
+        "R": "67",
+        "H": "123",
+        "1B": "76",
+        "2B": "26",
+        "3B": "4",
+        "HR": "17",
+        "RBI": "52",
+        "BB": "35",
+        "K": "140",
+        "SB": "17",
+        "CS": "3",
+        "AVG": ".261",
+        "OBP": ".321",
+        "SLG": ".442"
+      },
+      "Austin Hays": {
+        "AB": "466",
+        "R": "66",
+        "H": "119",
+        "1B": "75",
+        "2B": "20",
+        "3B": "4",
+        "HR": "20",
+        "RBI": "68",
+        "BB": "31",
+        "K": "126",
+        "SB": "9",
+        "CS": "1",
+        "AVG": ".255",
+        "OBP": ".306",
+        "SLG": ".444"
+      },
+      "Jesus Sanchez": {
+        "AB": "418",
+        "R": "68",
+        "H": "108",
+        "1B": "66",
+        "2B": "22",
+        "3B": "3",
+        "HR": "17",
+        "RBI": "58",
+        "BB": "47",
+        "K": "103",
+        "SB": "14",
+        "CS": "3",
+        "AVG": ".258",
+        "OBP": ".338",
+        "SLG": ".447"
+      },
+      "Tyler O'Neill": {
+        "AB": "407",
+        "R": "66",
+        "H": "96",
+        "1B": "52",
+        "2B": "16",
+        "3B": "2",
+        "HR": "26",
+        "RBI": "63",
+        "BB": "51",
+        "K": "138",
+        "SB": "8",
+        "CS": "1",
+        "AVG": ".236",
+        "OBP": ".329",
+        "SLG": ".477"
+      },
+      "Caleb Durbin": {
+        "AB": "441",
+        "R": "61",
+        "H": "119",
+        "1B": "74",
+        "2B": "30",
+        "3B": "2",
+        "HR": "13",
+        "RBI": "57",
+        "BB": "27",
+        "K": "73",
+        "SB": "19",
+        "CS": "6",
+        "AVG": ".270",
+        "OBP": ".343",
+        "SLG": ".435"
+      },
+      "Colton Cowser": {
+        "AB": "466",
+        "R": "63",
+        "H": "105",
+        "1B": "57",
+        "2B": "23",
+        "3B": "2",
+        "HR": "23",
+        "RBI": "63",
+        "BB": "46",
+        "K": "181",
+        "SB": "16",
+        "CS": "2",
+        "AVG": ".225",
+        "OBP": ".306",
+        "SLG": ".431"
+      },
+      "Kyle Manzardo": {
+        "AB": "437",
+        "R": "54",
+        "H": "112",
+        "1B": "62",
+        "2B": "20",
+        "3B": "2",
+        "HR": "28",
+        "RBI": "69",
+        "BB": "48",
+        "K": "122",
+        "SB": "3",
+        "CS": "1",
+        "AVG": ".256",
+        "OBP": ".337",
+        "SLG": ".503"
+      },
+      "Royce Lewis": {
+        "AB": "490",
+        "R": "55",
+        "H": "118",
+        "1B": "69",
+        "2B": "27",
+        "3B": "0",
+        "HR": "22",
+        "RBI": "74",
+        "BB": "39",
+        "K": "112",
+        "SB": "12",
+        "CS": "1",
+        "AVG": ".241",
+        "OBP": ".295",
+        "SLG": ".431"
+      },
+      "Miguel Vargas": {
+        "AB": "463",
+        "R": "74",
+        "H": "120",
+        "1B": "69",
+        "2B": "28",
+        "3B": "4",
+        "HR": "19",
+        "RBI": "62",
+        "BB": "46",
+        "K": "99",
+        "SB": "6",
+        "CS": "1",
+        "AVG": ".259",
+        "OBP": ".332",
+        "SLG": ".460"
+      },
+      "Kody Clemens": {
+        "AB": "441",
+        "R": "60",
+        "H": "106",
+        "1B": "57",
+        "2B": "20",
+        "3B": "4",
+        "HR": "25",
+        "RBI": "72",
+        "BB": "41",
+        "K": "117",
+        "SB": "5",
+        "CS": "2",
+        "AVG": ".240",
+        "OBP": ".312",
+        "SLG": ".474"
+      },
+      "Jake Meyers": {
+        "AB": "436",
+        "R": "66",
+        "H": "129",
+        "1B": "95",
+        "2B": "22",
+        "3B": "3",
+        "HR": "9",
+        "RBI": "42",
+        "BB": "42",
+        "K": "90",
+        "SB": "18",
+        "CS": "4",
+        "AVG": ".296",
+        "OBP": ".361",
+        "SLG": ".422"
+      },
+      "Isaac Paredes": {
+        "AB": "436",
+        "R": "59",
+        "H": "120",
+        "1B": "75",
+        "2B": "21",
+        "3B": "2",
+        "HR": "22",
+        "RBI": "67",
+        "BB": "57",
+        "K": "82",
+        "SB": "1",
+        "CS": "0",
+        "AVG": ".275",
+        "OBP": ".370",
+        "SLG": ".484"
+      },
+      "Carson Williams": {
+        "AB": "468",
+        "R": "65",
+        "H": "119",
+        "1B": "79",
+        "2B": "23",
+        "3B": "2",
+        "HR": "15",
+        "RBI": "61",
+        "BB": "35",
+        "K": "122",
+        "SB": "14",
+        "CS": "5",
+        "AVG": ".254",
+        "OBP": ".310",
+        "SLG": ".408"
+      },
+      "Nathan Lukes": {
+        "AB": "456",
+        "R": "67",
+        "H": "121",
+        "1B": "77",
+        "2B": "25",
+        "3B": "4",
+        "HR": "15",
+        "RBI": "72",
+        "BB": "44",
+        "K": "88",
+        "SB": "5",
+        "CS": "3",
+        "AVG": ".265",
+        "OBP": ".324",
+        "SLG": ".436"
+      },
+      "Trevor Larnach": {
+        "AB": "450",
+        "R": "65",
+        "H": "116",
+        "1B": "73",
+        "2B": "21",
+        "3B": "1",
+        "HR": "21",
+        "RBI": "65",
+        "BB": "53",
+        "K": "118",
+        "SB": "4",
+        "CS": "2",
+        "AVG": ".258",
+        "OBP": ".337",
+        "SLG": ".449"
+      },
+      "Colt Keith": {
+        "AB": "483",
+        "R": "69",
+        "H": "132",
+        "1B": "89",
+        "2B": "23",
+        "3B": "3",
+        "HR": "17",
+        "RBI": "60",
+        "BB": "48",
+        "K": "120",
+        "SB": "4",
+        "CS": "2",
+        "AVG": ".273",
+        "OBP": ".341",
+        "SLG": ".439"
+      },
+      "Jordan Westburg": {
+        "AB": "403",
+        "R": "65",
+        "H": "112",
+        "1B": "71",
+        "2B": "18",
+        "3B": "3",
+        "HR": "20",
+        "RBI": "56",
+        "BB": "25",
+        "K": "107",
+        "SB": "3",
+        "CS": "3",
+        "AVG": ".278",
+        "OBP": ".331",
+        "SLG": ".486"
+      },
+      "Jake Burger": {
+        "AB": "393",
+        "R": "57",
+        "H": "102",
+        "1B": "57",
+        "2B": "19",
+        "3B": "1",
+        "HR": "25",
+        "RBI": "66",
+        "BB": "20",
+        "K": "108",
+        "SB": "1",
+        "CS": "1",
+        "AVG": ".260",
+        "OBP": ".305",
+        "SLG": ".504"
+      },
+      "Victor Robles": {
+        "AB": "384",
+        "R": "51",
+        "H": "106",
+        "1B": "69",
+        "2B": "26",
+        "3B": "3",
+        "HR": "8",
+        "RBI": "38",
+        "BB": "31",
+        "K": "85",
+        "SB": "30",
+        "CS": "8",
+        "AVG": ".276",
+        "OBP": ".346",
+        "SLG": ".422"
+      },
+      "Munetaka Murakami": {
+        "AB": "472",
+        "R": "61",
+        "H": "122",
+        "1B": "77",
+        "2B": "24",
+        "3B": "1",
+        "HR": "20",
+        "RBI": "68",
+        "BB": "45",
+        "K": "118",
+        "SB": "4",
+        "CS": "1",
+        "AVG": ".259",
+        "OBP": ".329",
+        "SLG": ".441"
+      },
+      "Salvador Perez": {
+        "AB": "464",
+        "R": "44",
+        "H": "120",
+        "1B": "68",
+        "2B": "26",
+        "3B": "0",
+        "HR": "26",
+        "RBI": "79",
+        "BB": "29",
+        "K": "108",
+        "SB": "0",
+        "CS": "0",
+        "AVG": ".259",
+        "OBP": ".316",
+        "SLG": ".483"
+      },
+      "Austin Wells": {
+        "AB": "405",
+        "R": "56",
+        "H": "100",
+        "1B": "55",
+        "2B": "21",
+        "3B": "1",
+        "HR": "23",
+        "RBI": "70",
+        "BB": "34",
+        "K": "114",
+        "SB": "4",
+        "CS": "1",
+        "AVG": ".247",
+        "OBP": ".305",
+        "SLG": ".474"
+      },
+      "Alejandro Kirk": {
+        "AB": "478",
+        "R": "51",
+        "H": "128",
+        "1B": "88",
+        "2B": "21",
+        "3B": "1",
+        "HR": "18",
+        "RBI": "84",
+        "BB": "52",
+        "K": "73",
+        "SB": "1",
+        "CS": "0",
+        "AVG": ".268",
+        "OBP": ".338",
+        "SLG": ".429"
+      },
+      "Isaac Collins": {
+        "AB": "420",
+        "R": "56",
+        "H": "112",
+        "1B": "69",
+        "2B": "25",
+        "3B": "4",
+        "HR": "14",
+        "RBI": "53",
+        "BB": "51",
+        "K": "102",
+        "SB": "16",
+        "CS": "6",
+        "AVG": ".267",
+        "OBP": ".352",
+        "SLG": ".445"
+      },
+      "Chase DeLauter": {
+        "AB": "457",
+        "R": "61",
+        "H": "114",
+        "1B": "71",
+        "2B": "22",
+        "3B": "3",
+        "HR": "18",
+        "RBI": "57",
+        "BB": "45",
+        "K": "120",
+        "SB": "12",
+        "CS": "3",
+        "AVG": ".249",
+        "OBP": ".323",
+        "SLG": ".429"
+      },
+      "Joshua Lowe": {
+        "AB": "480",
+        "R": "68",
+        "H": "107",
+        "1B": "60",
+        "2B": "26",
+        "3B": "3",
+        "HR": "18",
+        "RBI": "52",
+        "BB": "44",
+        "K": "144",
+        "SB": "18",
+        "CS": "5",
+        "AVG": ".223",
+        "OBP": ".296",
+        "SLG": ".402"
+      },
+      "Andres Gimenez": {
+        "AB": "473",
+        "R": "63",
+        "H": "115",
+        "1B": "83",
+        "2B": "19",
+        "3B": "2",
+        "HR": "11",
+        "RBI": "59",
+        "BB": "30",
+        "K": "94",
+        "SB": "19",
+        "CS": "3",
+        "AVG": ".243",
+        "OBP": ".302",
+        "SLG": ".361"
+      },
+      "Gleyber Torres": {
+        "AB": "502",
+        "R": "71",
+        "H": "133",
+        "1B": "94",
+        "2B": "25",
+        "3B": "0",
+        "HR": "14",
+        "RBI": "63",
+        "BB": "62",
+        "K": "109",
+        "SB": "4",
+        "CS": "1",
+        "AVG": ".265",
+        "OBP": ".346",
+        "SLG": ".398"
+      },
+      "Josh H. Smith": {
+        "AB": "474",
+        "R": "70",
+        "H": "128",
+        "1B": "86",
+        "2B": "26",
+        "3B": "3",
+        "HR": "13",
+        "RBI": "46",
+        "BB": "48",
+        "K": "106",
+        "SB": "11",
+        "CS": "3",
+        "AVG": ".270",
+        "OBP": ".349",
+        "SLG": ".420"
+      },
+      "Josh Jung": {
+        "AB": "494",
+        "R": "56",
+        "H": "129",
+        "1B": "84",
+        "2B": "25",
+        "3B": "2",
+        "HR": "18",
+        "RBI": "65",
+        "BB": "30",
+        "K": "138",
+        "SB": "6",
+        "CS": "1",
+        "AVG": ".261",
+        "OBP": ".307",
+        "SLG": ".429"
+      },
+      "Ernie Clement": {
+        "AB": "484",
+        "R": "75",
+        "H": "134",
+        "1B": "91",
+        "2B": "28",
+        "3B": "4",
+        "HR": "11",
+        "RBI": "52",
+        "BB": "28",
+        "K": "71",
+        "SB": "6",
+        "CS": "4",
+        "AVG": ".277",
+        "OBP": ".318",
+        "SLG": ".419"
+      },
+      "Lenyn Sosa": {
+        "AB": "407",
+        "R": "51",
+        "H": "114",
+        "1B": "76",
+        "2B": "17",
+        "3B": "2",
+        "HR": "19",
+        "RBI": "60",
+        "BB": "18",
+        "K": "98",
+        "SB": "4",
+        "CS": "1",
+        "AVG": ".280",
+        "OBP": ".316",
+        "SLG": ".472"
+      }
+    },
+    "pitchers": {
+      "Tarik Skubal": {
+        "INNs": "191",
+        "APP": "30",
+        "GS": "30",
+        "QS": "24",
+        "CG": "1",
+        "W": "13",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "228",
+        "BB": "44",
+        "H": "159",
+        "ERA": "2.83",
+        "WHIP": "1.06"
+      },
+      "Bryan Woo": {
+        "INNs": "179",
+        "APP": "29",
+        "GS": "29",
+        "QS": "21",
+        "CG": "0",
+        "W": "15",
+        "L": "5",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "173",
+        "BB": "34",
+        "H": "143",
+        "ERA": "3.07",
+        "WHIP": "0.99"
+      },
+      "Garrett Crochet": {
+        "INNs": "159",
+        "APP": "27",
+        "GS": "27",
+        "QS": "18",
+        "CG": "1",
+        "W": "13",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "197",
+        "BB": "38",
+        "H": "147",
+        "ERA": "3.28",
+        "WHIP": "1.16"
+      },
+      "Jacob deGrom": {
+        "INNs": "160",
+        "APP": "27",
+        "GS": "27",
+        "QS": "13",
+        "CG": "0",
+        "W": "11",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "165",
+        "BB": "37",
+        "H": "124",
+        "ERA": "3.09",
+        "WHIP": "1.01"
+      },
+      "Nathan Eovaldi": {
+        "INNs": "164",
+        "APP": "27",
+        "GS": "27",
+        "QS": "18",
+        "CG": "1",
+        "W": "12",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "156",
+        "BB": "36",
+        "H": "139",
+        "ERA": "2.91",
+        "WHIP": "1.07"
+      },
+      "Joe Ryan": {
+        "INNs": "157",
+        "APP": "27",
+        "GS": "27",
+        "QS": "15",
+        "CG": "0",
+        "W": "12",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "171",
+        "BB": "34",
+        "H": "132",
+        "ERA": "3.33",
+        "WHIP": "1.06"
+      },
+      "Max Fried": {
+        "INNs": "178",
+        "APP": "29",
+        "GS": "29",
+        "QS": "20",
+        "CG": "1",
+        "W": "16",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "168",
+        "BB": "59",
+        "H": "161",
+        "ERA": "3.29",
+        "WHIP": "1.24"
+      },
+      "Andres Munoz": {
+        "INNs": "62",
+        "APP": "66",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "2",
+        "S": "39",
+        "BS": "7",
+        "HD": "3",
+        "K": "71",
+        "BB": "24",
+        "H": "30",
+        "ERA": "1.60",
+        "WHIP": "0.87"
+      },
+      "Logan Gilbert": {
+        "INNs": "166",
+        "APP": "30",
+        "GS": "30",
+        "QS": "15",
+        "CG": "0",
+        "W": "9",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "195",
+        "BB": "37",
+        "H": "138",
+        "ERA": "3.47",
+        "WHIP": "1.05"
+      },
+      "George Kirby": {
+        "INNs": "162",
+        "APP": "29",
+        "GS": "29",
+        "QS": "16",
+        "CG": "0",
+        "W": "14",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "163",
+        "BB": "32",
+        "H": "147",
+        "ERA": "3.72",
+        "WHIP": "1.10"
+      },
+      "Noah Cameron": {
+        "INNs": "159",
+        "APP": "26",
+        "GS": "26",
+        "QS": "12",
+        "CG": "0",
+        "W": "13",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "137",
+        "BB": "49",
+        "H": "132",
+        "ERA": "3.06",
+        "WHIP": "1.14"
+      },
+      "Aroldis Chapman": {
+        "INNs": "56",
+        "APP": "68",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "2",
+        "S": "36",
+        "BS": "4",
+        "HD": "3",
+        "K": "80",
+        "BB": "20",
+        "H": "31",
+        "ERA": "1.93",
+        "WHIP": "0.91"
+      },
+      "Kevin Gausman": {
+        "INNs": "185",
+        "APP": "30",
+        "GS": "30",
+        "QS": "17",
+        "CG": "1",
+        "W": "12",
+        "L": "9",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "171",
+        "BB": "51",
+        "H": "160",
+        "ERA": "3.70",
+        "WHIP": "1.14"
+      },
+      "Hunter Brown": {
+        "INNs": "160",
+        "APP": "27",
+        "GS": "27",
+        "QS": "20",
+        "CG": "1",
+        "W": "11",
+        "L": "7",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "170",
+        "BB": "52",
+        "H": "138",
+        "ERA": "3.15",
+        "WHIP": "1.19"
+      },
+      "Jack Flaherty": {
+        "INNs": "149",
+        "APP": "27",
+        "GS": "27",
+        "QS": "11",
+        "CG": "0",
+        "W": "11",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "168",
+        "BB": "40",
+        "H": "126",
+        "ERA": "3.50",
+        "WHIP": "1.11"
+      },
+      "Carlos Rodon": {
+        "INNs": "144",
+        "APP": "24",
+        "GS": "24",
+        "QS": "14",
+        "CG": "0",
+        "W": "13",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "150",
+        "BB": "51",
+        "H": "119",
+        "ERA": "3.50",
+        "WHIP": "1.18"
+      },
+      "Cole Ragans": {
+        "INNs": "149",
+        "APP": "27",
+        "GS": "27",
+        "QS": "13",
+        "CG": "0",
+        "W": "8",
+        "L": "7",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "192",
+        "BB": "46",
+        "H": "126",
+        "ERA": "3.32",
+        "WHIP": "1.15"
+      },
+      "Shane Smith": {
+        "INNs": "161",
+        "APP": "30",
+        "GS": "30",
+        "QS": "8",
+        "CG": "0",
+        "W": "11",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "154",
+        "BB": "54",
+        "H": "128",
+        "ERA": "3.47",
+        "WHIP": "1.13"
+      },
+      "Trevor Rogers": {
+        "INNs": "158",
+        "APP": "27",
+        "GS": "27",
+        "QS": "14",
+        "CG": "1",
+        "W": "9",
+        "L": "7",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "140",
+        "BB": "48",
+        "H": "130",
+        "ERA": "2.79",
+        "WHIP": "1.13"
+      },
+      "Ryan Pepiot": {
+        "INNs": "153",
+        "APP": "28",
+        "GS": "28",
+        "QS": "12",
+        "CG": "0",
+        "W": "12",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "152",
+        "BB": "50",
+        "H": "125",
+        "ERA": "3.65",
+        "WHIP": "1.14"
+      },
+      "Josh Hader": {
+        "INNs": "57",
+        "APP": "61",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "3",
+        "S": "31",
+        "BS": "2",
+        "HD": "3",
+        "K": "76",
+        "BB": "17",
+        "H": "31",
+        "ERA": "2.53",
+        "WHIP": "0.84"
+      },
+      "Cade Smith": {
+        "INNs": "56",
+        "APP": "70",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "2",
+        "S": "33",
+        "BS": "10",
+        "HD": "3",
+        "K": "78",
+        "BB": "14",
+        "H": "39",
+        "ERA": "2.57",
+        "WHIP": "0.95"
+      },
+      "Michael Wacha": {
+        "INNs": "175",
+        "APP": "30",
+        "GS": "30",
+        "QS": "14",
+        "CG": "0",
+        "W": "11",
+        "L": "11",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "136",
+        "BB": "46",
+        "H": "158",
+        "ERA": "3.19",
+        "WHIP": "1.17"
+      },
+      "Luis Castillo": {
+        "INNs": "165",
+        "APP": "29",
+        "GS": "29",
+        "QS": "18",
+        "CG": "0",
+        "W": "11",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "150",
+        "BB": "41",
+        "H": "148",
+        "ERA": "3.55",
+        "WHIP": "1.15"
+      },
+      "Gavin Williams": {
+        "INNs": "150",
+        "APP": "27",
+        "GS": "27",
+        "QS": "12",
+        "CG": "0",
+        "W": "10",
+        "L": "7",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "152",
+        "BB": "57",
+        "H": "120",
+        "ERA": "3.12",
+        "WHIP": "1.18"
+      },
+      "MacKenzie Gore": {
+        "INNs": "145",
+        "APP": "26",
+        "GS": "26",
+        "QS": "12",
+        "CG": "0",
+        "W": "9",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "158",
+        "BB": "43",
+        "H": "127",
+        "ERA": "3.04",
+        "WHIP": "1.17"
+      },
+      "Cameron Schlittler": {
+        "INNs": "148",
+        "APP": "27",
+        "GS": "27",
+        "QS": "13",
+        "CG": "0",
+        "W": "9",
+        "L": "7",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "160",
+        "BB": "54",
+        "H": "125",
+        "ERA": "2.98",
+        "WHIP": "1.21"
+      },
+      "David Bednar": {
+        "INNs": "52",
+        "APP": "55",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "2",
+        "S": "39",
+        "BS": "6",
+        "HD": "3",
+        "K": "64",
+        "BB": "18",
+        "H": "39",
+        "ERA": "3.12",
+        "WHIP": "1.10"
+      },
+      "Sonny Gray": {
+        "INNs": "156",
+        "APP": "27",
+        "GS": "27",
+        "QS": "13",
+        "CG": "1",
+        "W": "11",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "171",
+        "BB": "39",
+        "H": "145",
+        "ERA": "3.98",
+        "WHIP": "1.18"
+      },
+      "Carlos Estevez": {
+        "INNs": "63",
+        "APP": "66",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "2",
+        "S": "32",
+        "BS": "5",
+        "HD": "3",
+        "K": "48",
+        "BB": "17",
+        "H": "40",
+        "ERA": "2.29",
+        "WHIP": "0.90"
+      },
+      "Framber Valdez": {
+        "INNs": "187",
+        "APP": "30",
+        "GS": "30",
+        "QS": "21",
+        "CG": "2",
+        "W": "14",
+        "L": "10",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "173",
+        "BB": "57",
+        "H": "188",
+        "ERA": "3.95",
+        "WHIP": "1.31"
+      },
+      "Casey Mize": {
+        "INNs": "145",
+        "APP": "26",
+        "GS": "26",
+        "QS": "9",
+        "CG": "0",
+        "W": "9",
+        "L": "7",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "136",
+        "BB": "33",
+        "H": "130",
+        "ERA": "3.17",
+        "WHIP": "1.12"
+      },
+      "Kenley Jansen": {
+        "INNs": "67",
+        "APP": "67",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "1",
+        "S": "29",
+        "BS": "2",
+        "HD": "3",
+        "K": "63",
+        "BB": "21",
+        "H": "41",
+        "ERA": "2.69",
+        "WHIP": "0.93"
+      },
+      "Drew Rasmussen": {
+        "INNs": "130",
+        "APP": "27",
+        "GS": "27",
+        "QS": "7",
+        "CG": "0",
+        "W": "9",
+        "L": "4",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "111",
+        "BB": "31",
+        "H": "105",
+        "ERA": "3.05",
+        "WHIP": "1.05"
+      },
+      "Kris Bubic": {
+        "INNs": "153",
+        "APP": "26",
+        "GS": "26",
+        "QS": "16",
+        "CG": "0",
+        "W": "11",
+        "L": "9",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "154",
+        "BB": "50",
+        "H": "147",
+        "ERA": "3.29",
+        "WHIP": "1.29"
+      },
+      "Ryan Weathers": {
+        "INNs": "138",
+        "APP": "27",
+        "GS": "27",
+        "QS": "7",
+        "CG": "0",
+        "W": "10",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "135",
+        "BB": "48",
+        "H": "117",
+        "ERA": "3.13",
+        "WHIP": "1.20"
+      },
+      "Jeff Hoffman": {
+        "INNs": "60",
+        "APP": "68",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "2",
+        "S": "35",
+        "BS": "9",
+        "HD": "3",
+        "K": "78",
+        "BB": "21",
+        "H": "46",
+        "ERA": "3.75",
+        "WHIP": "1.12"
+      },
+      "Bennett Sousa": {
+        "INNs": "86",
+        "APP": "79",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "10",
+        "L": "2",
+        "S": "1",
+        "BS": "0",
+        "HD": "15",
+        "K": "100",
+        "BB": "26",
+        "H": "63",
+        "ERA": "2.83",
+        "WHIP": "1.03"
+      },
+      "Chris Bassitt": {
+        "INNs": "156",
+        "APP": "26",
+        "GS": "26",
+        "QS": "11",
+        "CG": "1",
+        "W": "10",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "150",
+        "BB": "45",
+        "H": "148",
+        "ERA": "3.46",
+        "WHIP": "1.24"
+      },
+      "Cristian Javier": {
+        "INNs": "132",
+        "APP": "27",
+        "GS": "27",
+        "QS": "9",
+        "CG": "0",
+        "W": "9",
+        "L": "10",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "119",
+        "BB": "45",
+        "H": "104",
+        "ERA": "3.14",
+        "WHIP": "1.13"
+      },
+      "Jack Leiter": {
+        "INNs": "154",
+        "APP": "29",
+        "GS": "29",
+        "QS": "10",
+        "CG": "0",
+        "W": "12",
+        "L": "7",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "148",
+        "BB": "57",
+        "H": "134",
+        "ERA": "3.97",
+        "WHIP": "1.24"
+      },
+      "Yusei Kikuchi": {
+        "INNs": "172",
+        "APP": "30",
+        "GS": "30",
+        "QS": "12",
+        "CG": "0",
+        "W": "7",
+        "L": "10",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "173",
+        "BB": "61",
+        "H": "156",
+        "ERA": "3.24",
+        "WHIP": "1.26"
+      },
+      "Nick Martinez": {
+        "INNs": "153",
+        "APP": "26",
+        "GS": "26",
+        "QS": "12",
+        "CG": "0",
+        "W": "12",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "121",
+        "BB": "32",
+        "H": "138",
+        "ERA": "4.18",
+        "WHIP": "1.11"
+      },
+      "Jacob Lopez": {
+        "INNs": "136",
+        "APP": "26",
+        "GS": "26",
+        "QS": "12",
+        "CG": "0",
+        "W": "9",
+        "L": "11",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "158",
+        "BB": "49",
+        "H": "117",
+        "ERA": "3.64",
+        "WHIP": "1.22"
+      },
+      "Connelly Early": {
+        "INNs": "137",
+        "APP": "26",
+        "GS": "26",
+        "QS": "8",
+        "CG": "0",
+        "W": "11",
+        "L": "7",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "148",
+        "BB": "41",
+        "H": "131",
+        "ERA": "3.81",
+        "WHIP": "1.26"
+      },
+      "Ranger Suarez": {
+        "INNs": "155",
+        "APP": "26",
+        "GS": "26",
+        "QS": "16",
+        "CG": "0",
+        "W": "11",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "149",
+        "BB": "43",
+        "H": "157",
+        "ERA": "3.66",
+        "WHIP": "1.29"
+      },
+      "Seth Lugo": {
+        "INNs": "158",
+        "APP": "26",
+        "GS": "26",
+        "QS": "16",
+        "CG": "0",
+        "W": "10",
+        "L": "7",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "135",
+        "BB": "48",
+        "H": "145",
+        "ERA": "3.53",
+        "WHIP": "1.22"
+      },
+      "Parker Messick": {
+        "INNs": "146",
+        "APP": "26",
+        "GS": "26",
+        "QS": "13",
+        "CG": "0",
+        "W": "10",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "139",
+        "BB": "40",
+        "H": "140",
+        "ERA": "3.64",
+        "WHIP": "1.23"
+      },
+      "Luis Severino": {
+        "INNs": "163",
+        "APP": "27",
+        "GS": "27",
+        "QS": "12",
+        "CG": "0",
+        "W": "9",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "127",
+        "BB": "44",
+        "H": "148",
+        "ERA": "3.53",
+        "WHIP": "1.18"
+      },
+      "Trey Yesavage": {
+        "INNs": "135",
+        "APP": "26",
+        "GS": "26",
+        "QS": "8",
+        "CG": "0",
+        "W": "9",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "148",
+        "BB": "44",
+        "H": "120",
+        "ERA": "3.80",
+        "WHIP": "1.21"
+      },
+      "Bailey Ober": {
+        "INNs": "170",
+        "APP": "30",
+        "GS": "30",
+        "QS": "13",
+        "CG": "1",
+        "W": "10",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "157",
+        "BB": "38",
+        "H": "166",
+        "ERA": "4.24",
+        "WHIP": "1.20"
+      },
+      "Kyle Bradish": {
+        "INNs": "143",
+        "APP": "27",
+        "GS": "27",
+        "QS": "12",
+        "CG": "0",
+        "W": "6",
+        "L": "5",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "174",
+        "BB": "41",
+        "H": "135",
+        "ERA": "3.71",
+        "WHIP": "1.23"
+      },
+      "Shane Bieber": {
+        "INNs": "115",
+        "APP": "21",
+        "GS": "21",
+        "QS": "9",
+        "CG": "0",
+        "W": "9",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "112",
+        "BB": "28",
+        "H": "105",
+        "ERA": "3.60",
+        "WHIP": "1.16"
+      },
+      "Griffin Jax": {
+        "INNs": "60",
+        "APP": "72",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "1",
+        "L": "3",
+        "S": "24",
+        "BS": "7",
+        "HD": "3",
+        "K": "84",
+        "BB": "16",
+        "H": "50",
+        "ERA": "3.30",
+        "WHIP": "1.10"
+      },
+      "Ryan Helsley": {
+        "INNs": "64",
+        "APP": "66",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "3",
+        "S": "32",
+        "BS": "8",
+        "HD": "3",
+        "K": "72",
+        "BB": "26",
+        "H": "61",
+        "ERA": "3.66",
+        "WHIP": "1.36"
+      },
+      "Tanner Bibee": {
+        "INNs": "176",
+        "APP": "30",
+        "GS": "30",
+        "QS": "12",
+        "CG": "1",
+        "W": "9",
+        "L": "12",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "166",
+        "BB": "54",
+        "H": "170",
+        "ERA": "4.14",
+        "WHIP": "1.27"
+      },
+      "Jeffrey Springs": {
+        "INNs": "148",
+        "APP": "27",
+        "GS": "27",
+        "QS": "13",
+        "CG": "0",
+        "W": "10",
+        "L": "9",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "121",
+        "BB": "45",
+        "H": "137",
+        "ERA": "3.83",
+        "WHIP": "1.23"
+      },
+      "Brayan Bello": {
+        "INNs": "149",
+        "APP": "26",
+        "GS": "26",
+        "QS": "14",
+        "CG": "1",
+        "W": "10",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "121",
+        "BB": "50",
+        "H": "138",
+        "ERA": "3.69",
+        "WHIP": "1.26"
+      },
+      "Robert Garcia": {
+        "INNs": "48",
+        "APP": "74",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "2",
+        "S": "32",
+        "BS": "10",
+        "HD": "2",
+        "K": "58",
+        "BB": "17",
+        "H": "47",
+        "ERA": "3.56",
+        "WHIP": "1.33"
+      },
+      "Joey Cantillo": {
+        "INNs": "137",
+        "APP": "27",
+        "GS": "27",
+        "QS": "4",
+        "CG": "0",
+        "W": "7",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "155",
+        "BB": "54",
+        "H": "121",
+        "ERA": "3.61",
+        "WHIP": "1.28"
+      },
+      "Bryce Miller": {
+        "INNs": "132",
+        "APP": "24",
+        "GS": "24",
+        "QS": "8",
+        "CG": "0",
+        "W": "8",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "115",
+        "BB": "37",
+        "H": "110",
+        "ERA": "3.89",
+        "WHIP": "1.11"
+      },
+      "Luis Morales": {
+        "INNs": "156",
+        "APP": "29",
+        "GS": "29",
+        "QS": "11",
+        "CG": "0",
+        "W": "10",
+        "L": "9",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "142",
+        "BB": "53",
+        "H": "144",
+        "ERA": "4.15",
+        "WHIP": "1.26"
+      },
+      "Slade Cecconi": {
+        "INNs": "149",
+        "APP": "26",
+        "GS": "26",
+        "QS": "12",
+        "CG": "0",
+        "W": "7",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "123",
+        "BB": "43",
+        "H": "126",
+        "ERA": "3.81",
+        "WHIP": "1.13"
+      },
+      "Dylan Cease": {
+        "INNs": "153",
+        "APP": "27",
+        "GS": "27",
+        "QS": "10",
+        "CG": "0",
+        "W": "8",
+        "L": "9",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "182",
+        "BB": "59",
+        "H": "138",
+        "ERA": "4.41",
+        "WHIP": "1.29"
+      },
+      "Grayson Rodriguez": {
+        "INNs": "152",
+        "APP": "25",
+        "GS": "25",
+        "QS": "15",
+        "CG": "0",
+        "W": "10",
+        "L": "9",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "160",
+        "BB": "60",
+        "H": "148",
+        "ERA": "4.08",
+        "WHIP": "1.37"
+      },
+      "Shane McClanahan": {
+        "INNs": "155",
+        "APP": "29",
+        "GS": "29",
+        "QS": "11",
+        "CG": "0",
+        "W": "9",
+        "L": "9",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "148",
+        "BB": "48",
+        "H": "155",
+        "ERA": "4.06",
+        "WHIP": "1.31"
+      },
+      "Steven Matz": {
+        "INNs": "132",
+        "APP": "26",
+        "GS": "26",
+        "QS": "6",
+        "CG": "0",
+        "W": "8",
+        "L": "6",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "116",
+        "BB": "37",
+        "H": "127",
+        "ERA": "3.61",
+        "WHIP": "1.24"
+      },
+      "Kirby Yates": {
+        "INNs": "53",
+        "APP": "63",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "3",
+        "L": "2",
+        "S": "21",
+        "BS": "4",
+        "HD": "18",
+        "K": "78",
+        "BB": "25",
+        "H": "41",
+        "ERA": "3.91",
+        "WHIP": "1.25"
+      },
+      "Taj Bradley": {
+        "INNs": "150",
+        "APP": "27",
+        "GS": "27",
+        "QS": "14",
+        "CG": "0",
+        "W": "8",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "145",
+        "BB": "47",
+        "H": "144",
+        "ERA": "4.08",
+        "WHIP": "1.27"
+      },
+      "Justin Verlander": {
+        "INNs": "143",
+        "APP": "27",
+        "GS": "27",
+        "QS": "12",
+        "CG": "0",
+        "W": "8",
+        "L": "7",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "127",
+        "BB": "44",
+        "H": "137",
+        "ERA": "3.78",
+        "WHIP": "1.27"
+      },
+      "Mick Abel": {
+        "INNs": "132",
+        "APP": "26",
+        "GS": "26",
+        "QS": "9",
+        "CG": "0",
+        "W": "9",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "128",
+        "BB": "38",
+        "H": "129",
+        "ERA": "4.16",
+        "WHIP": "1.27"
+      },
+      "Jose Soriano": {
+        "INNs": "148",
+        "APP": "27",
+        "GS": "27",
+        "QS": "14",
+        "CG": "0",
+        "W": "9",
+        "L": "9",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "128",
+        "BB": "58",
+        "H": "137",
+        "ERA": "3.83",
+        "WHIP": "1.32"
+      },
+      "Will Vest": {
+        "INNs": "61",
+        "APP": "65",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "5",
+        "L": "2",
+        "S": "8",
+        "BS": "2",
+        "HD": "10",
+        "K": "65",
+        "BB": "17",
+        "H": "51",
+        "ERA": "2.51",
+        "WHIP": "1.11"
+      },
+      "Cole Sulser": {
+        "INNs": "94",
+        "APP": "73",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "4",
+        "L": "4",
+        "S": "1",
+        "BS": "0",
+        "HD": "9",
+        "K": "89",
+        "BB": "35",
+        "H": "74",
+        "ERA": "2.20",
+        "WHIP": "1.16"
+      },
+      "Bryan Abreu": {
+        "INNs": "85",
+        "APP": "88",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "2",
+        "S": "1",
+        "BS": "0",
+        "HD": "42",
+        "K": "117",
+        "BB": "35",
+        "H": "60",
+        "ERA": "2.44",
+        "WHIP": "1.12"
+      },
+      "Davis Martin": {
+        "INNs": "154",
+        "APP": "27",
+        "GS": "27",
+        "QS": "10",
+        "CG": "0",
+        "W": "9",
+        "L": "9",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "116",
+        "BB": "56",
+        "H": "143",
+        "ERA": "3.74",
+        "WHIP": "1.29"
+      },
+      "Erick Fedde": {
+        "INNs": "150",
+        "APP": "26",
+        "GS": "26",
+        "QS": "9",
+        "CG": "1",
+        "W": "8",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "106",
+        "BB": "56",
+        "H": "130",
+        "ERA": "3.78",
+        "WHIP": "1.24"
+      },
+      "Chris Murphy": {
+        "INNs": "99",
+        "APP": "71",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "7",
+        "L": "4",
+        "S": "1",
+        "BS": "0",
+        "HD": "10",
+        "K": "90",
+        "BB": "60",
+        "H": "63",
+        "ERA": "3.27",
+        "WHIP": "1.24"
+      },
+      "Tatsuya Imai": {
+        "INNs": "141",
+        "APP": "26",
+        "GS": "26",
+        "QS": "10",
+        "CG": "0",
+        "W": "8",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "135",
+        "BB": "50",
+        "H": "137",
+        "ERA": "4.02",
+        "WHIP": "1.33"
+      },
+      "Gerrit Cole": {
+        "INNs": "98",
+        "APP": "17",
+        "GS": "17",
+        "QS": "9",
+        "CG": "0",
+        "W": "7",
+        "L": "4",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "97",
+        "BB": "36",
+        "H": "86",
+        "ERA": "3.49",
+        "WHIP": "1.24"
+      },
+      "Justin Sterner": {
+        "INNs": "87",
+        "APP": "83",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "4",
+        "L": "1",
+        "S": "4",
+        "BS": "1",
+        "HD": "26",
+        "K": "104",
+        "BB": "31",
+        "H": "72",
+        "ERA": "3.52",
+        "WHIP": "1.18"
+      },
+      "Bryan King": {
+        "INNs": "71",
+        "APP": "84",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "5",
+        "L": "3",
+        "S": "1",
+        "BS": "0",
+        "HD": "29",
+        "K": "77",
+        "BB": "14",
+        "H": "64",
+        "ERA": "2.79",
+        "WHIP": "1.10"
+      },
+      "Cody Ponce": {
+        "INNs": "141",
+        "APP": "26",
+        "GS": "26",
+        "QS": "10",
+        "CG": "0",
+        "W": "8",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "134",
+        "BB": "47",
+        "H": "138",
+        "ERA": "4.28",
+        "WHIP": "1.31"
+      },
+      "Lucas Erceg": {
+        "INNs": "67",
+        "APP": "72",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "3",
+        "L": "4",
+        "S": "8",
+        "BS": "2",
+        "HD": "29",
+        "K": "58",
+        "BB": "18",
+        "H": "53",
+        "ERA": "2.69",
+        "WHIP": "1.06"
+      },
+      "Garrett Cleavinger": {
+        "INNs": "57",
+        "APP": "72",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "3",
+        "L": "3",
+        "S": "8",
+        "BS": "2",
+        "HD": "22",
+        "K": "78",
+        "BB": "22",
+        "H": "43",
+        "ERA": "3.00",
+        "WHIP": "1.14"
+      },
+      "Edwin Uceta": {
+        "INNs": "65",
+        "APP": "61",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "4",
+        "L": "2",
+        "S": "3",
+        "BS": "1",
+        "HD": "20",
+        "K": "90",
+        "BB": "21",
+        "H": "51",
+        "ERA": "3.32",
+        "WHIP": "1.11"
+      },
+      "Simeon Woods Richardson": {
+        "INNs": "131",
+        "APP": "26",
+        "GS": "26",
+        "QS": "5",
+        "CG": "0",
+        "W": "6",
+        "L": "5",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "121",
+        "BB": "46",
+        "H": "117",
+        "ERA": "3.98",
+        "WHIP": "1.24"
+      },
+      "Aaron Civale": {
+        "INNs": "136",
+        "APP": "26",
+        "GS": "26",
+        "QS": "6",
+        "CG": "0",
+        "W": "8",
+        "L": "8",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "118",
+        "BB": "44",
+        "H": "131",
+        "ERA": "4.24",
+        "WHIP": "1.29"
+      },
+      "Taylor Rogers": {
+        "INNs": "62",
+        "APP": "62",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "1",
+        "L": "3",
+        "S": "22",
+        "BS": "4",
+        "HD": "3",
+        "K": "71",
+        "BB": "28",
+        "H": "62",
+        "ERA": "3.34",
+        "WHIP": "1.45"
+      },
+      "Zach Eflin": {
+        "INNs": "147",
+        "APP": "26",
+        "GS": "26",
+        "QS": "13",
+        "CG": "0",
+        "W": "10",
+        "L": "9",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "113",
+        "BB": "29",
+        "H": "162",
+        "ERA": "4.53",
+        "WHIP": "1.30"
+      },
+      "Seranthony Dominguez": {
+        "INNs": "52",
+        "APP": "64",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "1",
+        "L": "3",
+        "S": "24",
+        "BS": "7",
+        "HD": "3",
+        "K": "70",
+        "BB": "33",
+        "H": "43",
+        "ERA": "3.98",
+        "WHIP": "1.46"
+      },
+      "Michael Burrows": {
+        "INNs": "127",
+        "APP": "27",
+        "GS": "27",
+        "QS": "3",
+        "CG": "0",
+        "W": "2",
+        "L": "4",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "128",
+        "BB": "45",
+        "H": "105",
+        "ERA": "3.54",
+        "WHIP": "1.18"
+      },
+      "Matt Strahm": {
+        "INNs": "57",
+        "APP": "64",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "2",
+        "L": "1",
+        "S": "4",
+        "BS": "1",
+        "HD": "23",
+        "K": "61",
+        "BB": "14",
+        "H": "37",
+        "ERA": "2.37",
+        "WHIP": "0.89"
+      },
+      "Shane Baz": {
+        "INNs": "150",
+        "APP": "27",
+        "GS": "27",
+        "QS": "12",
+        "CG": "0",
+        "W": "8",
+        "L": "10",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "148",
+        "BB": "51",
+        "H": "148",
+        "ERA": "4.68",
+        "WHIP": "1.33"
+      },
+      "Shawn Armstrong": {
+        "INNs": "66",
+        "APP": "74",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "3",
+        "L": "1",
+        "S": "4",
+        "BS": "1",
+        "HD": "14",
+        "K": "68",
+        "BB": "21",
+        "H": "49",
+        "ERA": "3.14",
+        "WHIP": "1.06"
+      },
+      "Hunter Bigge": {
+        "INNs": "81",
+        "APP": "83",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "1",
+        "L": "1",
+        "S": "1",
+        "BS": "0",
+        "HD": "8",
+        "K": "78",
+        "BB": "24",
+        "H": "64",
+        "ERA": "2.33",
+        "WHIP": "1.09"
+      },
+      "Cole Winn": {
+        "INNs": "86",
+        "APP": "75",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "1",
+        "L": "2",
+        "S": "0",
+        "BS": "0",
+        "HD": "9",
+        "K": "70",
+        "BB": "32",
+        "H": "54",
+        "ERA": "2.51",
+        "WHIP": "1.00"
+      },
+      "Steven Okert": {
+        "INNs": "66",
+        "APP": "79",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "4",
+        "L": "1",
+        "S": "1",
+        "BS": "0",
+        "HD": "13",
+        "K": "79",
+        "BB": "21",
+        "H": "50",
+        "ERA": "3.68",
+        "WHIP": "1.08"
+      },
+      "Reid Detmers": {
+        "INNs": "139",
+        "APP": "26",
+        "GS": "26",
+        "QS": "7",
+        "CG": "0",
+        "W": "8",
+        "L": "11",
+        "S": "0",
+        "BS": "0",
+        "HD": "0",
+        "K": "168",
+        "BB": "53",
+        "H": "146",
+        "ERA": "4.99",
+        "WHIP": "1.43"
+      },
+      "Mason Englert": {
+        "INNs": "108",
+        "APP": "68",
+        "GS": "0",
+        "QS": "0",
+        "CG": "0",
+        "W": "3",
+        "L": "2",
+        "S": "1",
+        "BS": "0",
+        "HD": "11",
+        "K": "94",
+        "BB": "24",
+        "H": "98",
+        "ERA": "3.83",
+        "WHIP": "1.13"
+      }
+    }
+  }
 }
