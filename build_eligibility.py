@@ -47,9 +47,12 @@ LAHMAN_TEAM = {
 }
 
 # Manual overrides: CBS name → Lahman playerID
-# Add entries here only for cases the fuzzy matcher still can't resolve
-# (norm() now handles Jr./Sr./accents automatically).
+# Add entries here for cases norm() can't resolve automatically:
+#   - Nickname vs. formal name (Josh vs. Joshua, Mike vs. Michael, etc.)
+#   - Hyphenated names CBS drops the hyphen from
+#   - Middle initials present in one source but not the other
 NAME_OVERRIDES: dict[str, str] = {
+    'Joshua Lowe':          'lowejo01',  # Lahman: "Josh Lowe"
 }
 
 
@@ -138,25 +141,76 @@ def build_norm_index(id_to_name: dict, relevant_ids: set) -> dict[str, list[tupl
     return index
 
 
-def resolve(cbs_name: str, norm_index: dict, cbs_team: str,
-            teams_2025: dict) -> str | None:
-    """Return best-matching Lahman playerID for a CBS player name."""
-    if cbs_name in NAME_OVERRIDES:
-        return NAME_OVERRIDES[cbs_name]
-    candidates = norm_index.get(norm(cbs_name), [])
+def best_candidate(candidates: list[tuple], cbs_team: str,
+                   teams_2025: dict, claimed_pids: set,
+                   relevant_ids: set) -> str | None:
+    """
+    From a list of (pid, name) candidates, pick the best match using:
+      1. Team match against 2025 Lahman team
+      2. Prefer candidates with recent (2024/2025) fielding data
+      3. Process of elimination: remove already-claimed PIDs
+      4. Fall back to first remaining candidate
+    Returns playerID or None.
+    """
     if not candidates:
         return None
-    if len(candidates) == 1:
-        return candidates[0][0]
 
-    # Disambiguate by team
+    pool = candidates
+
+    # Prefer candidates with recent fielding data over retired players
+    with_data = [c for c in pool if c[0] in relevant_ids]
+    if with_data:
+        pool = with_data
+
+    # Remove PIDs already claimed by another CBS player
+    unclaimed = [c for c in pool if c[0] not in claimed_pids]
+    if unclaimed:
+        pool = unclaimed
+
+    if len(pool) == 1:
+        return pool[0][0]
+
+    # Try team match
     if cbs_team:
-        team_match = [c for c in candidates
+        team_match = [c for c in pool
                       if cbs_team in teams_2025.get(c[0], set())]
         if len(team_match) == 1:
             return team_match[0][0]
 
-    return candidates[0][0]   # best guess: take first
+    return pool[0][0]  # best guess: take first
+
+
+def resolve(cbs_name: str, norm_index: dict, full_norm_index: dict,
+            cbs_team: str, teams_2025: dict,
+            claimed_pids: set, relevant_ids: set) -> tuple[str | None, str]:
+    """
+    Return (playerID, source) for a CBS player name.
+    source: 'override' | 'primary' | 'secondary' | 'none'
+
+    Two-pass strategy:
+      Primary  — search only players with 2024/2025 fielding data
+      Secondary — search all of People.csv (handles team changes, missing data)
+    """
+    if cbs_name in NAME_OVERRIDES:
+        return NAME_OVERRIDES[cbs_name], 'override'
+
+    key = norm(cbs_name)
+
+    # Pass 1: players with fielding data
+    candidates = norm_index.get(key, [])
+    if candidates:
+        pid = best_candidate(candidates, cbs_team, teams_2025,
+                             claimed_pids, relevant_ids)
+        return pid, 'primary'
+
+    # Pass 2: all People.csv (player may have changed teams or have sparse data)
+    all_candidates = full_norm_index.get(key, [])
+    if all_candidates:
+        pid = best_candidate(all_candidates, cbs_team, teams_2025,
+                             claimed_pids, relevant_ids)
+        return pid, 'secondary'
+
+    return None, 'none'
 
 
 # ── Main ───────────────────────────────────────────────────────────────────
@@ -174,8 +228,9 @@ def main():
     print('Loading Fielding.csv...')
     games_2025, games_2024, teams_2025 = load_fielding(FIELDING_CSV)
 
-    relevant_ids = set(games_2025) | set(games_2024)
-    norm_index   = build_norm_index(id_to_name, relevant_ids)
+    relevant_ids     = set(games_2025) | set(games_2024)
+    norm_index       = build_norm_index(id_to_name, relevant_ids)
+    full_norm_index  = build_norm_index(id_to_name, set(id_to_name.keys()))
 
     # ── Load CBS names from data.json ──────────────────────────────────────
     print('\nLoading data.json...')
@@ -197,30 +252,40 @@ def main():
 
     # ── Match & compute eligibility ────────────────────────────────────────
     print('\nMatching names and computing eligibility...')
-    positions_2025:  dict[str, list[str]]       = {}
-    games_2025_named: dict[str, dict[str, int]] = {}
-    games_2024_named: dict[str, dict[str, int]] = {}
+    positions_2025:   dict[str, list[str]]       = {}
+    games_2025_named: dict[str, dict[str, int]]  = {}
+    games_2024_named: dict[str, dict[str, int]]  = {}
 
-    unmatched: list[str] = []
-    dh_only:   list[str] = []
-    ambiguous: list[str] = []
+    unmatched:  list[str] = []
+    dh_only:    list[str] = []
+    ambiguous:  list[str] = []
+    secondary:  list[str] = []   # matched only via full People.csv fallback
+    claimed_pids: set[str] = set()
 
     for name in sorted(cbs_names):
         team = cbs_team.get(name, '')
-        pid  = resolve(name, norm_index, team, teams_2025)
+        pid, source = resolve(name, norm_index, full_norm_index,
+                              team, teams_2025, claimed_pids, relevant_ids)
 
-        # Check for ambiguity (for logging)
-        candidates = norm_index.get(norm(name), [])
-        if len(candidates) > 1:
+        # Log ambiguity
+        key = norm(name)
+        primary_candidates = norm_index.get(key, [])
+        all_candidates     = full_norm_index.get(key, [])
+        if len(primary_candidates) > 1 or (not primary_candidates and len(all_candidates) > 1):
+            chosen_from = primary_candidates or all_candidates
             ambiguous.append(
-                f'{name!r} -> chose {id_to_name.get(pid,"")} '
-                f'from {[c[1] for c in candidates]}'
+                f'{name!r} ({source}) -> chose {id_to_name.get(pid, "?")} '
+                f'from {[c[1] for c in chosen_from]}'
             )
 
         if pid is None:
             unmatched.append(name)
             positions_2025[name] = ['DH']
             continue
+
+        claimed_pids.add(pid)
+        if source == 'secondary':
+            secondary.append(f'{name!r} -> {id_to_name.get(pid, pid)}')
 
         # 2025 eligibility
         g2025 = games_2025.get(pid, {})
@@ -247,9 +312,15 @@ def main():
     print(f'\nResults:')
     print(f'  Total CBS players:          {len(cbs_names)}')
     print(f'  Matched to Lahman:          {len(cbs_names) - len(unmatched)}')
+    print(f'    via primary (fielding data): {len(cbs_names) - len(unmatched) - len(secondary)}')
+    print(f'    via secondary (all People):  {len(secondary)}')
     print(f'  Multi-position eligible:    {multi_pos}')
     print(f'  DH-only (< {THRESHOLD}g at any pos): {len(dh_only)}')
     print(f'  No Lahman match (DH only):  {len(unmatched)}')
+    if secondary:
+        print(f'\nSecondary matches (no fielding data, matched via People.csv):')
+        for s in secondary:
+            print(f'  {s}')
 
     if ambiguous:
         print(f'\nAmbiguous matches ({len(ambiguous)} — used first/team candidate):')
