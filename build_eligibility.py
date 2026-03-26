@@ -196,7 +196,7 @@ def main():
         candidates = norm_index.get(norm(name), [])
         if len(candidates) > 1:
             ambiguous.append(
-                f'{name!r} → chose {id_to_name.get(pid,"")} '
+                f'{name!r} -> chose {id_to_name.get(pid,"")} '
                 f'from {[c[1] for c in candidates]}'
             )
 
