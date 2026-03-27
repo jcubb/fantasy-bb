@@ -508,6 +508,15 @@ async def main():
     if depth_chart and rankings:
         rankings = reconcile_rankings(rankings, depth_chart)
 
+    # Preserve fields owned by one-time scripts (projections, eligibility) —
+    # the scraper only refreshes the fields it owns.
+    existing = {}
+    if OUT_FILE.exists():
+        try:
+            existing = json.loads(OUT_FILE.read_text(encoding='utf-8'))
+        except Exception:
+            pass
+
     now = datetime.now(timezone.utc).isoformat()
     output = {
         'scraped_at':      now,
@@ -516,6 +525,9 @@ async def main():
         'news':            news,
         'news_scraped_at': now,
     }
+    for key in ('projections', 'eligibility'):
+        if key in existing:
+            output[key] = existing[key]
 
     OUT_FILE.write_text(json.dumps(output, indent=2), encoding='utf-8')
     print(f'\nSaved {len(depth_chart)} AL teams, {len(rankings)} ranked players -> {OUT_FILE}')
