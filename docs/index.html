@@ -420,6 +420,7 @@ body {
 .stat-label { text-align: left !important; font-weight: 700; color: #1e3a5f; }
 .my-val { font-size: 15px; font-weight: 700; min-width: 72px; }
 .sub-avg { font-size: 12px; color: #4a6080; }
+.pct-val  { font-size: 12px; color: #3a5a7a; font-weight: 600; }
 .sv-great { color: #1a7a3f; }
 .sv-good  { color: #2e9e5a; }
 .sv-low   { color: #c07010; }
@@ -762,6 +763,22 @@ function wSubsetAvg(pool, getter, isDrafted) {
   return tw ? sub.reduce((s, x) => s + getter(x) * x.weight, 0) / tw : null;
 }
 
+function wPercentile(pool, getter, myVal, hb) {
+  if (myVal == null) return null;
+  const valid = pool.filter(x => getter(x) != null);
+  if (!valid.length) return null;
+  const tw = valid.reduce((s, x) => s + x.weight, 0);
+  if (!tw) return null;
+  const belowEq = valid.filter(x => getter(x) <= myVal).reduce((s, x) => s + x.weight, 0);
+  const cdf = belowEq / tw;
+  // Lower percentile = better (1 = best)
+  return hb ? Math.round(100 * (1 - cdf)) : Math.round(100 * cdf);
+}
+
+function wSubsetPct(pool, getter, myVal, hb, isDrafted) {
+  return wPercentile(pool.filter(x => x.drafted === isDrafted), getter, myVal, hb);
+}
+
 function fmtCount(v) { return v != null ? Math.round(v).toString() : '—'; }
 function fmtBA(v)    { return v != null ? v.toFixed(3).replace(/^0/, '') : '—'; }
 function fmtERA(v)   { return v != null ? v.toFixed(2) : '—'; }
@@ -869,23 +886,36 @@ function renderStats() {
           <th>Q3</th>
           <th>Drafted<br>Avg</th>
           <th>Undrafted<br>Avg</th>
+          <th>%ile<br>All</th>
+          <th>%ile<br>Dft</th>
+          <th>%ile<br>Und</th>
         </tr></thead><tbody>`;
     defs.forEach(def => {
-      const ps  = wStats(pool, def.getter);
-      const dA  = wSubsetAvg(pool, def.getter, true);
-      const uA  = wSubsetAvg(pool, def.getter, false);
-      const my  = myAvgFn(def.key);
-      const cls = statCls(my, ps, def.hb);
-      const f   = def.fmt;
+      const ps   = wStats(pool, def.getter);
+      const dA   = wSubsetAvg(pool, def.getter, true);
+      const uA   = wSubsetAvg(pool, def.getter, false);
+      const my   = myAvgFn(def.key);
+      const cls  = statCls(my, ps, def.hb);
+      const f    = def.fmt;
+      // Q1 = better-end threshold, Q3 = worse-end, for all stats
+      const dQ1  = ps ? f(def.hb ? ps.q3 : ps.q1) : '—';
+      const dQ3  = ps ? f(def.hb ? ps.q1 : ps.q3) : '—';
+      const pAll = wPercentile(pool, def.getter, my, def.hb);
+      const pDft = wSubsetPct(pool, def.getter, my, def.hb, true);
+      const pUnd = wSubsetPct(pool, def.getter, my, def.hb, false);
+      const fp   = v => v != null ? v.toString() : '—';
       h += `<tr>
         <td class="stat-label">${def.label}</td>
         <td class="my-val ${cls}">${f(my)}</td>
         <td>${ps ? f(ps.avg) : '—'}</td>
-        <td>${ps ? f(ps.q1)  : '—'}</td>
+        <td>${dQ1}</td>
         <td>${ps ? f(ps.med) : '—'}</td>
-        <td>${ps ? f(ps.q3)  : '—'}</td>
+        <td>${dQ3}</td>
         <td class="sub-avg">${dA != null ? f(dA) : '—'}</td>
         <td class="sub-avg">${uA != null ? f(uA) : '—'}</td>
+        <td class="pct-val">${fp(pAll)}</td>
+        <td class="pct-val">${fp(pDft)}</td>
+        <td class="pct-val">${fp(pUnd)}</td>
       </tr>`;
     });
     h += '</tbody></table>';
@@ -893,11 +923,11 @@ function renderStats() {
   }
 
   const legend = `<div class="stats-legend">
-    <span><span class="leg-sq" style="background:#1a7a3f"></span> Top 25% (above Q3)</span>
-    <span><span class="leg-sq" style="background:#2e9e5a"></span> 2nd quartile</span>
-    <span><span class="leg-sq" style="background:#c07010"></span> 3rd quartile</span>
-    <span><span class="leg-sq" style="background:#c0392b"></span> Bottom 25% (below Q1)</span>
-    <span style="color:#9ab0c8;font-size:10px">(ERA/WHIP: lower = better)</span>
+    <span><span class="leg-sq" style="background:#1a7a3f"></span> Above Q1 (top quartile)</span>
+    <span><span class="leg-sq" style="background:#2e9e5a"></span> Q1–Median</span>
+    <span><span class="leg-sq" style="background:#c07010"></span> Median–Q3</span>
+    <span><span class="leg-sq" style="background:#c0392b"></span> Below Q3 (bottom quartile)</span>
+    <span style="color:#9ab0c8;font-size:10px">Q1 = best-quartile threshold · Q3 = worst · %ile: lower = better (1 = best)</span>
   </div>`;
 
   let html = legend;
