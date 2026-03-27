@@ -762,10 +762,10 @@ function wSubsetAvg(pool, getter, isDrafted) {
   return tw ? sub.reduce((s, x) => s + getter(x) * x.weight, 0) / tw : null;
 }
 
-function fmtCount(v) { return v != null ? v.toFixed(1) : '—'; }
+function fmtCount(v) { return v != null ? Math.round(v).toString() : '—'; }
 function fmtBA(v)    { return v != null ? v.toFixed(3).replace(/^0/, '') : '—'; }
 function fmtERA(v)   { return v != null ? v.toFixed(2) : '—'; }
-function fmtWHIP(v)  { return v != null ? v.toFixed(3) : '—'; }
+function fmtWHIP(v)  { return v != null ? v.toFixed(2) : '—'; }
 
 function g(key) { return x => { const v = parseFloat(x.proj[key]); return isNaN(v) ? null : v; }; }
 
