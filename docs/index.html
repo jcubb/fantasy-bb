@@ -392,6 +392,47 @@ body {
 #assign-cancel-btn:hover { background: #f0f4f8; }
 #assign-remove-btn { border: none; background: #c0392b; color: white; }
 #assign-remove-btn:hover { background: #a93226; }
+
+/* ── My Team Stats tab ───────────────────────────────────────────────────── */
+#stats-section { padding: 0 16px 24px; display: none; }
+#stats-header {
+  padding: 12px 0 8px; border-top: 2px solid #c8d3e0;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+#stats-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
+#stats-context { font-size: 11px; color: #7a8ca0; }
+.stats-tbl-title {
+  font-size: 13px; font-weight: 700; color: #1e3a5f; margin: 16px 0 6px;
+}
+.stats-pool-n { font-size: 11px; font-weight: 400; color: #7a8ca0; margin-left: 6px; }
+.stats-tbl { border-collapse: collapse; margin-bottom: 8px; }
+.stats-tbl th {
+  background: #1e3a5f; color: #cfe0f8; padding: 5px 12px;
+  font-size: 11px; font-weight: 700; letter-spacing: .4px;
+  text-align: center; line-height: 1.35;
+}
+.stats-tbl th:first-child { text-align: left; min-width: 52px; }
+.stats-tbl td {
+  padding: 6px 12px; border-bottom: 1px solid #e8eef5;
+  font-size: 13px; text-align: center; font-variant-numeric: tabular-nums;
+}
+.stats-tbl tbody tr:hover td { background: #f5f8ff; }
+.stat-label { text-align: left !important; font-weight: 700; color: #1e3a5f; }
+.my-val { font-size: 15px; font-weight: 700; min-width: 72px; }
+.sub-avg { font-size: 12px; color: #4a6080; }
+.sv-great { color: #1a7a3f; }
+.sv-good  { color: #2e9e5a; }
+.sv-low   { color: #c07010; }
+.sv-bad   { color: #c0392b; }
+.stats-legend {
+  font-size: 11px; color: #7a8ca0; margin: 2px 0 14px; display: flex; gap: 14px; flex-wrap: wrap;
+}
+.stats-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.leg-sq { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.stats-note {
+  font-size: 11px; color: #9ab0c8; margin-top: 14px;
+  max-width: 720px; line-height: 1.65;
+}
 </style>
 </head>
 <body>
@@ -414,6 +455,7 @@ body {
   <button class="tab-btn" onclick="switchTab('pitchers',this)">Pitchers</button>
   <button class="tab-btn" onclick="switchTab('injuries',this)">Injuries</button>
   <button class="tab-btn" onclick="switchTab('news',this)">Last Week</button>
+  <button class="tab-btn" onclick="switchTab('mystats',this)">My Team</button>
 </div>
 
 <!-- Grid -->
@@ -465,6 +507,15 @@ body {
     </thead>
     <tbody id="injuries-body"></tbody>
   </table>
+</div>
+
+<!-- My Team Stats -->
+<div id="stats-section">
+  <div id="stats-header">
+    <h2>My Team Stats</h2>
+    <span id="stats-context"></span>
+  </div>
+  <div id="stats-body"></div>
 </div>
 
 <!-- Roster Panel -->
@@ -620,13 +671,243 @@ function render() {
   const isGrid     = currentTab === 'batters' || currentTab === 'pitchers';
   const isInjuries = currentTab === 'injuries';
   const isNews     = currentTab === 'news';
+  const isStats    = currentTab === 'mystats';
   document.getElementById('grid-wrapper').style.display     = isGrid     ? '' : 'none';
   document.getElementById('ranked-section').style.display   = isGrid     ? '' : 'none';
   document.getElementById('injuries-section').style.display = isInjuries ? 'block' : 'none';
   document.getElementById('news-section').style.display     = isNews     ? 'block' : 'none';
+  document.getElementById('stats-section').style.display    = isStats    ? 'block' : 'none';
   if (isInjuries)   renderInjuries();
   else if (isNews)  renderNews();
+  else if (isStats) renderStats();
   else { buildPosFilter(); renderGrid(); renderList(); }
+}
+
+// ── My Team Stats ────────────────────────────────────────────────────────────
+
+// Batter position weights (sum = 14 roster slots)
+// C×2, 1B×1.5 (1B + 0.5×CI), 2B×1.5 (2B + 0.5×MI), 3B×1.5, SS×1.5,
+// LF/CF/RF × 5/3 (5 OF slots / 3 OF positions), DH×1 (Util)
+const BATTER_POOL_W = {
+  C: 2, '1B': 1.5, '2B': 1.5, '3B': 1.5, SS: 1.5,
+  LF: 5/3, CF: 5/3, RF: 5/3, DH: 1
+};
+
+function buildBatterPool() {
+  const dc   = DATA?.depth_chart         || {};
+  const proj = DATA?.projections?.batters || {};
+  const items = [], seen = new Set();
+  AL_ORDER.forEach(team => {
+    const td = dc[team] || {};
+    Object.entries(BATTER_POOL_W).forEach(([pos, posW]) => {
+      const s = (td[pos] || [])[0];
+      if (!s || seen.has(s.name) || !proj[s.name]) return;
+      seen.add(s.name);
+      items.push({ name: s.name, weight: posW / 15, proj: proj[s.name],
+                   drafted: drafted.has(s.name) });
+    });
+  });
+  return items;
+}
+
+function buildPitcherPool() {
+  // SP×5, CL×2, RP/SU×2 — all equal weight (1/15), total weight = 9
+  const dc   = DATA?.depth_chart          || {};
+  const proj = DATA?.projections?.pitchers || {};
+  const items = [], seen = new Set();
+  const types = [['SP', 5], ['CL', 2], ['RP', 2]];
+  AL_ORDER.forEach(team => {
+    const td = dc[team] || {};
+    types.forEach(([key, cnt]) => {
+      (td[key] || []).slice(0, cnt).forEach(s => {
+        if (seen.has(s.name) || !proj[s.name]) return;
+        seen.add(s.name);
+        items.push({ name: s.name, weight: 1/15, proj: proj[s.name],
+                     drafted: drafted.has(s.name) });
+      });
+    });
+  });
+  return items;
+}
+
+function wQuantile(sorted, q) {
+  // sorted: [{value, weight}] ascending; returns weighted quantile
+  const total = sorted.reduce((s, x) => s + x.weight, 0);
+  if (!total) return null;
+  const target = q * total;
+  let cum = 0;
+  for (const it of sorted) { cum += it.weight; if (cum >= target) return it.value; }
+  return sorted[sorted.length - 1]?.value ?? null;
+}
+
+function wStats(pool, getter) {
+  const valid = pool.filter(x => getter(x) != null);
+  if (!valid.length) return null;
+  const tw  = valid.reduce((s, x) => s + x.weight, 0);
+  const avg = valid.reduce((s, x) => s + getter(x) * x.weight, 0) / tw;
+  const sorted = valid.map(x => ({ value: getter(x), weight: x.weight }))
+                      .sort((a, b) => a.value - b.value);
+  return {
+    avg,
+    q1:  wQuantile(sorted, 0.25),
+    med: wQuantile(sorted, 0.50),
+    q3:  wQuantile(sorted, 0.75),
+  };
+}
+
+function wSubsetAvg(pool, getter, isDrafted) {
+  const sub = pool.filter(x => x.drafted === isDrafted && getter(x) != null);
+  if (!sub.length) return null;
+  const tw = sub.reduce((s, x) => s + x.weight, 0);
+  return tw ? sub.reduce((s, x) => s + getter(x) * x.weight, 0) / tw : null;
+}
+
+function fmtCount(v) { return v != null ? v.toFixed(1) : '—'; }
+function fmtBA(v)    { return v != null ? v.toFixed(3).replace(/^0/, '') : '—'; }
+function fmtERA(v)   { return v != null ? v.toFixed(2) : '—'; }
+function fmtWHIP(v)  { return v != null ? v.toFixed(3) : '—'; }
+
+function g(key) { return x => { const v = parseFloat(x.proj[key]); return isNaN(v) ? null : v; }; }
+
+const BATTER_STAT_DEFS = [
+  { key:'HR',  label:'HR',   fmt:fmtCount, getter:g('HR'),  hb:true },
+  { key:'RBI', label:'RBI',  fmt:fmtCount, getter:g('RBI'), hb:true },
+  { key:'BA',  label:'BA',   fmt:fmtBA,    getter:g('AVG'), hb:true },
+  { key:'SB',  label:'SB',   fmt:fmtCount, getter:g('SB'),  hb:true },
+  { key:'R',   label:'R',    fmt:fmtCount, getter:g('R'),   hb:true },
+];
+const PITCHER_STAT_DEFS = [
+  { key:'W',    label:'W',    fmt:fmtCount, getter:g('W'),    hb:true  },
+  { key:'S',    label:'S',    fmt:fmtCount, getter:g('S'),    hb:true  },
+  { key:'ERA',  label:'ERA',  fmt:fmtERA,   getter:g('ERA'),  hb:false },
+  { key:'WHIP', label:'WHIP', fmt:fmtWHIP,  getter:g('WHIP'), hb:false },
+  { key:'K',    label:'K',    fmt:fmtCount, getter:g('K'),    hb:true  },
+];
+
+function myBatterAvg(key) {
+  const proj = DATA?.projections?.batters || {};
+  const myB  = [...drafted].filter(n => proj[n]);
+  if (!myB.length) return null;
+  if (key === 'BA') {
+    let h = 0, ab = 0;
+    myB.forEach(n => {
+      const p = proj[n];
+      const hv = parseFloat(p.H), abv = parseFloat(p.AB);
+      if (!isNaN(hv) && !isNaN(abv) && abv > 0) { h += hv; ab += abv; }
+    });
+    return ab > 0 ? h / ab : null;
+  }
+  const col = { HR:'HR', RBI:'RBI', SB:'SB', R:'R' }[key];
+  if (!col) return null;
+  let sum = 0, cnt = 0;
+  myB.forEach(n => { const v = parseFloat(proj[n]?.[col]); if (!isNaN(v)) { sum += v; cnt++; } });
+  return cnt ? sum / cnt : null;
+}
+
+function myPitcherAvg(key) {
+  const proj = DATA?.projections?.pitchers || {};
+  const myP  = [...drafted].filter(n => proj[n]);
+  if (!myP.length) return null;
+  if (key === 'ERA' || key === 'WHIP') {
+    let wSum = 0, inn = 0;
+    myP.forEach(n => {
+      const p = proj[n];
+      const iv = parseFloat(p.INNs), rv = parseFloat(p[key]);
+      if (!isNaN(iv) && !isNaN(rv) && iv > 0) { wSum += rv * iv; inn += iv; }
+    });
+    return inn > 0 ? wSum / inn : null;
+  }
+  let sum = 0, cnt = 0;
+  myP.forEach(n => { const v = parseFloat(proj[n]?.[key]); if (!isNaN(v)) { sum += v; cnt++; } });
+  return cnt ? sum / cnt : null;
+}
+
+function statCls(myVal, ps, hb) {
+  if (myVal == null || !ps) return '';
+  const { q1, med, q3 } = ps;
+  if (hb) {
+    if (myVal >= q3)  return 'sv-great';
+    if (myVal >= med) return 'sv-good';
+    if (myVal >= q1)  return 'sv-low';
+    return 'sv-bad';
+  } else {
+    if (myVal <= q1)  return 'sv-great';
+    if (myVal <= med) return 'sv-good';
+    if (myVal <= q3)  return 'sv-low';
+    return 'sv-bad';
+  }
+}
+
+function renderStats() {
+  if (!DATA) return;
+  const proj = DATA.projections || {};
+  const hasBP = Object.keys(proj.batters  || {}).length > 0;
+  const hasPP = Object.keys(proj.pitchers || {}).length > 0;
+
+  const myB = [...drafted].filter(n => proj.batters?.[n]);
+  const myP = [...drafted].filter(n => proj.pitchers?.[n]);
+  document.getElementById('stats-context').textContent =
+    `${myB.length} batter${myB.length !== 1 ? 's' : ''} · ` +
+    `${myP.length} pitcher${myP.length !== 1 ? 's' : ''} drafted`;
+
+  if (!hasBP && !hasPP) {
+    document.getElementById('stats-body').innerHTML =
+      '<p style="padding:16px;color:#7a8ca0">No projection data — run scraper or add projections first.</p>';
+    return;
+  }
+
+  function makeTable(title, defs, pool, myAvgFn) {
+    let h = `<p class="stats-tbl-title">${title}
+      <span class="stats-pool-n">(pool: ${pool.length} starters with projections)</span></p>
+      <table class="stats-tbl">
+        <thead><tr>
+          <th>Stat</th>
+          <th>My Team</th>
+          <th>Avg</th>
+          <th>Q1</th>
+          <th>Median</th>
+          <th>Q3</th>
+          <th>Drafted<br>Avg</th>
+          <th>Undrafted<br>Avg</th>
+        </tr></thead><tbody>`;
+    defs.forEach(def => {
+      const ps  = wStats(pool, def.getter);
+      const dA  = wSubsetAvg(pool, def.getter, true);
+      const uA  = wSubsetAvg(pool, def.getter, false);
+      const my  = myAvgFn(def.key);
+      const cls = statCls(my, ps, def.hb);
+      const f   = def.fmt;
+      h += `<tr>
+        <td class="stat-label">${def.label}</td>
+        <td class="my-val ${cls}">${f(my)}</td>
+        <td>${ps ? f(ps.avg) : '—'}</td>
+        <td>${ps ? f(ps.q1)  : '—'}</td>
+        <td>${ps ? f(ps.med) : '—'}</td>
+        <td>${ps ? f(ps.q3)  : '—'}</td>
+        <td class="sub-avg">${dA != null ? f(dA) : '—'}</td>
+        <td class="sub-avg">${uA != null ? f(uA) : '—'}</td>
+      </tr>`;
+    });
+    h += '</tbody></table>';
+    return h;
+  }
+
+  const legend = `<div class="stats-legend">
+    <span><span class="leg-sq" style="background:#1a7a3f"></span> Top 25% (above Q3)</span>
+    <span><span class="leg-sq" style="background:#2e9e5a"></span> 2nd quartile</span>
+    <span><span class="leg-sq" style="background:#c07010"></span> 3rd quartile</span>
+    <span><span class="leg-sq" style="background:#c0392b"></span> Bottom 25% (below Q1)</span>
+    <span style="color:#9ab0c8;font-size:10px">(ERA/WHIP: lower = better)</span>
+  </div>`;
+
+  let html = legend;
+  if (hasBP) html += makeTable('Batting', BATTER_STAT_DEFS, buildBatterPool(), myBatterAvg);
+  if (hasPP) html += makeTable('Pitching', PITCHER_STAT_DEFS, buildPitcherPool(), myPitcherAvg);
+  html += `<p class="stats-note">Per-player averages. Counting stat team total ≈ avg × batters/pitchers drafted.
+    Pool weights: C×2, 1B/2B/3B/SS×1.5 (includes MI/CI share), OF×5/3, DH×1; pitchers equal weight.
+    BA uses H/AB weighting for My Team; ERA/WHIP are innings-weighted for My Team.</p>`;
+
+  document.getElementById('stats-body').innerHTML = html;
 }
 
 function buildPosFilter() {
