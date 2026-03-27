@@ -320,12 +320,15 @@ body {
 .slot-player:hover { color: #7dd3fc; text-decoration: underline; }
 .slot-empty { font-size: 11px; color: #2a4060; font-style: italic; }
 .slot-unassigned .slot-player { color: #f0d060; }
-#roster-clear-btn {
-  display: block; width: calc(100% - 20px); margin: 8px 10px;
-  padding: 5px; font-size: 11px; background: #c0392b; color: white;
+#roster-clear-btn, #roster-dl-btn {
+  display: block; width: calc(100% - 20px); margin: 4px 10px;
+  padding: 5px; font-size: 11px; color: white;
   border: none; border-radius: 4px; cursor: pointer;
 }
+#roster-clear-btn { background: #c0392b; margin-top: 8px; }
 #roster-clear-btn:hover { background: #a93226; }
+#roster-dl-btn { background: #1e6a9f; }
+#roster-dl-btn:hover { background: #165580; }
 
 /* ── Search overlay ───────────────────────────────────────────────────────── */
 #search-overlay {
@@ -634,6 +637,7 @@ body {
     My Roster <span id="roster-count">0/23</span>
   </div>
   <div id="roster-body"></div>
+  <button id="roster-dl-btn" onclick="downloadRoster()">⬇ Download roster</button>
   <button id="roster-clear-btn" onclick="clearRoster()">Clear roster</button>
 </div>
 
@@ -1508,6 +1512,42 @@ function clearRoster() {
   roster = { slots: {}, unassigned: [] };
   saveRoster();
   renderRoster();
+}
+
+function downloadRoster() {
+  const rankings = DATA?.rankings || {};
+  const bProj    = DATA?.projections?.batters  || {};
+  const pProj    = DATA?.projections?.pitchers || {};
+
+  const header = ['Slot','Player','Rank','Pos','AVG','HR','RBI','SB','R','ERA','W','S','WHIP','K'];
+  const rows   = [header];
+
+  function addRow(slotLabel, name) {
+    if (!name) { rows.push([slotLabel, ...Array(header.length - 1).fill('')]); return; }
+    const info = rankings[name] || {};
+    const bp   = bProj[name]   || {};
+    const pp   = pProj[name]   || {};
+    rows.push([
+      slotLabel, name, info.rank || '', info.pos || '',
+      bp.AVG || '', bp.HR || '', bp.RBI || '', bp.SB || '', bp.R || '',
+      pp.ERA || '', pp.W || '', pp.S  || '', pp.WHIP || '', pp.K || '',
+    ]);
+  }
+
+  ROSTER_SLOTS.forEach(slot => addRow(slot.label, roster.slots[slot.id]));
+  roster.unassigned.forEach(name => addRow('Unassigned', name));
+
+  const csv = rows.map(r =>
+    r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')
+  ).join('\r\n');
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'fantasy-bb-roster.csv';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ── Roster panel render ─────────────────────────────────────────────────────
