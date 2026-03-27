@@ -393,6 +393,30 @@ body {
 #assign-remove-btn { border: none; background: #c0392b; color: white; }
 #assign-remove-btn:hover { background: #a93226; }
 
+/* ── Read Me tab ────────────────────────────────────────────────────────── */
+#readme-section { padding: 0 16px 32px; display: none; max-width: 820px; }
+#readme-section h2 {
+  font-size: 15px; font-weight: 700; color: #1e3a5f;
+  margin: 18px 0 6px; padding-top: 14px;
+  border-top: 2px solid #c8d3e0;
+}
+#readme-section h2:first-of-type { margin-top: 14px; }
+#readme-section p  { font-size: 13px; line-height: 1.7; color: #2a3a50; margin-bottom: 8px; }
+#readme-section ul { font-size: 13px; line-height: 1.75; color: #2a3a50;
+                     padding-left: 20px; margin-bottom: 8px; }
+#readme-section li { margin-bottom: 2px; }
+#readme-section .rm-key { font-weight: 700; color: #1e3a5f; }
+#readme-section .rm-warn {
+  background: #fff8e8; border-left: 4px solid #e0a020;
+  padding: 10px 14px; margin: 12px 0; border-radius: 0 5px 5px 0;
+  font-size: 13px; line-height: 1.7; color: #4a3800;
+}
+#readme-section .rm-warn strong { color: #7a4800; }
+#readme-section kbd {
+  background: #e8eef8; border: 1px solid #b0c4d8; border-radius: 3px;
+  padding: 1px 5px; font-size: 12px; font-family: monospace; color: #1e3a5f;
+}
+
 /* ── My Team Stats tab ───────────────────────────────────────────────────── */
 #stats-section { padding: 0 16px 24px; display: none; }
 #stats-header {
@@ -452,11 +476,94 @@ body {
 
 <!-- Tabs -->
 <div id="tabs">
+  <button class="tab-btn" onclick="switchTab('readme',this)">Read Me</button>
   <button class="tab-btn active" onclick="switchTab('batters',this)">Batters</button>
   <button class="tab-btn" onclick="switchTab('pitchers',this)">Pitchers</button>
   <button class="tab-btn" onclick="switchTab('injuries',this)">Injuries</button>
   <button class="tab-btn" onclick="switchTab('news',this)">Last Week</button>
   <button class="tab-btn" onclick="switchTab('mystats',this)">My Team</button>
+</div>
+
+<!-- Read Me -->
+<div id="readme-section">
+
+  <h2>What This Tool Does</h2>
+  <p>A draft-day companion for an AL-only rotisserie league (15 teams). It shows depth charts and
+  CBS AL rankings side-by-side so you can see who is starting, check players off as they're
+  drafted, build your roster, and track how your team projects in the five roto categories for
+  batters and pitchers.</p>
+
+  <h2>How to Use It</h2>
+  <ul>
+    <li><span class="rm-key">Batters / Pitchers tabs</span> — depth-chart grid (starters bold,
+    backups gray) across all 15 AL teams. Hover a player for rank, eligibility, projections, and
+    injury notes.</li>
+    <li><span class="rm-key">Check a player</span> to mark them drafted. An Assign modal opens so
+    you can place them in a roster slot. Uncheck to un-draft and remove from the roster.</li>
+    <li><span class="rm-key">Ranked list</span> (below the grid) — all players sorted by CBS AL
+    rank, with position filter and name search. Same checkboxes as the grid.</li>
+    <li><span class="rm-key"><kbd>/</kbd> key</span> — quick search overlay. Type a name,
+    use ↑/↓ to navigate, Enter to select.</li>
+    <li><span class="rm-key">Roster panel</span> (right side) — shows your 14 batter + 9 pitcher
+    slots. Click a name to reassign. <em>Clear roster</em> removes slot assignments without
+    un-drafting players.</li>
+    <li><span class="rm-key">Injuries tab</span> — all players with active injury notes, sorted by
+    rank, with a suggested replacement from the depth chart.</li>
+    <li><span class="rm-key">Last Week tab</span> — recent MLB.com news headlines by team,
+    filtered to player-relevant stories from the past 7 days.</li>
+    <li><span class="rm-key">My Team tab</span> — projects your drafted players' per-player stat
+    averages against the weighted pool of AL starters (Q1/Median/Q3 and percentile columns).
+    Lower percentile = better.</li>
+    <li><span class="rm-key">Run Scraper button</span> — triggers a GitHub Actions workflow that
+    refreshes depth charts, rankings, and news (takes ~5 min). Reload the page afterward.</li>
+    <li><span class="rm-key">Reset Draft</span> — clears all drafted marks and roster assignments.
+    Cannot be undone.</li>
+  </ul>
+  <p>Draft state (checked players, roster assignments) is saved in your browser's
+  <em>localStorage</em> and is <strong>local to your browser only</strong> — other people opening
+  this page see their own independent state.</p>
+
+  <h2>Data Sources</h2>
+  <ul>
+    <li><span class="rm-key">Depth charts</span> — scraped from CBS Sports fantasy baseball depth
+    chart pages (<code>cbssports.com/fantasy/baseball/depth-chart/</code>), one page per position.
+    AL teams identified by table heading. Refreshed daily at 7 AM ET via GitHub Actions, or
+    manually via the Run Scraper button.</li>
+    <li><span class="rm-key">Rankings</span> — CBS Sports AL-only rotisserie top-300, scraped at
+    the same time as depth charts.</li>
+    <li><span class="rm-key">Projections</span> — CBS Sports Rest-of-Season projected stats,
+    manually copied from the CBS stats page and parsed locally. <em>Not refreshed automatically</em>;
+    last updated when the projections were last run.</li>
+    <li><span class="rm-key">Position eligibility</span> — calculated from SABR/Lahman historical
+    fielding data. A player is eligible at a position if they played 20+ games there in the 2025
+    season. This is <em>not</em> official CBS eligibility.</li>
+    <li><span class="rm-key">Injury notes</span> — pulled from the CBS depth chart pages alongside
+    player listings. Notes are filtered by keyword to suppress non-injury blurbs, but the filter
+    is imperfect.</li>
+  </ul>
+
+  <h2>Warnings &amp; Limitations</h2>
+  <div class="rm-warn">
+    <strong>⚠ Use at your own risk.</strong> This tool is a personal project built for convenience,
+    not a production system. The following are known limitations:
+    <ul style="margin:8px 0 0 0">
+      <li><strong>Eligibility is approximate.</strong> Position eligibility is calculated from
+      Lahman fielding data and does not match CBS's official eligibility rules exactly. Always
+      verify eligibility on CBS before making roster decisions.</li>
+      <li><strong>Projections may be stale.</strong> Rest-of-season projections are refreshed
+      manually and could be weeks out of date. Treat them as rough guides, not current forecasts.</li>
+      <li><strong>Scraper accuracy.</strong> Depth charts and rankings are parsed from CBS's HTML
+      structure. If CBS changes their page layout, the scraper may produce incomplete or incorrect
+      data without warning.</li>
+      <li><strong>Name matching.</strong> Player names are reconciled between data sources using
+      fuzzy normalization. Occasionally a player may be mismatched or missing projections/eligibility
+      data, especially for players with recent name changes, Jr./Sr. suffixes, or accented
+      characters.</li>
+      <li><strong>No data validation.</strong> Projection values and depth chart positions are
+      displayed as-is from the source. They have not been independently verified.</li>
+    </ul>
+  </div>
+
 </div>
 
 <!-- Grid -->
@@ -673,11 +780,14 @@ function render() {
   const isInjuries = currentTab === 'injuries';
   const isNews     = currentTab === 'news';
   const isStats    = currentTab === 'mystats';
+  const isReadme   = currentTab === 'readme';
+  document.getElementById('readme-section').style.display   = isReadme   ? 'block' : 'none';
   document.getElementById('grid-wrapper').style.display     = isGrid     ? '' : 'none';
   document.getElementById('ranked-section').style.display   = isGrid     ? '' : 'none';
   document.getElementById('injuries-section').style.display = isInjuries ? 'block' : 'none';
   document.getElementById('news-section').style.display     = isNews     ? 'block' : 'none';
   document.getElementById('stats-section').style.display    = isStats    ? 'block' : 'none';
+  if (isReadme)     return;
   if (isInjuries)   renderInjuries();
   else if (isNews)  renderNews();
   else if (isStats) renderStats();
