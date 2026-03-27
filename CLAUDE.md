@@ -95,13 +95,22 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
 ### Web App (`docs/index.html`)
 
+**Tab order:** Read Me | Batters | Pitchers | Injuries | Last Week | My Team
+
+**Read Me tab** — static documentation page (no JS needed):
+- Usage guide covering all features, keyboard shortcuts, and the roster panel
+- Data sources section: depth charts, rankings, projections, eligibility, injury notes
+- Warnings callout: eligibility is approximate (Lahman, not official CBS), projections may be stale, scraper fragility, name-matching edge cases, no independent data validation
+- Draft state localStorage note (local to each browser, not shared)
+
 **Batters tab** — columns: C, 1B, 2B, 3B, SS, LF, CF, RF, DH
 - Each cell: starter (bold) + 1 backup (gray/small)
+- **Search highlight**: as the user types in the ranked-list search box, matching players in the depth chart grid get a yellow highlight — starters and backups both highlighted
 
 **Pitchers tab** — 9 columns: SP1, SP2, SP3, SP4, SP5, CL1, CL2, SU1, SU2
 - Each cell: one player; `PITCHER_COL_MAP` maps column name to `[data_key, index]`
 
-**Features:**
+**Features (Batters/Pitchers tabs):**
 - Checkbox per player → marks as drafted + opens Assign modal to place on roster
 - Unchecking a checkbox → undrafts and removes from roster
 - Injury `!` flag in grid — only shown for real injuries (keyword-matched); all notes still appear in hover tooltip
@@ -111,10 +120,32 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 - Position filter rebuilds on tab switch (only shows relevant positions)
 - Batter ranked list columns: Rank, Name, Pos, Eligible (with 2025 games count), AVG, HR, RBI, SB, R, Injury
 - Pitcher ranked list columns: Rank, Name, Pos, ERA, W, S, WHIP, K, Injury
-- **Injuries tab**: lists all players with real injury notes, sorted by CBS rank; shows likely replacement (first healthy player at same position, with MI/CI/OF/CL overlaps)
-- **Last Week tab**: MLB.com news from the past 7 days, organized by team; only player-relevant headlines (blocklist filters out TV/streaming/tickets/nostalgia/odds); deduplicated by normalized headline; shows "as of" timestamp
-- **Run Scraper** button in header → opens GitHub Actions page to trigger a fresh scrape
-- **Reset Draft** button clears all drafted marks and the full roster
+
+**Injuries tab**: lists all players with real injury notes, sorted by CBS rank; shows likely replacement (first healthy player at same position, with MI/CI/OF/CL overlaps)
+
+**Last Week tab**: MLB.com news from the past 7 days, organized by team; only player-relevant headlines (blocklist filters out TV/streaming/tickets/nostalgia/odds); deduplicated by normalized headline; shows "as of" timestamp
+
+**My Team tab** — projects drafted players' stats against a weighted pool of AL starters:
+- Two tables: Batting (HR, RBI, BA, SB, R) and Pitching (W, S, ERA, WHIP, K)
+- Columns: Stat | My Team | Avg | Q1 | Median | Q3 | Drafted Avg | Undrafted Avg | %ile All | %ile Dft | %ile Und
+- **My Team** = per-player average of all drafted players with projection data
+  - BA: H/AB-weighted; ERA/WHIP: innings-weighted; all others: simple average
+- **Pool**: weighted sample of AL starters from the depth chart
+  - Batter weights (sum = 14): C×2, 1B/2B/3B/SS×1.5 each (absorbs MI/CI half-shares), LF/CF/RF×5/3, DH×1
+  - Pitcher weights (sum = 9): all equal (SP1–5 + CL1–2 + SU1–2, weight 1/15 each)
+  - Only players with projection data are included in the pool
+- **Q1/Q3 orientation**: Q1 = better-end threshold, Q3 = worse-end, for ALL stats
+  - For HR/RBI/etc (higher = better): Q1 value > Q3 value (Q1 is the 75th-percentile threshold)
+  - For ERA/WHIP (lower = better): Q1 value < Q3 value (Q1 is the 25th-percentile threshold, i.e. the best ERA)
+  - Internally `wStats()` always returns natural order (q1=25th, q3=75th); display swaps Q1↔Q3 for `hb:true` stats
+- **Percentile columns** (%ile All/Dft/Und): where My Team's value ranks in each population; lower = better (1 = best); computed via `wPercentile()` — for `hb:true` returns `100*(1-CDF)`, for `hb:false` returns `100*CDF`
+- **Color coding on My Team cell**: green = above Q1 (top quartile), light green = Q1–Median, orange = Median–Q3, red = below Q3
+- Drafted/Undrafted columns use same pool filtered to `x.drafted` flag (set at pool-build time)
+- Counting stats display as whole numbers; BA to 3dp; ERA/WHIP to 2dp
+
+**Other header controls:**
+- **Run Scraper** button → opens GitHub Actions page to trigger a fresh scrape
+- **Reset Draft** button → clears all drafted marks and roster assignments
 
 **Teams displayed** (AL_ORDER): BAL, BOS, NYY, TB, TOR, CWS, CLE, DET, KC, MIN, HOU, LAA, OAK, SEA, TEX
 
@@ -129,7 +160,8 @@ Fixed 220px panel on the right side of the screen showing your roster in progres
 
 **Interactions:**
 - Click a player name in the panel → opens Assign modal for reassignment
-- **Clear Roster** button in panel removes all slot assignments (keeps drafted marks)
+- **Download Roster** button → exports `fantasy-bb-roster.csv` with columns: Slot, Player, Rank, Pos, AVG, HR, RBI, SB, R, ERA, W, S, WHIP, K; all 23 slots included (empty slots have blank player row); unassigned players appended at bottom
+- **Clear Roster** button removes all slot assignments (keeps drafted marks)
 - Roster state persisted in `localStorage` (`ff_roster` key): `{ slots: {slotId: name}, unassigned: [name, ...] }`
 - `ROSTER_SLOTS` constant defines all slots with `{id, label, type, elig}` — `elig` lists which positions can play that slot (used to color-code the assign modal)
 
@@ -234,3 +266,6 @@ Scrapes `https://www.mlb.com/{slug}/news` for each AL team using Playwright.
 - Commits updated `docs/data.json` with message `Auto-refresh data YYYY-MM-DD HH:MM UTC`
 - Does `git pull --rebase` before pushing to avoid race condition when local changes were pushed since the workflow started
 - Does NOT run `parse_projections.py` or `build_eligibility.py` — those are one-time local scripts
+
+**⚠ Important — `scrape.py` field ownership:**
+`scrape.py` only owns `scraped_at`, `depth_chart`, `rankings`, `news`, `news_scraped_at`. Before writing `data.json` it reads the existing file and carries forward any keys it doesn't own (`projections`, `eligibility`). This prevents the daily auto-scrape from wiping manually-added projection and eligibility data. If `data.json` doesn't exist yet, those keys are simply omitted.
