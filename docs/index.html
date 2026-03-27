@@ -124,6 +124,8 @@ body {
   border-radius: 3px;
 }
 .player-entry:hover { background: #e8f4fd; }
+.player-entry.search-hl { background: #fff3a0 !important; border-radius: 3px; }
+.player-entry.search-hl .p-name { color: #7a5000 !important; font-weight: 700 !important; }
 .player-entry input[type=checkbox] { cursor: pointer; flex-shrink: 0; accent-color: #1e3a5f; }
 
 .p-name {
@@ -1350,6 +1352,13 @@ function renderList() {
 
   document.getElementById('list-body').innerHTML =
     html || `<tr><td colspan="${totalCols}" style="padding:12px;color:#7a8ca0">No players match.</td></tr>`;
+
+  // Highlight matching players in the depth-chart grid
+  const q = searchVal;  // already lowercased and trimmed above
+  document.querySelectorAll('.player-entry').forEach(el => {
+    const name = (el.dataset.name || '').toLowerCase();
+    el.classList.toggle('search-hl', q.length > 0 && name.includes(q));
+  });
 }
 
 // ── News ───────────────────────────────────────────────────────────────────
