@@ -1312,11 +1312,16 @@ function renderList() {
     }
   });
 
-  // Add any projection-only players not in depth chart or rankings
+  // Add any projection-only players not in depth chart or rankings;
+  // also fill in missing team/pos for players already in the map
   if (hasProj) {
     Object.keys(projMap).forEach(name => {
+      const s = projMap[name];
       if (!players[name]) {
-        players[name] = { name, team: '', pos: '', injury: null, rank: 99999 };
+        players[name] = { name, team: s._team || '', pos: s._pos || '', injury: null, rank: 99999 };
+      } else {
+        if (!players[name].team && s._team) players[name].team = s._team;
+        if (!players[name].pos  && s._pos)  players[name].pos  = s._pos;
       }
     });
   }

@@ -54,9 +54,11 @@ def parse_file(path: Path, cols: list[str]) -> dict:
         if not m:
             continue
         name = m.group(1).strip()
+        pos  = m.group(2).strip()
+        team = m.group(3).strip()
 
         # Map stat values to column names
-        stats = {}
+        stats = {'_team': team, '_pos': pos}
         for i, col in enumerate(cols):
             if i < len(stat_parts):
                 val = stat_parts[i].strip()
