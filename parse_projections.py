@@ -19,6 +19,7 @@ OUT_FILE = DOCS_DIR / 'data.json'
 
 BATTER_FILE  = BASE_DIR / 'batters2026.txt'
 PITCHER_FILE = BASE_DIR / 'pitchers2026.txt'
+SAL_FILE     = BASE_DIR / 'salproj.txt'
 
 # Column names after [action, player_info] fields
 BATTER_COLS  = ['AB','R','H','1B','2B','3B','HR','RBI','BB','K','SB','CS','AVG','OBP','SLG','Rank']
@@ -74,8 +75,32 @@ def parse_file(path: Path, cols: list[str]) -> dict:
     return projections
 
 
+def parse_salaries(path: Path) -> dict:
+    """
+    Parse CBS salary projection file (salproj.txt).
+    Returns {player_name: al_salary_string} e.g. {'Aaron Judge': '$46'}.
+    Data rows are tab-separated: player_info, pos, team, mixed_sal, al_sal.
+    """
+    salaries = {}
+    lines = path.read_text(encoding='utf-8').splitlines()
+    for line in lines:
+        line = line.strip()
+        if not line or '•' not in line:
+            continue
+        parts = line.split('\t')
+        if len(parts) < 5:
+            continue
+        player_info = parts[0].strip()
+        al_sal      = parts[4].strip()
+        m = PLAYER_RE.match(player_info)
+        if not m or not al_sal:
+            continue
+        salaries[m.group(1).strip()] = al_sal
+    return salaries
+
+
 def main():
-    for f in (BATTER_FILE, PITCHER_FILE):
+    for f in (BATTER_FILE, PITCHER_FILE, SAL_FILE):
         if not f.exists():
             print(f'ERROR: {f.name} not found in {BASE_DIR}')
             return
@@ -96,6 +121,13 @@ def main():
         sample = next(iter(pitchers_proj))
         print(f'Sample pitcher — {sample}: {pitchers_proj[sample]}')
 
+    print(f'Parsing {SAL_FILE.name}...')
+    salaries = parse_salaries(SAL_FILE)
+    print(f'  {len(salaries)} players with salary data')
+    if salaries:
+        sample = next(iter(salaries))
+        print(f'  Sample — {sample}: {salaries[sample]}')
+
     # Merge into data.json
     existing = {}
     if OUT_FILE.exists():
@@ -105,6 +137,7 @@ def main():
         'batters':  batters_proj,
         'pitchers': pitchers_proj,
     }
+    existing['salaries'] = salaries
 
     OUT_FILE.write_text(json.dumps(existing, indent=2), encoding='utf-8')
     print(f'\nSaved -> {OUT_FILE}')

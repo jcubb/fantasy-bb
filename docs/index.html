@@ -279,6 +279,7 @@ body {
 .r-injury { color: #c0392b; font-size: 11px; }
 .proj-val { text-align: right; color: #2a4a6a; font-variant-numeric: tabular-nums; }
 .proj-val.missing { color: #c0ccd8; }
+.sal-val { font-weight: 600; color: #1a6640; }
 #ranked-table thead th.sortable { cursor: pointer; user-select: none; }
 #ranked-table thead th.sortable:hover { background: #2a4f7a; }
 #ranked-table thead th.sort-active { background: #2a4f7a; }
@@ -1300,6 +1301,8 @@ function renderList() {
   const projMap     = isBatters ? (projections.batters || {}) : (projections.pitchers || {});
   const projCols    = isBatters ? BATTER_PROJ_COLS : PITCHER_PROJ_COLS;
   const hasProj     = Object.keys(projMap).length > 0;
+  const salaries    = DATA.salaries || {};
+  const hasSal      = Object.keys(salaries).length > 0;
 
   // ── Rebuild thead ────────────────────────────────────────────────────────
   const eligData  = (DATA.eligibility?.positions_2025) || {};
@@ -1316,7 +1319,7 @@ function renderList() {
   const projHeads = hasProj
     ? projCols.map(c => `<th ${thAttrs(c, 'proj-col', 'width:42px')}>${c}${thArrow(c)}</th>`).join('')
     : '';
-  const totalCols = 5 + (hasElig ? 1 : 0) + (hasProj ? projCols.length : 0);
+  const totalCols = 5 + (hasElig ? 1 : 0) + (hasSal ? 1 : 0) + (hasProj ? projCols.length : 0);
   document.getElementById('list-head').innerHTML =
     `<tr>
        <th ${thAttrs('rank', '', 'width:36px')}>Rank${thArrow('rank')}</th>
@@ -1324,6 +1327,7 @@ function renderList() {
        <th ${thAttrs('team', '', 'width:42px')}>Team${thArrow('team')}</th>
        <th ${thAttrs('pos', '', 'width:42px')}>Pos${thArrow('pos')}</th>
        ${hasElig ? `<th ${thAttrs('eligible', '', 'width:90px')}>Eligible${thArrow('eligible')}</th>` : ''}
+       ${hasSal ? `<th ${thAttrs('sal', 'proj-col', 'width:42px')}>Sal${thArrow('sal')}</th>` : ''}
        ${projHeads}
        <th ${thAttrs('injury')}>Injury / Note${thArrow('injury')}</th>
      </tr>`;
@@ -1397,6 +1401,13 @@ function renderList() {
     } else if (listSortCol === 'injury') {
       av = a.injury ? a.injury.toLowerCase() : '';
       bv = b.injury ? b.injury.toLowerCase() : '';
+    } else if (listSortCol === 'sal') {
+      const sa = salaries[a.name]; const sb = salaries[b.name];
+      av = sa ? parseInt(sa.replace('$', ''), 10) : NaN;
+      bv = sb ? parseInt(sb.replace('$', ''), 10) : NaN;
+      if (isNaN(av) && isNaN(bv)) return 0;
+      if (isNaN(av)) return 1;
+      if (isNaN(bv)) return -1;
     } else if (projCols.includes(listSortCol)) {
       const pa = projMap[a.name] || {}; const pb = projMap[b.name] || {};
       av = pa[listSortCol] !== undefined ? parseFloat(pa[listSortCol]) : NaN;
@@ -1454,6 +1465,12 @@ function renderList() {
                    const totalG = Object.values(g2025).reduce((s, v) => s + v, 0);
                    const gStr   = totalG > 0 ? ` <span style="color:#9ab0c8">(${totalG}g)</span>` : '';
                    return `<td style="font-size:11px;color:#2a4a6a">${posStr}${gStr}</td>`;
+                 })() : ''}
+               ${hasSal ? (() => {
+                   const sal = salaries[p.name];
+                   return sal
+                     ? `<td class="proj-val sal-val">${esc(sal)}</td>`
+                     : `<td class="proj-val missing">—</td>`;
                  })() : ''}
                ${projCells}
                <td>${injHtml}</td>
