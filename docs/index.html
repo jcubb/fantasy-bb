@@ -343,6 +343,19 @@ body {
 .slot-player:hover { color: #7dd3fc; text-decoration: underline; }
 .slot-empty { font-size: 11px; color: #2a4060; font-style: italic; }
 .slot-unassigned .slot-player { color: #f0d060; }
+.slot-sal-input {
+  width: 36px; flex-shrink: 0; font-size: 11px; font-family: inherit;
+  background: #0f1e30; border: 1px solid #2a4060; border-radius: 3px;
+  color: #a0d080; text-align: right; padding: 1px 3px;
+  -moz-appearance: textfield;
+}
+.slot-sal-input::-webkit-outer-spin-button,
+.slot-sal-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.slot-sal-input:focus { outline: none; border-color: #5a88b0; }
+#roster-budget {
+  padding: 7px 10px 5px; font-size: 11px; border-top: 1px solid #1e3550;
+  display: flex; justify-content: space-between; flex-shrink: 0;
+}
 #roster-clear-btn, #roster-dl-btn {
   display: block; width: calc(100% - 20px); margin: 4px 10px;
   padding: 5px; font-size: 11px; color: white;
@@ -670,6 +683,7 @@ body {
     My Roster <span id="roster-count">0/23</span>
   </div>
   <div id="roster-body"></div>
+  <div id="roster-budget"></div>
   <button id="roster-dl-btn" onclick="downloadRoster()">⬇ Download roster</button>
   <button id="roster-clear-btn" onclick="clearRoster()">Clear roster</button>
 </div>
@@ -763,6 +777,7 @@ let listSortCol = 'rank';
 let listSortDir = 'asc';
 let roster      = JSON.parse(localStorage.getItem('ff_roster') || 'null')
                   || { slots: {}, unassigned: [] };
+let salPaid     = JSON.parse(localStorage.getItem('ff_sal_paid') || '{}');
 
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
@@ -808,6 +823,22 @@ function handleCheck(cb, name) {
   }
 }
 
+function setSalPaid(name, val) {
+  const n = parseInt(val, 10);
+  if (n > 0) salPaid[name] = n; else delete salPaid[name];
+  localStorage.setItem('ff_sal_paid', JSON.stringify(salPaid));
+  renderBudget();
+}
+
+function renderBudget() {
+  const allPlayers = [...Object.values(roster.slots).filter(Boolean), ...roster.unassigned];
+  const spent      = allPlayers.reduce((s, n) => s + (salPaid[n] || 0), 0);
+  const remaining  = 260 - spent;
+  document.getElementById('roster-budget').innerHTML =
+    `<span style="color:#a0d080">$${spent} spent</span>` +
+    `<span style="${remaining < 0 ? 'color:#e05050' : 'color:#9ab0c8'}">$${remaining} left</span>`;
+}
+
 function saveNotes() {
   localStorage.setItem('ff_notes', document.getElementById('notes-area').value);
 }
@@ -823,6 +854,8 @@ function resetDraft() {
   localStorage.removeItem('ff_drafted');
   roster = { slots: {}, unassigned: [] };
   localStorage.removeItem('ff_roster');
+  salPaid = {};
+  localStorage.removeItem('ff_sal_paid');
   render(); renderRoster();
 }
 
@@ -1627,6 +1660,8 @@ function rosterAdd(name, slotId, skipSave) {
 function rosterRemove(name) {
   for (const [id, n] of Object.entries(roster.slots)) if (n === name) { delete roster.slots[id]; break; }
   roster.unassigned = roster.unassigned.filter(n => n !== name);
+  delete salPaid[name];
+  localStorage.setItem('ff_sal_paid', JSON.stringify(salPaid));
   saveRoster();
 }
 
@@ -1678,12 +1713,23 @@ function renderRoster() {
   const total = Object.keys(roster.slots).length + roster.unassigned.length;
   document.getElementById('roster-count').textContent = `${total}/23`;
 
+  const cbsSal = DATA?.salaries || {};
+  const salInput = name => {
+    const paid  = salPaid[name] || '';
+    const hint  = cbsSal[name] ? cbsSal[name].replace('$','') : '';
+    return `<input type="number" class="slot-sal-input" min="1" max="260"
+              value="${paid}" placeholder="${hint}"
+              title="Salary paid (CBS proj: ${cbsSal[name] || '—'})"
+              oninput="setSalPaid('${esc(name)}', this.value)"
+              onclick="event.stopPropagation()">`;
+  };
+
   let html = '<div class="roster-sec">Batters</div>';
   ROSTER_SLOTS.filter(s => s.type === 'b').forEach(slot => {
     const p = roster.slots[slot.id];
     html += `<div class="roster-slot">
       <span class="slot-label">${slot.label}</span>
-      ${p ? `<span class="slot-player" onclick="openAssign('${esc(p)}')" title="${esc(p)}">${esc(p)}</span>`
+      ${p ? `<span class="slot-player" onclick="openAssign('${esc(p)}')" title="${esc(p)}">${esc(p)}</span>${salInput(p)}`
           : '<span class="slot-empty">—</span>'}
     </div>`;
   });
@@ -1693,7 +1739,7 @@ function renderRoster() {
     const p = roster.slots[slot.id];
     html += `<div class="roster-slot">
       <span class="slot-label">${slot.label}</span>
-      ${p ? `<span class="slot-player" onclick="openAssign('${esc(p)}')" title="${esc(p)}">${esc(p)}</span>`
+      ${p ? `<span class="slot-player" onclick="openAssign('${esc(p)}')" title="${esc(p)}">${esc(p)}</span>${salInput(p)}`
           : '<span class="slot-empty">—</span>'}
     </div>`;
   });
@@ -1703,11 +1749,13 @@ function renderRoster() {
     roster.unassigned.forEach(name => {
       html += `<div class="roster-slot slot-unassigned">
         <span class="slot-player" onclick="openAssign('${esc(name)}')" title="${esc(name)}">${esc(name)}</span>
+        ${salInput(name)}
       </div>`;
     });
   }
 
   document.getElementById('roster-body').innerHTML = html;
+  renderBudget();
 }
 
 // ── Assign modal ────────────────────────────────────────────────────────────
