@@ -834,9 +834,12 @@ function renderBudget() {
   const allPlayers = [...Object.values(roster.slots).filter(Boolean), ...roster.unassigned];
   const spent      = allPlayers.reduce((s, n) => s + (salPaid[n] || 0), 0);
   const remaining  = 260 - spent;
+  const openSlots  = ROSTER_SLOTS.length - Object.keys(roster.slots).length;
+  const perSlot    = openSlots > 0 ? Math.floor(remaining / openSlots) : null;
+  const perSlotStr = perSlot !== null ? ` <span style="color:#7a8ca0;font-size:10px">($${perSlot}/slot)</span>` : '';
   document.getElementById('roster-budget').innerHTML =
     `<span style="color:#a0d080">$${spent} spent</span>` +
-    `<span style="${remaining < 0 ? 'color:#e05050' : 'color:#9ab0c8'}">$${remaining} left</span>`;
+    `<span style="${remaining < 0 ? 'color:#e05050' : 'color:#9ab0c8'}">$${remaining} left${perSlotStr}</span>`;
 }
 
 function saveNotes() {
