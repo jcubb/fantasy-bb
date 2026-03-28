@@ -181,6 +181,24 @@ body {
 }
 #btn-run:hover { background: #165f30; }
 
+/* ── Notes section ──────────────────────────────────────────────────────── */
+#notes-section { padding: 0 16px 24px; display: none; }
+#notes-header { display: flex; align-items: center; gap: 12px; padding: 12px 0 8px; }
+#notes-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
+#btn-clear-notes {
+  background: none; border: 1px solid #c0ccd8; color: #7a8ca0;
+  padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;
+}
+#btn-clear-notes:hover { background: #f5f8ff; color: #c0392b; border-color: #c0392b; }
+#notes-area {
+  width: 100%; max-width: 800px; height: 480px;
+  font-family: inherit; font-size: 13px; line-height: 1.6;
+  padding: 12px; border: 1px solid #c8d3e0; border-radius: 6px;
+  background: white; color: #1a2035; resize: vertical;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.06);
+}
+#notes-area:focus { outline: none; border-color: #1e3a5f; box-shadow: inset 0 1px 3px rgba(0,0,0,.06), 0 0 0 2px rgba(30,58,95,.12); }
+
 /* ── Injuries section ───────────────────────────────────────────────────── */
 #injuries-section { padding: 0 16px 24px; display: none; }
 #injuries-header {
@@ -491,6 +509,7 @@ body {
   <button class="tab-btn" onclick="switchTab('injuries',this)">Injuries</button>
   <button class="tab-btn" onclick="switchTab('news',this)">Last Week</button>
   <button class="tab-btn" onclick="switchTab('mystats',this)">My Team</button>
+  <button class="tab-btn" onclick="switchTab('notes',this)">Notes</button>
 </div>
 
 <!-- Read Me -->
@@ -594,6 +613,15 @@ body {
     <thead id="list-head"></thead>
     <tbody id="list-body"></tbody>
   </table>
+</div>
+
+<!-- Notes -->
+<div id="notes-section">
+  <div id="notes-header">
+    <h2>Draft Notes</h2>
+    <button id="btn-clear-notes" onclick="clearNotes()">Clear</button>
+  </div>
+  <textarea id="notes-area" placeholder="Scratch pad — jot down anything you want to remember during the draft..." oninput="saveNotes()"></textarea>
 </div>
 
 <!-- Last Week News -->
@@ -746,6 +774,8 @@ async function init() {
       'Scraped: ' + d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
     render();
     renderRoster();
+    const saved = localStorage.getItem('ff_notes');
+    if (saved) document.getElementById('notes-area').value = saved;
   } catch (e) {
     document.getElementById('grid-body').innerHTML =
       `<tr><td colspan="20" style="padding:20px;color:#c0392b">
@@ -777,6 +807,15 @@ function handleCheck(cb, name) {
   }
 }
 
+function saveNotes() {
+  localStorage.setItem('ff_notes', document.getElementById('notes-area').value);
+}
+function clearNotes() {
+  if (!confirm('Clear all notes?')) return;
+  document.getElementById('notes-area').value = '';
+  localStorage.removeItem('ff_notes');
+}
+
 function resetDraft() {
   if (!confirm('Clear all drafted players and roster?')) return;
   drafted.clear();
@@ -793,13 +832,16 @@ function render() {
   const isNews     = currentTab === 'news';
   const isStats    = currentTab === 'mystats';
   const isReadme   = currentTab === 'readme';
+  const isNotes    = currentTab === 'notes';
   document.getElementById('readme-section').style.display   = isReadme   ? 'block' : 'none';
   document.getElementById('grid-wrapper').style.display     = isGrid     ? '' : 'none';
   document.getElementById('ranked-section').style.display   = isGrid     ? '' : 'none';
   document.getElementById('injuries-section').style.display = isInjuries ? 'block' : 'none';
   document.getElementById('news-section').style.display     = isNews     ? 'block' : 'none';
   document.getElementById('stats-section').style.display    = isStats    ? 'block' : 'none';
+  document.getElementById('notes-section').style.display    = isNotes    ? 'block' : 'none';
   if (isReadme)     return;
+  if (isNotes)      return;
   if (isInjuries)   renderInjuries();
   else if (isNews)  renderNews();
   else if (isStats) renderStats();
