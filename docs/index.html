@@ -261,6 +261,10 @@ body {
 .r-injury { color: #c0392b; font-size: 11px; }
 .proj-val { text-align: right; color: #2a4a6a; font-variant-numeric: tabular-nums; }
 .proj-val.missing { color: #c0ccd8; }
+#ranked-table thead th.sortable { cursor: pointer; user-select: none; }
+#ranked-table thead th.sortable:hover { background: #2a4f7a; }
+#ranked-table thead th.sort-active { background: #2a4f7a; }
+.sort-arrow { margin-left: 3px; font-size: 10px; opacity: .8; }
 
 /* ── Tooltip ─────────────────────────────────────────────────────────────── */
 #tooltip {
@@ -726,6 +730,8 @@ const ROSTER_SLOTS = [
 let DATA        = null;
 let drafted     = new Set(JSON.parse(localStorage.getItem('ff_drafted') || '[]'));
 let currentTab  = 'batters';
+let listSortCol = 'rank';
+let listSortDir = 'asc';
 let roster      = JSON.parse(localStorage.getItem('ff_roster') || 'null')
                   || { slots: {}, unassigned: [] };
 
@@ -1066,8 +1072,20 @@ function buildPosFilter() {
   sel.innerHTML = options.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
 }
 
+function sortList(col) {
+  if (listSortCol === col) {
+    listSortDir = listSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    listSortCol = col;
+    listSortDir = 'asc';
+  }
+  renderList();
+}
+
 function switchTab(tab, btn) {
   currentTab = tab;
+  listSortCol = 'rank';
+  listSortDir = 'asc';
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   render();
@@ -1244,19 +1262,28 @@ function renderList() {
   // ── Rebuild thead ────────────────────────────────────────────────────────
   const eligData  = (DATA.eligibility?.positions_2025) || {};
   const hasElig   = isBatters && Object.keys(eligData).length > 0;
+
+  const thAttrs = (col, extraCls = '', extraStyle = '') => {
+    const active = listSortCol === col ? ' sort-active' : '';
+    const style  = extraStyle ? ` style="${extraStyle}"` : '';
+    return `class="sortable${active}${extraCls ? ' ' + extraCls : ''}" onclick="sortList('${col}')"${style}`;
+  };
+  const thArrow = col => listSortCol === col
+    ? `<span class="sort-arrow">${listSortDir === 'asc' ? '▲' : '▼'}</span>` : '';
+
   const projHeads = hasProj
-    ? projCols.map(c => `<th class="proj-col" style="width:42px">${c}</th>`).join('')
+    ? projCols.map(c => `<th ${thAttrs(c, 'proj-col', 'width:42px')}>${c}${thArrow(c)}</th>`).join('')
     : '';
   const totalCols = 5 + (hasElig ? 1 : 0) + (hasProj ? projCols.length : 0);
   document.getElementById('list-head').innerHTML =
     `<tr>
-       <th style="width:36px">Rank</th>
-       <th>Name</th>
-       <th style="width:42px">Team</th>
-       <th style="width:42px">Pos</th>
-       ${hasElig ? '<th style="width:90px">Eligible</th>' : ''}
+       <th ${thAttrs('rank', '', 'width:36px')}>Rank${thArrow('rank')}</th>
+       <th ${thAttrs('name')}>Name${thArrow('name')}</th>
+       <th ${thAttrs('team', '', 'width:42px')}>Team${thArrow('team')}</th>
+       <th ${thAttrs('pos', '', 'width:42px')}>Pos${thArrow('pos')}</th>
+       ${hasElig ? `<th ${thAttrs('eligible', '', 'width:90px')}>Eligible${thArrow('eligible')}</th>` : ''}
        ${projHeads}
-       <th>Injury / Note</th>
+       <th ${thAttrs('injury')}>Injury / Note${thArrow('injury')}</th>
      </tr>`;
 
   // ── Build player map ─────────────────────────────────────────────────────
@@ -1306,7 +1333,39 @@ function renderList() {
     return pos === posFilter;
   });
 
-  list.sort((a, b) => a.rank - b.rank);
+  list.sort((a, b) => {
+    let av, bv;
+    if (listSortCol === 'rank') {
+      av = a.rank; bv = b.rank;
+    } else if (listSortCol === 'name') {
+      av = a.name.toLowerCase(); bv = b.name.toLowerCase();
+    } else if (listSortCol === 'team') {
+      av = (a.team || '').toLowerCase(); bv = (b.team || '').toLowerCase();
+    } else if (listSortCol === 'pos') {
+      av = (a.pos || '').toLowerCase(); bv = (b.pos || '').toLowerCase();
+    } else if (listSortCol === 'eligible') {
+      const ea = eligData[a.name]; const eb = eligData[b.name];
+      av = ea ? ea.filter(x => x !== 'DH').join(',') : '';
+      bv = eb ? eb.filter(x => x !== 'DH').join(',') : '';
+    } else if (listSortCol === 'injury') {
+      av = a.injury ? a.injury.toLowerCase() : '';
+      bv = b.injury ? b.injury.toLowerCase() : '';
+    } else if (projCols.includes(listSortCol)) {
+      const pa = projMap[a.name] || {}; const pb = projMap[b.name] || {};
+      av = pa[listSortCol] !== undefined ? parseFloat(pa[listSortCol]) : NaN;
+      bv = pb[listSortCol] !== undefined ? parseFloat(pb[listSortCol]) : NaN;
+      if (isNaN(av) && isNaN(bv)) return 0;
+      if (isNaN(av)) return 1;
+      if (isNaN(bv)) return -1;
+    } else {
+      av = a.rank; bv = b.rank;
+    }
+    if (typeof av === 'number' && typeof bv === 'number') {
+      return listSortDir === 'asc' ? av - bv : bv - av;
+    }
+    av = String(av); bv = String(bv);
+    return listSortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+  });
 
   // ── Render rows ──────────────────────────────────────────────────────────
   let html = '';
