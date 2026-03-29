@@ -148,6 +148,7 @@ body {
 .drafted          { opacity: .6; }
 
 .inj-flag { color: #c0392b; font-size: 10px; font-weight: 700; margin-left: 1px; flex-shrink: 0; }
+.p-sal { font-size: 10px; color: #4a8a5a; margin-left: 3px; flex-shrink: 0; }
 
 /* ── News section ───────────────────────────────────────────────────────── */
 #news-section { padding: 0 16px 24px; display: none; }
@@ -1301,13 +1302,13 @@ function renderInjuries() {
       : '<span style="color:#aaa">—</span>';
 
     html += `<tr class="${dftCls}"
-                  onmouseenter="showTip(event,'${esc(p.name)}','${esc(p.injury)}')"
+                  onmouseenter="showTip(event,'${jsStr(p.name)}','${jsStr(p.injury)}')"
                   onmouseleave="hideTip()">
                <td class="rank-num">${rankStr}</td>
                <td>
                  <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
                    <input type="checkbox" ${isDrafted?'checked':''}
-                          onchange="handleCheck(this,'${esc(p.name)}')">
+                          onchange="handleCheck(this,'${jsStr(p.name)}')">
                    <span class="r-name">${esc(p.name)}</span>
                  </label>
                </td>
@@ -1325,8 +1326,9 @@ function renderInjuries() {
 function renderGrid() {
   if (!DATA) return;
   const hideDrafted = document.getElementById('hide-drafted').checked;
-  const cols = currentTab === 'batters' ? BATTER_COLS : PITCHER_COLS;
-  const dc   = DATA.depth_chart || {};
+  const cols     = currentTab === 'batters' ? BATTER_COLS : PITCHER_COLS;
+  const dc       = DATA.depth_chart || {};
+  const salaries = DATA.salaries || {};
 
   // Determine row order: AL_ORDER first, then any extras
   const teams = [...AL_ORDER.filter(t => dc[t]),
@@ -1357,9 +1359,10 @@ function renderGrid() {
           html += `<div class="player-entry starter${dftCls}"
                         data-name="${esc(p.name)}" data-injury="${esc(p.injury||'')}">
                      <input type="checkbox" ${isDrafted?'checked':''}
-                            onchange="handleCheck(this,'${esc(p.name)}')">
-                     <span class="p-name" onmouseenter="showTip(event,'${esc(p.name)}','${esc(p.injury||'')}')"
+                            onchange="handleCheck(this,'${jsStr(p.name)}')">
+                     <span class="p-name" onmouseenter="showTip(event,'${jsStr(p.name)}','${jsStr(p.injury||'')}')"
                            onmouseleave="hideTip()">${esc(p.name)}</span>
+                     ${salaries[p.name] ? `<span class="p-sal">${esc(salaries[p.name])}</span>` : ''}
                      ${injHtml}
                    </div>`;
         } else {
@@ -1531,13 +1534,13 @@ function renderList() {
     }
 
     html += `<tr class="${dftCls}"
-                 onmouseenter="showTip(event,'${esc(p.name)}','${esc(p.injury||'')}')"
+                 onmouseenter="showTip(event,'${jsStr(p.name)}','${jsStr(p.injury||'')}')"
                  onmouseleave="hideTip()">
                <td class="rank-num">${rankStr}</td>
                <td>
                  <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
                    <input type="checkbox" ${isDrafted?'checked':''}
-                          onchange="handleCheck(this,'${esc(p.name)}')">
+                          onchange="handleCheck(this,'${jsStr(p.name)}')">
                    <span class="r-name">${esc(p.name)}</span>
                  </label>
                </td>
@@ -1774,7 +1777,7 @@ function renderRoster() {
     return `<input type="number" class="slot-sal-input" min="1" max="260"
               value="${paid}" placeholder="${hint}"
               title="Salary paid (CBS proj: ${cbsSal[name] || '—'})"
-              oninput="setSalPaid('${esc(name)}', this.value)"
+              oninput="setSalPaid('${jsStr(name)}', this.value)"
               onclick="event.stopPropagation()">`;
   };
 
@@ -1783,7 +1786,7 @@ function renderRoster() {
     const p = roster.slots[slot.id];
     html += `<div class="roster-slot">
       <span class="slot-label">${slot.label}</span>
-      ${p ? `<span class="slot-player" onclick="openAssign('${esc(p)}')" title="${esc(p)}">${esc(p)}</span>${salInput(p)}`
+      ${p ? `<span class="slot-player" onclick="openAssign('${jsStr(p)}')" title="${esc(p)}">${esc(p)}</span>${salInput(p)}`
           : '<span class="slot-empty">—</span>'}
     </div>`;
   });
@@ -1793,7 +1796,7 @@ function renderRoster() {
     const p = roster.slots[slot.id];
     html += `<div class="roster-slot">
       <span class="slot-label">${slot.label}</span>
-      ${p ? `<span class="slot-player" onclick="openAssign('${esc(p)}')" title="${esc(p)}">${esc(p)}</span>${salInput(p)}`
+      ${p ? `<span class="slot-player" onclick="openAssign('${jsStr(p)}')" title="${esc(p)}">${esc(p)}</span>${salInput(p)}`
           : '<span class="slot-empty">—</span>'}
     </div>`;
   });
@@ -1802,7 +1805,7 @@ function renderRoster() {
     html += '<div class="roster-sec" style="margin-top:4px;color:#b0a020">Unassigned</div>';
     roster.unassigned.forEach(name => {
       html += `<div class="roster-slot slot-unassigned">
-        <span class="slot-player" onclick="openAssign('${esc(name)}')" title="${esc(name)}">${esc(name)}</span>
+        <span class="slot-player" onclick="openAssign('${jsStr(name)}')" title="${esc(name)}">${esc(name)}</span>
         ${salInput(name)}
       </div>`;
     });
@@ -2014,6 +2017,12 @@ function esc(s) {
   return String(s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+// For embedding strings inside JS string literals in inline event handlers.
+// HTML-entity escaping (' → &#39;) doesn't work there because the HTML parser
+// converts &#39; back to ' before JS runs, breaking the string literal.
+function jsStr(s) {
+  return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
 }
 
 init();
