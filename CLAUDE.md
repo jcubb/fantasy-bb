@@ -158,7 +158,20 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
 **Other header controls:**
 - **Run Scraper** button → opens GitHub Actions page to trigger a fresh scrape
-- **Reset Draft** button → clears all drafted marks and roster assignments
+- **Save Draft** button → downloads `fantasy-bb-draft-YYYY-MM-DD.json` snapshot of all draft state (drafted players, roster slots, salaries paid, notes)
+- **Load Draft** button → file picker; shows save timestamp and confirmation before restoring; fully replaces current draft state in memory and localStorage
+- **Reset Draft** button → clears all drafted marks, roster assignments, and salaries paid
+
+**Draft snapshot format** (`fantasy-bb-draft-YYYY-MM-DD.json`):
+```json
+{
+  "saved_at": "2026-03-29T...",
+  "drafted":  ["Aaron Judge", ...],
+  "roster":   { "slots": {"C1": "Austin Wells", ...}, "unassigned": [...] },
+  "sal_paid": {"Aaron Judge": 46, ...},
+  "notes":    "..."
+}
+```
 
 **Teams displayed** (AL_ORDER): BAL, BOS, NYY, TB, TOR, CWS, CLE, DET, KC, MIN, HOU, LAA, OAK, SEA, TEX
 
@@ -288,7 +301,7 @@ Scrapes `https://www.mlb.com/{slug}/news` for each AL team using Playwright.
 
 ### GitHub Actions (`/.github/workflows/scrape.yml`)
 
-- Triggers: `workflow_dispatch` (manual, via Run Scraper button) + daily cron at 11am UTC (7am ET)
+- Triggers: `workflow_dispatch` only (manual, via Run Scraper button in the app or Actions page) — daily cron was disabled
 - Runs on `ubuntu-latest`: installs Python 3.11, playwright + chromium, runs `scrape.py`
 - Commits updated `docs/data.json` with message `Auto-refresh data YYYY-MM-DD HH:MM UTC`
 - Does `git pull --rebase` before pushing to avoid race condition when local changes were pushed since the workflow started
