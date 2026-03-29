@@ -38,6 +38,11 @@ body {
   padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;
 }
 #btn-reset:hover { background: #a93226; }
+#btn-save-draft, #btn-load-draft {
+  background: #2a4f7a; border: none; color: #cfe0f8;
+  padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; white-space: nowrap;
+}
+#btn-save-draft:hover, #btn-load-draft:hover { background: #3a6a9a; }
 
 /* ── Tabs ───────────────────────────────────────────────────────────────── */
 #tabs {
@@ -511,6 +516,9 @@ body {
     <label><input type="checkbox" id="hide-drafted" onchange="render()"> Hide drafted</label>
     <a id="btn-run" href="https://github.com/jcubb/fantasy-bb/actions/workflows/scrape.yml"
        target="_blank" rel="noopener">Run Scraper</a>
+    <button id="btn-save-draft" onclick="saveDraft()">Save Draft</button>
+    <button id="btn-load-draft" onclick="document.getElementById('load-draft-input').click()">Load Draft</button>
+    <input type="file" id="load-draft-input" accept=".json" style="display:none" onchange="loadDraft(this)">
     <button id="btn-reset" onclick="resetDraft()">Reset Draft</button>
   </div>
 </div>
@@ -849,6 +857,49 @@ function clearNotes() {
   if (!confirm('Clear all notes?')) return;
   document.getElementById('notes-area').value = '';
   localStorage.removeItem('ff_notes');
+}
+
+function saveDraft() {
+  const snapshot = {
+    saved_at: new Date().toISOString(),
+    drafted:  [...drafted],
+    roster:   roster,
+    sal_paid: salPaid,
+    notes:    document.getElementById('notes-area').value,
+  };
+  const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `fantasy-bb-draft-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function loadDraft(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const snap = JSON.parse(e.target.result);
+      if (!snap.drafted || !snap.roster) throw new Error('Unrecognized file format.');
+      if (!confirm(`Load draft saved at ${new Date(snap.saved_at).toLocaleString()}?\nThis will replace your current draft state.`)) return;
+      drafted = new Set(snap.drafted);
+      roster  = snap.roster;
+      salPaid = snap.sal_paid || {};
+      localStorage.setItem('ff_drafted',  JSON.stringify([...drafted]));
+      localStorage.setItem('ff_roster',   JSON.stringify(roster));
+      localStorage.setItem('ff_sal_paid', JSON.stringify(salPaid));
+      const notes = snap.notes || '';
+      document.getElementById('notes-area').value = notes;
+      localStorage.setItem('ff_notes', notes);
+      render(); renderRoster();
+    } catch(err) {
+      alert('Failed to load draft file: ' + err.message);
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
 }
 
 function resetDraft() {
