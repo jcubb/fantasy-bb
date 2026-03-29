@@ -1,11 +1,11 @@
 {
-  "scraped_at": "2026-03-28T11:14:59.053125+00:00",
+  "scraped_at": "2026-03-29T11:15:23.632866+00:00",
   "depth_chart": {
     "OAK": {
       "C": [
         {
           "name": "Shea Langeliers",
-          "injury": "Athletics' Shea Langeliers: Cracks two solo homers"
+          "injury": "Athletics' Shea Langeliers: Stays hot Saturday"
         },
         {
           "name": "Austin Wynns",
@@ -95,7 +95,7 @@
       "SP": [
         {
           "name": "Luis Severino",
-          "injury": "Athletics' Luis Severino: No decision vs. Toronto"
+          "injury": null
         },
         {
           "name": "Jeffrey Springs",
@@ -314,11 +314,11 @@
       ],
       "LF": [
         {
-          "name": "Jarren Duran",
+          "name": "Roman Anthony",
           "injury": null
         },
         {
-          "name": "Roman Anthony",
+          "name": "Jarren Duran",
           "injury": null
         }
       ],
@@ -335,7 +335,7 @@
       "RF": [
         {
           "name": "Wilyer Abreu",
-          "injury": null
+          "injury": "Red Sox's Wilyer Abreu: First home run of season in loss"
         },
         {
           "name": "Roman Anthony",
@@ -344,7 +344,7 @@
       ],
       "DH": [
         {
-          "name": "Roman Anthony",
+          "name": "Jarren Duran",
           "injury": null
         },
         {
@@ -399,13 +399,13 @@
         },
         {
           "name": "Edgar Quero",
-          "injury": null
+          "injury": "White Sox's Edgar Quero: Sitting Saturday"
         }
       ],
       "1B": [
         {
           "name": "Munetaka Murakami",
-          "injury": null
+          "injury": "White Sox's Munetaka Murakami: Homers again"
         },
         {
           "name": "Lenyn Sosa",
@@ -425,11 +425,11 @@
       "3B": [
         {
           "name": "Miguel Vargas",
-          "injury": null
+          "injury": "White Sox's Miguel Vargas: Not in Saturday's lineup"
         },
         {
           "name": "Munetaka Murakami",
-          "injury": null
+          "injury": "White Sox's Munetaka Murakami: Homers again"
         }
       ],
       "SS": [
@@ -468,8 +468,8 @@
           "injury": null
         },
         {
-          "name": "Brooks Baldwin",
-          "injury": "Elbow: Expected to be out until at least May 1"
+          "name": "Everson Pereira",
+          "injury": null
         }
       ],
       "DH": [
@@ -489,7 +489,7 @@
         },
         {
           "name": "Sean Burke",
-          "injury": null
+          "injury": "White Sox's Sean Burke: Struggles early in loss"
         },
         {
           "name": "Anthony Kay",
@@ -525,17 +525,17 @@
       "C": [
         {
           "name": "Bo Naylor",
-          "injury": null
+          "injury": "Guardians' Bo Naylor: Absent from lineup"
         },
         {
           "name": "Austin Hedges",
-          "injury": "Hand: Probable for Mar 28"
+          "injury": "Hand: Probable for Mar 29"
         }
       ],
       "1B": [
         {
           "name": "Rhys Hoskins",
-          "injury": null
+          "injury": "Guardians' Rhys Hoskins: Sitting down Saturday"
         },
         {
           "name": "Kyle Manzardo",
@@ -565,7 +565,7 @@
       "SS": [
         {
           "name": "Gabriel Arias",
-          "injury": null
+          "injury": "Guardians' Gabriel Arias: Getting rest Saturday"
         },
         {
           "name": "Brayan Rocchio",
@@ -595,7 +595,7 @@
       "RF": [
         {
           "name": "Chase DeLauter",
-          "injury": "Guardians' Chase DeLauter: Smacks third homer"
+          "injury": "Guardians' Chase DeLauter: Launches another long ball"
         },
         {
           "name": "C.J. Kayfus",
@@ -615,11 +615,11 @@
       "SP": [
         {
           "name": "Tanner Bibee",
-          "injury": "Shoulder: Expected to be out until at least Apr 1"
+          "injury": "Shoulder: Expected to be out until at least Mar 31"
         },
         {
           "name": "Gavin Williams",
-          "injury": "Guardians' Gavin Williams: Wild in loss"
+          "injury": null
         },
         {
           "name": "Slade Cecconi",
@@ -627,7 +627,7 @@
         },
         {
           "name": "Joey Cantillo",
-          "injury": null
+          "injury": "Guardians' Joey Cantillo: Mixed results in season debut"
         },
         {
           "name": "Parker Messick",
@@ -641,7 +641,7 @@
         },
         {
           "name": "Hunter Gaddis",
-          "injury": "Forearm: Expected to be out until at least Apr 10"
+          "injury": "Guardians' Hunter Gaddis: Scoreless frame in rehab outing"
         }
       ],
       "RP": [
@@ -655,7 +655,7 @@
       "C": [
         {
           "name": "Dillon Dingler",
-          "injury": "Tigers' Dillon Dingler: Tees off Opening Day"
+          "injury": "Tigers' Dillon Dingler: Resting Saturday"
         },
         {
           "name": "Jake Rogers",
@@ -669,7 +669,7 @@
         },
         {
           "name": "Colt Keith",
-          "injury": "Tigers' Colt Keith: Not starting Friday"
+          "injury": null
         }
       ],
       "2B": [
@@ -689,13 +689,13 @@
         },
         {
           "name": "Colt Keith",
-          "injury": "Tigers' Colt Keith: Not starting Friday"
+          "injury": null
         }
       ],
       "SS": [
         {
           "name": "Javier Baez",
-          "injury": null
+          "injury": "Tigers' Javier Baez: Sitting Saturday"
         },
         {
           "name": "Kevin McGonigle",
@@ -718,7 +718,7 @@
           "injury": null
         },
         {
-          "name": "Javier Baez",
+          "name": "Matt Vierling",
           "injury": null
         }
       ],
@@ -735,7 +735,7 @@
       "DH": [
         {
           "name": "Colt Keith",
-          "injury": "Tigers' Colt Keith: Not starting Friday"
+          "injury": null
         },
         {
           "name": "Kerry Carpenter",
@@ -749,11 +749,11 @@
         },
         {
           "name": "Framber Valdez",
-          "injury": "Tigers' Framber Valdez: Quality start in team debut"
+          "injury": null
         },
         {
           "name": "Jack Flaherty",
-          "injury": null
+          "injury": "Tigers' Jack Flaherty: Labors through 4.1 frames in loss"
         },
         {
           "name": "Justin Verlander",
@@ -799,7 +799,7 @@
         },
         {
           "name": "Isaac Paredes",
-          "injury": "Astros' Isaac Paredes: In lineup again Friday"
+          "injury": null
         }
       ],
       "2B": [
@@ -809,7 +809,7 @@
         },
         {
           "name": "Isaac Paredes",
-          "injury": "Astros' Isaac Paredes: In lineup again Friday"
+          "injury": null
         }
       ],
       "3B": [
@@ -819,13 +819,13 @@
         },
         {
           "name": "Isaac Paredes",
-          "injury": "Astros' Isaac Paredes: In lineup again Friday"
+          "injury": null
         }
       ],
       "SS": [
         {
           "name": "Jeremy Pena",
-          "injury": "Astros' Jeremy Pena: In lineup Friday"
+          "injury": "Astros' Jeremy Pena: Not starting Saturday"
         },
         {
           "name": "Carlos Correa",
@@ -835,7 +835,7 @@
       "LF": [
         {
           "name": "Joey Loperfido",
-          "injury": "Astros' Joey Loperfido: On bench against LHP"
+          "injury": null
         },
         {
           "name": "Yordan Alvarez",
@@ -845,11 +845,11 @@
       "CF": [
         {
           "name": "Jake Meyers",
-          "injury": "Astros' Jake Meyers: Idle Friday"
+          "injury": "Astros' Jake Meyers: Busy performance in win"
         },
         {
           "name": "Joey Loperfido",
-          "injury": "Astros' Joey Loperfido: On bench against LHP"
+          "injury": null
         }
       ],
       "RF": [
@@ -859,7 +859,7 @@
         },
         {
           "name": "Joey Loperfido",
-          "injury": "Astros' Joey Loperfido: On bench against LHP"
+          "injury": null
         }
       ],
       "DH": [
@@ -883,7 +883,7 @@
         },
         {
           "name": "Cristian Javier",
-          "injury": null
+          "injury": "Astros' Cristian Javier: Ineffective in no-decision"
         },
         {
           "name": "Michael Burrows",
@@ -901,13 +901,13 @@
         },
         {
           "name": "Bennett Sousa",
-          "injury": "Astros' Bennett Sousa: Has Grade 1 oblique strain"
+          "injury": "Oblique: Expected to be out until at least Apr 14"
         }
       ],
       "RP": [
         {
           "name": "Bryan King",
-          "injury": "Astros' Enyel De Los Santos: Set for Triple-A appearance"
+          "injury": "Knee: Expected to be out until at least Apr 10"
         }
       ]
     },
@@ -1055,7 +1055,7 @@
       "1B": [
         {
           "name": "Nolan Schanuel",
-          "injury": null
+          "injury": "Angels' Nolan Schanuel: Swats second homer"
         },
         {
           "name": "Oswald Peraza",
@@ -1085,7 +1085,7 @@
       "SS": [
         {
           "name": "Zachary Neto",
-          "injury": null
+          "injury": "Angels' Zach Neto: Launches first long ball Friday"
         },
         {
           "name": "Oswald Peraza",
@@ -1143,7 +1143,7 @@
         },
         {
           "name": "Reid Detmers",
-          "injury": null
+          "injury": "Angels' Reid Detmers: Mixed bag in return to rotation"
         },
         {
           "name": "Grayson Rodriguez",
@@ -1179,16 +1179,16 @@
         },
         {
           "name": "Victor Caratini",
-          "injury": "Twins' Victor Caratini: Gets start at first base"
+          "injury": null
         }
       ],
       "1B": [
         {
-          "name": "Josh Bell",
+          "name": "Kody Clemens",
           "injury": null
         },
         {
-          "name": "Victor Caratini",
+          "name": "Josh Bell",
           "injury": null
         }
       ],
@@ -1205,7 +1205,7 @@
       "3B": [
         {
           "name": "Royce Lewis",
-          "injury": null
+          "injury": "Twins' Royce Lewis: Goes deep in Saturday's win"
         },
         {
           "name": "Brooks Lee",
@@ -1224,7 +1224,7 @@
       ],
       "LF": [
         {
-          "name": "James Outman",
+          "name": "Trevor Larnach",
           "injury": null
         },
         {
@@ -1254,11 +1254,11 @@
       ],
       "DH": [
         {
-          "name": "Trevor Larnach",
+          "name": "Josh Bell",
           "injury": null
         },
         {
-          "name": "Josh Bell",
+          "name": "Trevor Larnach",
           "injury": null
         }
       ],
@@ -1291,7 +1291,7 @@
         },
         {
           "name": "Justin Topa",
-          "injury": "Twins' Justin Topa: Gives up run in season opener"
+          "injury": null
         }
       ],
       "RP": [
@@ -1315,7 +1315,7 @@
       "1B": [
         {
           "name": "Ben Rice",
-          "injury": "Yankees' Ben Rice: Not facing lefty"
+          "injury": null
         },
         {
           "name": "Paul Goldschmidt",
@@ -1375,7 +1375,7 @@
       "RF": [
         {
           "name": "Aaron Judge",
-          "injury": "Yankees' Aaron Judge: Cracks two-run shot"
+          "injury": null
         },
         {
           "name": "Cody Bellinger",
@@ -1389,7 +1389,7 @@
         },
         {
           "name": "Aaron Judge",
-          "injury": "Yankees' Aaron Judge: Cracks two-run shot"
+          "injury": null
         }
       ],
       "SP": [
@@ -1407,7 +1407,7 @@
         },
         {
           "name": "Cameron Schlittler",
-          "injury": "Yankees' Cam Schlittler: Fans eight in 2026 debut"
+          "injury": null
         },
         {
           "name": "Ryan Weathers",
@@ -1427,7 +1427,7 @@
       "RP": [
         {
           "name": "Fernando Cruz",
-          "injury": null
+          "injury": "Yankees' Tim Hill: Notches hold Friday"
         }
       ]
     },
@@ -1455,10 +1455,10 @@
       "2B": [
         {
           "name": "Cole Young",
-          "injury": "Mariners' Cole Young: Belts three-run homer"
+          "injury": null
         },
         {
-          "name": "Brendan Donovan",
+          "name": "Ryan Bliss",
           "injury": null
         }
       ],
@@ -1505,7 +1505,7 @@
       "RF": [
         {
           "name": "Luke Raley",
-          "injury": "Mariners' Luke Raley: Goes yard again Friday"
+          "injury": "Mariners' Luke Raley: Remains red-hot"
         },
         {
           "name": "Victor Robles",
@@ -1518,7 +1518,7 @@
           "injury": null
         },
         {
-          "name": "Cal Raleigh",
+          "name": "Rob Refsnyder",
           "injury": null
         }
       ],
@@ -1529,11 +1529,11 @@
         },
         {
           "name": "George Kirby",
-          "injury": "Mariners' George Kirby: Sharp in season debut"
+          "injury": null
         },
         {
           "name": "Bryan Woo",
-          "injury": null
+          "injury": "Mariners' Bryan Woo: Racks up nine Ks over six frames"
         },
         {
           "name": "Luis Castillo",
@@ -1557,7 +1557,7 @@
       "RP": [
         {
           "name": "Gabe Speier",
-          "injury": "Mariners' Carlos Vargas: Headed to IL"
+          "injury": "Lat: Expected to be out until at least Apr 3"
         }
       ]
     },
@@ -1588,7 +1588,7 @@
           "injury": "Shoulder: Expected to be out until at least Apr 10"
         },
         {
-          "name": "Ben Williamson",
+          "name": "Richard Palacios",
           "injury": null
         }
       ],
@@ -1671,7 +1671,7 @@
         },
         {
           "name": "Nick Martinez",
-          "injury": "Hamstring: Expected to be out until at least Mar 30"
+          "injury": null
         }
       ],
       "CL": [
@@ -1705,7 +1705,7 @@
       "1B": [
         {
           "name": "Jake Burger",
-          "injury": null
+          "injury": "Rangers' Jake Burger: Another home run in victory"
         },
         {
           "name": "Ezequiel Duran",
@@ -1735,7 +1735,7 @@
       "SS": [
         {
           "name": "Corey Seager",
-          "injury": null
+          "injury": "Rangers' Corey Seager: Swats first home run of season"
         },
         {
           "name": "Josh H. Smith",
@@ -1785,7 +1785,7 @@
       "SP": [
         {
           "name": "Jacob deGrom",
-          "injury": null
+          "injury": "Neck: Expected to be out until at least Mar 31"
         },
         {
           "name": "Nathan Eovaldi",
@@ -1817,7 +1817,7 @@
       "RP": [
         {
           "name": "Jalen Beeks",
-          "injury": null
+          "injury": "Rangers' Jacob Latz: Four scoreless innings Saturday"
         }
       ]
     },
@@ -1839,7 +1839,7 @@
         },
         {
           "name": "Kazuma Okamoto",
-          "injury": "Blue Jays' Kazuma Okamoto: Game-winning run in MLB debut"
+          "injury": null
         }
       ],
       "2B": [
@@ -1855,7 +1855,7 @@
       "3B": [
         {
           "name": "Kazuma Okamoto",
-          "injury": "Blue Jays' Kazuma Okamoto: Game-winning run in MLB debut"
+          "injury": null
         },
         {
           "name": "Addison Barger",
@@ -1865,7 +1865,7 @@
       "SS": [
         {
           "name": "Andres Gimenez",
-          "injury": "Blue Jays' Andres Gimenez: Powers Jays to Opening Day win"
+          "injury": null
         },
         {
           "name": "Ernie Clement",
@@ -1898,7 +1898,7 @@
           "injury": null
         },
         {
-          "name": "Jesus Sanchez",
+          "name": "Myles Straw",
           "injury": null
         }
       ],
@@ -1915,7 +1915,7 @@
       "SP": [
         {
           "name": "Kevin Gausman",
-          "injury": "Blue Jays' Kevin Gausman: Outstanding in 2026 debut"
+          "injury": null
         },
         {
           "name": "Dylan Cease",
@@ -1947,7 +1947,7 @@
       "RP": [
         {
           "name": "Tyler Rogers",
-          "injury": null
+          "injury": "Blue Jays' Mason Fluharty: X-rays negative on right knee"
         }
       ]
     }
@@ -3309,125 +3309,120 @@
   "news": {
     "BAL": [
       {
-        "headline": "Baz agrees to 5-year extension with Orioles, before debut with team",
-        "date": "March 27, 2026",
+        "headline": "Nunez's whirlwind 72 hours ends with two scoreless innings in MLB debut",
+        "date": "March 28, 2026",
         "blurb": ""
       }
     ],
     "NYY": [
       {
-        "headline": "Judge wins first ABS challenge, then takes advantage with towering first HR",
-        "date": "Mar 27, 2026\u00a0\u00b7\u00a00:55",
+        "headline": "Have mercy, Judge: MVP's latest blast bounces off ambulance",
+        "date": "March 28, 2026",
         "blurb": ""
       },
       {
-        "headline": "Aaron Judge challenges pitch, hits two-run homer",
-        "date": "Mar 27, 2026\u00a0\u00b7\u00a00:55",
-        "blurb": ""
-      },
-      {
-        "headline": "Schlittler (1 H, 8 K's) dazzles as Yanks record back-to-back shutouts",
-        "date": "March 27, 2026",
-        "blurb": ""
+        "headline": "Old AL East foes Judge, Devers share laugh on the West Coast",
+        "date": "12:11 AM EDT",
+        "blurb": "Game recognize game ... even when there\u2019s humor involved.\n                        Two of baseball\u2019s greatest stars demonstrated that during the Yankees\u2019 3-1 victory to complete a sweep of the Giants in San Francisco on Saturday.\n                        Aaron Judge of the Yankees and Rafael Devers of"
       }
     ],
     "TB": [
       {
-        "headline": "Caminero's key after breakout 2025? 'Just go be yourself'",
-        "date": "March 27, 2026",
+        "headline": "Rays' faith in Jax unshaken despite rocky start to '26",
+        "date": "March 28, 2026",
         "blurb": ""
       }
     ],
     "CLE": [
       {
-        "headline": "Guardians' star prospect keeps racking up HRs -- and unread texts",
-        "date": "1:51 AM EDT",
+        "headline": "What's 'really stupid' about DeLauter's HR surge? His Guards teammates can tell you",
+        "date": "4:18 AM EDT",
         "blurb": ""
       }
     ],
     "DET": [
       {
-        "headline": "McGonigle the star again after 10-pitch battle turns tables on Padres",
-        "date": "3:16 AM EDT",
+        "headline": "Torkelson's early non-challenge proves costly in Tigers loss",
+        "date": "2:08 AM EDT",
         "blurb": ""
       }
     ],
     "KC": [
       {
-        "headline": "Promising season starts off slow as breaks don't fall Royals' way",
-        "date": "March 27, 2026",
+        "headline": "Velo down and control wobbly, Est\u00e9vez stumbles but still has Royals' faith",
+        "date": "12:01 AM CDT",
         "blurb": ""
       }
     ],
     "MIN": [
       {
-        "headline": "Bradley isn't done learning -- and he's ready to put growth into practice",
-        "date": "March 27, 2026",
+        "headline": "New-look bullpen steps up in Shelton's first win with Twins",
+        "date": "March 28, 2026",
         "blurb": ""
       }
     ],
     "HOU": [
       {
-        "headline": "Matthews ready to show off his versatility with Astros",
-        "date": "11:07 PM CDT",
+        "headline": "Astros storm back with 11 straight runs in first win of 2026",
+        "date": "Mar 29, 2026\u00a0\u00b7\u00a00:30",
         "blurb": ""
       },
       {
-        "headline": "Astros employ effective long relief plan after Brown (9 K's) on Opening Day",
-        "date": "Mar 26, 2026\u00a0\u00b7\u00a02:25",
+        "headline": "Isaac Paredes' two-run double",
+        "date": "Mar 29, 2026\u00a0\u00b7\u00a00:30",
         "blurb": ""
       },
       {
-        "headline": "Hunter Brown strikes out nine",
-        "date": "Mar 26, 2026\u00a0\u00b7\u00a02:25",
+        "headline": "Japanese ace Imai set for Major League debut Sunday",
+        "date": "March 28, 2026",
         "blurb": ""
       }
     ],
     "LAA": [
       {
-        "headline": "2 G, 2 HR, 2 W: Trout (3-for-4), Angels turn back clock",
-        "date": "Mar 28, 2026\u00a0\u00b7\u00a00:29",
+        "headline": "Series of unfortunate events in 6th leads to Angels' first loss",
+        "date": "Mar 29, 2026\u00a0\u00b7\u00a01:37",
         "blurb": ""
       },
       {
-        "headline": "Mike Trout's solo home run (2)",
-        "date": "Mar 28, 2026\u00a0\u00b7\u00a00:29",
+        "headline": "Reid Detmers' nine strikeouts in season debut",
+        "date": "Mar 29, 2026\u00a0\u00b7\u00a01:37",
         "blurb": ""
       }
     ],
     "OAK": [
       {
-        "headline": "Langeliers slugs pair of Opening Day homers, joins impressive A's company",
-        "date": "9:22 PM PDT",
+        "headline": "Langeliers alongside Hall of Famers with 3 HRs in season's first 2 games",
+        "date": "March 28, 2026",
         "blurb": ""
       }
     ],
     "SEA": [
       {
-        "headline": "Young brings the thump -- and the glove -- to power Mariners to win No. 1 of 2026",
-        "date": "10:36 PM PDT",
+        "headline": "Despite strong debut, Woo shoulders blame after Mariners fall late",
+        "date": "1:02 AM PDT",
         "blurb": ""
       }
     ],
     "TEX": [
       {
-        "headline": "McCutchen enters Year 18 full of gratitude as he debuts with Rangers",
-        "date": "March 27, 2026",
+        "headline": "Resilient Rangers rally to overcome Burger's blunder, deGrom's absence",
+        "date": "March 28, 2026",
         "blurb": ""
       },
       {
-        "headline": "Rangers' offense wakes up too late behind uneven Eovaldi on Opening Day",
-        "date": "Mar 26, 2026\u00a0\u00b7\u00a00:07",
+        "headline": "deGrom (neck stiffness) scratched from 2026 debut; next start TBD",
+        "date": "Mar 10, 2026\u00a0\u00b7\u00a00:33",
         "blurb": ""
       },
       {
-        "headline": "Nathan Eovaldi strikes out Bryce Harper",
-        "date": "Mar 26, 2026\u00a0\u00b7\u00a00:07",
+        "headline": "Jacob deGrom strikes out five over three scoreless",
+        "date": "Mar 10, 2026\u00a0\u00b7\u00a00:33",
         "blurb": ""
       }
     ]
   },
-  "news_scraped_at": "2026-03-28T11:14:59.053125+00:00",
+  "news_scraped_at": "2026-03-29T11:15:23.632866+00:00",
   "projections": {
     "batters": {
       "Aaron Judge": {
@@ -14972,282 +14967,5 @@
         "2B": 138
       }
     }
-  },
-  "salaries": {
-    "Aaron Judge": "$46",
-    "Bobby Witt": "$44",
-    "Jose Ramirez": "$43",
-    "Julio Rodriguez": "$39",
-    "Tarik Skubal": "$39",
-    "Garrett Crochet": "$39",
-    "Gunnar Henderson": "$37",
-    "Cal Raleigh": "$35",
-    "Jazz Chisholm": "$35",
-    "Nick Kurtz": "$34",
-    "Junior Caminero": "$34",
-    "Vladimir Guerrero Jr.": "$33",
-    "Yordan Alvarez": "$31",
-    "Pete Alonso": "$30",
-    "Bryan Woo": "$29",
-    "Logan Gilbert": "$29",
-    "Zachary Neto": "$28",
-    "Hunter Brown": "$28",
-    "Jacob deGrom": "$27",
-    "Brent Rooker": "$26",
-    "Wyatt Langford": "$26",
-    "Josh Naylor": "$26",
-    "Max Fried": "$26",
-    "Cole Ragans": "$26",
-    "Cody Bellinger": "$25",
-    "Roman Anthony": "$25",
-    "Ben Rice": "$25",
-    "Shea Langeliers": "$25",
-    "George Springer": "$23",
-    "Riley Greene": "$23",
-    "Maikel Garcia": "$23",
-    "Joe Ryan": "$23",
-    "Andres Munoz": "$23",
-    "George Kirby": "$23",
-    "Byron Buxton": "$22",
-    "Corey Seager": "$22",
-    "Jarren Duran": "$22",
-    "Vinnie Pasquantino": "$22",
-    "Cade Smith": "$22",
-    "Kyle Bradish": "$22",
-    "Dylan Cease": "$22",
-    "Randy Arozarena": "$21",
-    "Framber Valdez": "$21",
-    "Tyler Soderstrom": "$20",
-    "Trevor Story": "$19",
-    "Aroldis Chapman": "$19",
-    "David Bednar": "$19",
-    "Jeremy Pena": "$18",
-    "Salvador Perez": "$18",
-    "Jose Altuve": "$17",
-    "Jo Adell": "$17",
-    "Luke Keaschall": "$17",
-    "Kevin Gausman": "$17",
-    "Yainer Diaz": "$17",
-    "Ryan Helsley": "$17",
-    "Yandy Diaz": "$16",
-    "Brandon Nimmo": "$16",
-    "Trevor Rogers": "$16",
-    "Josh Hader": "$16",
-    "Gavin Williams": "$16",
-    "Cameron Schlittler": "$16",
-    "Jeff Hoffman": "$16",
-    "Lawrence Butler": "$15",
-    "Taylor Ward": "$15",
-    "Nathan Eovaldi": "$15",
-    "Kris Bubic": "$15",
-    "Adley Rutschman": "$15",
-    "Tatsuya Imai": "$15",
-    "Daulton Varsho": "$14",
-    "Jacob Wilson": "$14",
-    "Jonathan Aranda": "$14",
-    "Steven Kwan": "$14",
-    "Mike Trout": "$14",
-    "Ceddanne Rafaela": "$14",
-    "Spencer Torkelson": "$14",
-    "Royce Lewis": "$14",
-    "Luis Castillo": "$14",
-    "Ryan Pepiot": "$14",
-    "MacKenzie Gore": "$14",
-    "Sonny Gray": "$14",
-    "Drew Rasmussen": "$14",
-    "Kenley Jansen": "$14",
-    "Ranger Suarez": "$14",
-    "Trey Yesavage": "$14",
-    "Samuel Basallo": "$14",
-    "Jac Caglianone": "$14",
-    "Colson Montgomery": "$13",
-    "Chandler Simpson": "$13",
-    "Kevin McGonigle": "$13",
-    "Carlos Rodon": "$13",
-    "Alejandro Kirk": "$13",
-    "Jackson Holliday": "$13",
-    "Carlos Estevez": "$13",
-    "Tanner Bibee": "$13",
-    "Carter Jensen": "$13",
-    "Kerry Carpenter": "$12",
-    "Willson Contreras": "$12",
-    "Kyle Manzardo": "$12",
-    "Munetaka Murakami": "$12",
-    "Kyle Teel": "$12",
-    "Gerrit Cole": "$12",
-    "Shane Baz": "$12",
-    "Giancarlo Stanton": "$11",
-    "Christian Walker": "$11",
-    "Addison Barger": "$11",
-    "Noah Cameron": "$11",
-    "Jack Flaherty": "$11",
-    "Chase DeLauter": "$11",
-    "Jack Leiter": "$11",
-    "Parker Messick": "$11",
-    "Griffin Jax": "$11",
-    "Shane McClanahan": "$11",
-    "Bryan Abreu": "$11",
-    "Seranthony Dominguez": "$11",
-    "Connelly Early": "$11",
-    "Wilyer Abreu": "$10",
-    "Trent Grisham": "$10",
-    "Caleb Durbin": "$10",
-    "Colton Cowser": "$10",
-    "Joshua Lowe": "$10",
-    "Gleyber Torres": "$10",
-    "Austin Wells": "$10",
-    "Casey Mize": "$10",
-    "Bryce Miller": "$10",
-    "Dillon Dingler": "$10",
-    "Shane Bieber": "$10",
-    "Grayson Rodriguez": "$10",
-    "Will Warren": "$10",
-    "Carlos Correa": "$9",
-    "Kazuma Okamoto": "$9",
-    "Cedric Mullins": "$9",
-    "Miguel Vargas": "$9",
-    "Isaac Paredes": "$9",
-    "Shane Smith": "$9",
-    "Jordan Westburg": "$9",
-    "Ryan Weathers": "$9",
-    "Jacob Lopez": "$9",
-    "Logan O'Hoppe": "$9",
-    "Kirby Yates": "$9",
-    "Nolan Schanuel": "$8",
-    "Jake Burger": "$8",
-    "Jose Caballero": "$8",
-    "Cam Smith": "$8",
-    "Joey Cantillo": "$8",
-    "Mick Abel": "$8",
-    "Michael Burrows": "$8",
-    "Dylan Beavers": "$7",
-    "Austin Hays": "$7",
-    "Colt Keith": "$7",
-    "Josh Jung": "$7",
-    "Michael Wacha": "$7",
-    "Andres Gimenez": "$7",
-    "Ryan Jeffers": "$7",
-    "Anthony Volpe": "$7",
-    "Bailey Ober": "$7",
-    "Robert Garcia": "$7",
-    "Brayan Bello": "$7",
-    "Edwin Uceta": "$7",
-    "Coby Mayo": "$7",
-    "Cody Ponce": "$7",
-    "Reid Detmers": "$7",
-    "Ian Seymour": "$7",
-    "Evan Carter": "$6",
-    "Brendan Donovan": "$6",
-    "Matt Wallner": "$6",
-    "Victor Robles": "$6",
-    "Josh H. Smith": "$6",
-    "Isaac Collins": "$6",
-    "Lenyn Sosa": "$6",
-    "Chase Meidroth": "$6",
-    "Zach McKinstry": "$6",
-    "Brooks Lee": "$6",
-    "Josh Bell": "$6",
-    "Seth Lugo": "$6",
-    "Jorge Soler": "$6",
-    "Luis Morales": "$6",
-    "Jose Soriano": "$6",
-    "Victor Caratini": "$6",
-    "Max Scherzer": "$6",
-    "Andrew Benintendi": "$5",
-    "Tyler O'Neill": "$5",
-    "Carson Williams": "$5",
-    "Ernie Clement": "$5",
-    "Ryan McMahon": "$5",
-    "Max Muncy": "$5",
-    "Marcelo Mayer": "$5",
-    "Chris Bassitt": "$5",
-    "Yusei Kikuchi": "$5",
-    "Luis Severino": "$5",
-    "Cole Young": "$5",
-    "Jeff McNeil": "$5",
-    "Triston Casas": "$5",
-    "Carlos Narvaez": "$5",
-    "Taj Bradley": "$5",
-    "Will Vest": "$5",
-    "Justin Verlander": "$5",
-    "Simeon Woods Richardson": "$5",
-    "Edgar Quero": "$5",
-    "Luis Gil": "$5",
-    "Kyle Finnegan": "$5",
-    "Jose Berrios": "$5",
-    "Dominic Canzone": "$4",
-    "Jesus Sanchez": "$4",
-    "Wenceel Perez": "$4",
-    "Parker Meadows": "$4",
-    "Rhys Hoskins": "$4",
-    "Cristian Javier": "$4",
-    "J.P. Crawford": "$4",
-    "Paul Goldschmidt": "$4",
-    "Jonathan India": "$4",
-    "Jeffrey Springs": "$4",
-    "Taylor Rogers": "$4",
-    "Hogan Harris": "$4",
-    "Tyler Wells": "$4",
-    "Joe Boyle": "$4",
-    "Zach Cole": "$3",
-    "Jake Meyers": "$3",
-    "Trevor Larnach": "$3",
-    "Ryan Mountcastle": "$3",
-    "Luisangel Acuna": "$3",
-    "Bo Naylor": "$3",
-    "Danny Jansen": "$3",
-    "Zach Eflin": "$3",
-    "Garrett Cleavinger": "$3",
-    "Blaze Alexander": "$3",
-    "Anthony Kay": "$3",
-    "Cole Sands": "$3",
-    "Jordan Leasure": "$3",
-    "Troy Melton": "$3",
-    "Jose Ferrer": "$3",
-    "C.J. Kayfus": "$2",
-    "Denzel Clarke": "$2",
-    "Yoan Moncada": "$2",
-    "Masataka Yoshida": "$2",
-    "Kyle Higashioka": "$2",
-    "Brayan Rocchio": "$2",
-    "Gavin Lux": "$2",
-    "Javier Baez": "$2",
-    "Joc Pederson": "$2",
-    "Slade Cecconi": "$2",
-    "Johan Oviedo": "$2",
-    "Romy Gonzalez": "$2",
-    "Justin Sterner": "$2",
-    "Matt Brash": "$2",
-    "Grant Taylor": "$2",
-    "Robert Stephenson": "$2",
-    "Sean Newcomb": "$2",
-    "Anthony Santander": "$2",
-    "Kumar Rocker": "$2",
-    "Jonny DeLuca": "$1",
-    "Kody Clemens": "$1",
-    "Nathan Lukes": "$1",
-    "Brooks Baldwin": "$1",
-    "Luke Raley": "$1",
-    "Lane Thomas": "$1",
-    "Nick Martinez": "$1",
-    "Isiah Kiner-Falefa": "$1",
-    "Austin Martin": "$1",
-    "Gabriel Arias": "$1",
-    "Steven Matz": "$1",
-    "Davis Schneider": "$1",
-    "Connor Wong": "$1",
-    "Curtis Mead": "$1",
-    "Lucas Erceg": "$1",
-    "Matt Strahm": "$1",
-    "Andrew Kittredge": "$1",
-    "Chris Martin": "$1",
-    "George Valera": "$1",
-    "Eric Lauer": "$1",
-    "Elvis Alvarado": "$1",
-    "Ben Joyce": "$1",
-    "Keegan Akin": "$1",
-    "Louie Varland": "$1",
-    "Garrett Whitlock": "$1",
-    "David Festa": "$1"
   }
 }
