@@ -82,8 +82,13 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
     ...
   },
   "projections": {
-    "batters":  {"Aaron Judge": {"AB": "522", "R": "124", "HR": "50", ...}, ...},
-    "pitchers": {"Tarik Skubal": {"INNs": "180", "W": "14", "ERA": "2.85", ...}, ...}
+    "batters":  {"Aaron Judge": {"_team": "NYY", "_pos": "OF", "AB": "522", "HR": "50", ...}, ...},
+    "pitchers": {"Tarik Skubal": {"_team": "DET", "_pos": "P", "INNs": "191", "ERA": "2.83", ...}, ...}
+  },
+  "salaries": {
+    "Aaron Judge": "$46",
+    "Tarik Skubal": "$39",
+    ...
   },
   "eligibility": {
     "positions_2025": {"Aaron Judge": ["OF", "DH"], "Jose Ramirez": ["3B", "DH"], ...},
@@ -95,7 +100,7 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
 ### Web App (`docs/index.html`)
 
-**Tab order:** Read Me | Batters | Pitchers | Injuries | Last Week | My Team
+**Tab order:** Read Me | Batters | Pitchers | Injuries | Last Week | My Team | Notes
 
 **Read Me tab** — static documentation page (no JS needed):
 - Usage guide covering all features, keyboard shortcuts, and the roster panel
@@ -118,12 +123,20 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 - "Hide drafted" toggle for the grid
 - Ranked list below grid: filtered to current tab (batters on Batters tab, pitchers on Pitchers tab), with search, position filter, and hide-drafted toggle
 - Position filter rebuilds on tab switch (only shows relevant positions)
-- Batter ranked list columns: Rank, Name, Pos, Eligible (with 2025 games count), AVG, HR, RBI, SB, R, Injury
-- Pitcher ranked list columns: Rank, Name, Pos, ERA, W, S, WHIP, K, Injury
+- Batter ranked list columns: Rank, Name, Team, Pos, Eligible (with 2025 games count), Sal, AVG, HR, RBI, SB, R, Injury
+- Pitcher ranked list columns: Rank, Name, Team, Pos, Sal, ERA, W, S, WHIP, K, Injury
+- **Sal column**: AL-only salary projection from `data.json` salaries; shown in green/bold; missing = `—`
+- **Team fallback**: if a player is missing from the depth chart (e.g. projection-only), team and pos are filled from `_team`/`_pos` fields stored in the projections entry
+- **Click-to-sort**: all columns in the ranked list are sortable by clicking the header; active column shows ▲/▼ arrow; sort resets to Rank on tab switch; missing values always sort to the end
 
 **Injuries tab**: lists all players with real injury notes, sorted by CBS rank; shows likely replacement (first healthy player at same position, with MI/CI/OF/CL overlaps)
 
 **Last Week tab**: MLB.com news from the past 7 days, organized by team; only player-relevant headlines (blocklist filters out TV/streaming/tickets/nostalgia/odds); deduplicated by normalized headline; shows "as of" timestamp
+
+**Notes tab** — free-text scratch pad for draft-day notes:
+- Single `<textarea>` that auto-saves to `localStorage` (`ff_notes` key) on every keystroke
+- Persists across page refreshes; **Clear** button with confirmation prompt
+- Notes are browser-local (not shared)
 
 **My Team tab** — projects drafted players' stats against a weighted pool of AL starters:
 - Two tables: Batting (HR, RBI, BA, SB, R) and Pitching (W, S, ERA, WHIP, K)
@@ -160,6 +173,11 @@ Fixed 220px panel on the right side of the screen showing your roster in progres
 
 **Interactions:**
 - Click a player name in the panel → opens Assign modal for reassignment
+- **Salary input**: each filled slot has a compact number input on the right for entering the actual auction price paid; CBS projected salary shown as placeholder; green text
+- **Budget footer**: always visible above the buttons — shows `$X spent` (green) and `$Y left` (gray; red if over budget) plus `($Z/slot)` — average remaining budget per unfilled slot
+  - Budget = $260 total; open slot count = `ROSTER_SLOTS.length` minus filled slots (unassigned players don't count as filling a slot)
+  - Salary state persisted in `localStorage` (`ff_sal_paid` key): `{playerName: amountPaid}`
+  - Salary cleared when player is removed from roster or draft is reset
 - **Download Roster** button → exports `fantasy-bb-roster.csv` with columns: Slot, Player, Rank, Pos, AVG, HR, RBI, SB, R, ERA, W, S, WHIP, K; all 23 slots included (empty slots have blank player row); unassigned players appended at bottom
 - **Clear Roster** button removes all slot assignments (keeps drafted marks)
 - Roster state persisted in `localStorage` (`ff_roster` key): `{ slots: {slotId: name}, unassigned: [name, ...] }`
@@ -193,15 +211,16 @@ Opens when: checking a checkbox, selecting from quick search, or clicking a name
 
 ## One-Time Data Scripts (run locally, do NOT add to daily scrape)
 
-### Projections (`parse_projections.py`)
+### Projections + Salaries (`parse_projections.py`)
 
-Parses tab-separated text copied from CBS projected stats pages into `data.json`.
+Parses tab-separated text copied from CBS projected stats pages and salary projections into `data.json`. Also stores `_team` and `_pos` from the player info field so the web app can show team/pos for players not in the AL depth chart.
 
 **Setup:**
 1. Go to https://pochicago.baseball.cbssports.com/stats/stats-main
 2. Click Projections → set Timeframe = Rest of Season, Categories = Standard
 3. Run "All Players - Batters" → select all → copy → paste into `batters2026.txt`
 4. Run "All Players - P" → select all → copy → paste into `pitchers2026.txt`
+5. Copy CBS salary projections (AL-only column) into `salproj.txt`
 
 **Run:**
 ```
@@ -209,10 +228,18 @@ python parse_projections.py
 git add docs/data.json && git commit -m "Add projections" && git push
 ```
 
-Row format in the text files: `{action}\t{Name POS • TEAM}\t{stat1}\t...\t{Rank}`
+**Row format — projections** (`{action}\t{Name POS • TEAM}\t{stat1}\t...\t{Rank}`):
 - Batter columns: AB, R, H, 1B, 2B, 3B, HR, RBI, BB, K, SB, CS, AVG, OBP, SLG, Rank
 - Pitcher columns: INNs, APP, GS, QS, CG, W, L, S, BS, HD, K, BB, H, ERA, WHIP, Rank
 - Rank is excluded from stored stats (already in CBS rankings)
+- `_team` and `_pos` are extracted from the player info field and stored alongside stats
+
+**Row format — salaries** (`salproj.txt`, tab-separated: `Name POS • TEAM\tPos\tTeam\tMixed\tAL-Only`):
+- AL-Only column (index 4) stored as string e.g. `"$46"`
+- `parse_salaries()` uses the same `PLAYER_RE` regex as projections
+- Stored under top-level `salaries` key in `data.json`; ~275 players
+
+**`scrape.py` field ownership:** does NOT touch `projections`, `salaries`, or `eligibility` — those are carried forward from the existing file on each scrape run.
 
 Note: `scrape_projections.py` is a Playwright-based alternative that was attempted but abandoned — CBS page JS polluted the columns. Use `parse_projections.py` (text copy-paste approach) instead.
 
@@ -268,4 +295,4 @@ Scrapes `https://www.mlb.com/{slug}/news` for each AL team using Playwright.
 - Does NOT run `parse_projections.py` or `build_eligibility.py` — those are one-time local scripts
 
 **⚠ Important — `scrape.py` field ownership:**
-`scrape.py` only owns `scraped_at`, `depth_chart`, `rankings`, `news`, `news_scraped_at`. Before writing `data.json` it reads the existing file and carries forward any keys it doesn't own (`projections`, `eligibility`). This prevents the daily auto-scrape from wiping manually-added projection and eligibility data. If `data.json` doesn't exist yet, those keys are simply omitted.
+`scrape.py` only owns `scraped_at`, `depth_chart`, `rankings`, `news`, `news_scraped_at`. Before writing `data.json` it reads the existing file and carries forward any keys it doesn't own (`projections`, `salaries`, `eligibility`). This prevents the daily auto-scrape from wiping manually-added projection, salary, and eligibility data. If `data.json` doesn't exist yet, those keys are simply omitted.
