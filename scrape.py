@@ -525,7 +525,7 @@ async def main():
         'news':            news,
         'news_scraped_at': now,
     }
-    for key in ('projections', 'eligibility'):
+    for key in ('projections', 'eligibility', 'salaries'):
         if key in existing:
             output[key] = existing[key]
 

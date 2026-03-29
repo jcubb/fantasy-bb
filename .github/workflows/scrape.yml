@@ -2,8 +2,6 @@ name: Scrape Data
 
 on:
   workflow_dispatch:          # manual "Run" button on Actions page
-  schedule:
-    - cron: '0 11 * * *'     # daily at 11am UTC (7am ET)
 
 jobs:
   scrape:
