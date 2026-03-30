@@ -535,6 +535,29 @@ body {
   padding: 1px 5px; font-size: 12px; font-family: monospace; color: #1e3a5f;
 }
 
+/* ── League section ──────────────────────────────────────────────────────── */
+#league-section { padding: 0 16px 24px; display: none; }
+#league-header { display: flex; align-items: center; gap: 14px; padding: 12px 0 8px; border-top: 2px solid #c8d3e0; flex-wrap: wrap; }
+#league-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
+#league-count { font-size: 11px; color: #7a8ca0; }
+#league-body { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px; align-items: flex-start; }
+.league-card { background: white; border: 1px solid #c8d3e0; border-radius: 6px; width: 330px; flex-shrink: 0; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.league-card-header { background: #1e3a5f; color: white; padding: 7px 10px; font-size: 13px; font-weight: 700; border-radius: 5px 5px 0 0; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.league-card-counts { font-size: 10px; opacity: .8; font-weight: 400; white-space: nowrap; }
+.league-card-body { display: flex; }
+.league-card-batters { flex: 1; padding: 5px 8px; border-right: 1px solid #e8eef4; min-width: 0; }
+.league-card-pitchers { width: 118px; flex-shrink: 0; padding: 5px 8px; }
+.league-col-hdr { font-size: 9px; font-weight: 700; color: #9ab0c8; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 3px; }
+.lslot { display: flex; align-items: center; gap: 4px; padding: 1.5px 0; line-height: 1.35; }
+.lslot-lbl { font-size: 10px; color: #9ab0c8; width: 22px; flex-shrink: 0; font-weight: 600; }
+.lslot-name { font-size: 11.5px; color: #1a2035; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lslot-name.empty { color: #c8d3e0; font-style: italic; }
+.lslot-sal { font-size: 10px; color: #4a8a5a; flex-shrink: 0; }
+.league-unassigned { padding: 4px 8px 6px; border-top: 1px solid #e8eef4; }
+.league-unasgn-hdr { font-size: 9px; font-weight: 700; color: #9ab0c8; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 3px; }
+.league-unasgn-pills { display: flex; flex-wrap: wrap; gap: 3px; }
+.league-unasgn-pill { background: #fff3e0; border: 1px solid #f0a030; color: #7a4000; border-radius: 3px; padding: 1px 6px; font-size: 10px; }
+
 /* ── My Team Stats tab ───────────────────────────────────────────────────── */
 #stats-section { padding: 0 16px 24px; display: none; }
 #stats-header {
@@ -599,6 +622,7 @@ body {
 <div id="tabs">
   <button class="tab-btn" onclick="switchTab('readme',this)">Read Me</button>
   <button class="tab-btn" onclick="switchTab('player',this)">Player</button>
+  <button class="tab-btn" onclick="switchTab('league',this)">League</button>
   <button class="tab-btn active" onclick="switchTab('batters',this)">Batters</button>
   <button class="tab-btn" onclick="switchTab('pitchers',this)">Pitchers</button>
   <button class="tab-btn" onclick="switchTab('drafted',this)">Drafted</button>
@@ -812,6 +836,15 @@ body {
     <span id="stats-context"></span>
   </div>
   <div id="stats-body"></div>
+</div>
+
+<!-- League -->
+<div id="league-section">
+  <div id="league-header">
+    <h2>League Rosters</h2>
+    <span id="league-count"></span>
+  </div>
+  <div id="league-body"></div>
 </div>
 
 <!-- Roster Panel -->
@@ -1143,6 +1176,7 @@ function render() {
   const isSetup    = currentTab === 'setup';
   const isPlayer   = currentTab === 'player';
   const isDrafted  = currentTab === 'drafted';
+  const isLeague   = currentTab === 'league';
   document.getElementById('readme-section').style.display   = isReadme   ? 'block' : 'none';
   document.getElementById('grid-wrapper').style.display     = isGrid     ? '' : 'none';
   document.getElementById('ranked-section').style.display   = isGrid     ? '' : 'none';
@@ -1153,6 +1187,7 @@ function render() {
   document.getElementById('stats-section').style.display    = isStats    ? 'block' : 'none';
   document.getElementById('notes-section').style.display    = isNotes    ? 'block' : 'none';
   document.getElementById('setup-section').style.display    = isSetup    ? 'block' : 'none';
+  document.getElementById('league-section').style.display   = isLeague   ? 'block' : 'none';
   if (isReadme)     return;
   if (isNotes)      return;
   if (isSetup)      return;
@@ -1161,6 +1196,7 @@ function render() {
   else if (isStats) renderStats();
   else if (isPlayer) renderPlayerTab();
   else if (isDrafted) renderDrafted();
+  else if (isLeague)  renderLeague();
   else { buildPosFilter(); renderGrid(); renderList(); }
 }
 
@@ -2633,6 +2669,160 @@ document.addEventListener('keydown', e => {
     cancelAssign();
   }
 });
+
+// ── League tab ────────────────────────────────────────────────────────────
+
+// Determine SP/CL/RP for a pitcher from projections, rankings, or depth chart
+function getPitcherPos(name) {
+  const pp = DATA?.projections?.pitchers?.[name];
+  if (pp) {
+    const p = (pp._pos || '').toUpperCase();
+    if (p === 'SP' || p === 'P') return 'SP';
+    if (p === 'CL') return 'CL';
+    if (p === 'RP') return 'RP';
+  }
+  const rp = (DATA?.rankings?.[name]?.pos || '').toUpperCase();
+  if (rp === 'SP') return 'SP';
+  if (rp === 'CL') return 'CL';
+  if (rp === 'RP') return 'RP';
+  const dc = DATA?.depth_chart || {};
+  for (const td of Object.values(dc)) {
+    if ((td.SP || []).some(p => p.name === name)) return 'SP';
+    if ((td.CL || []).some(p => p.name === name)) return 'CL';
+    if ((td.RP || []).some(p => p.name === name)) return 'RP';
+  }
+  return null;
+}
+
+// Returns the ROSTER_SLOT IDs this player is eligible to fill
+function playerSlotElig(name) {
+  const pitPos = getPitcherPos(name);
+  if (pitPos) {
+    return ROSTER_SLOTS.filter(s => {
+      if (s.type !== 'p') return false;
+      if (pitPos === 'SP') return s.elig.includes('SP');
+      if (pitPos === 'CL') return s.elig.includes('CL') || s.elig.includes('RP');
+      if (pitPos === 'RP') return s.elig.includes('RP');
+      return false;
+    }).map(s => s.id);
+  }
+  const elig = DATA?.eligibility?.positions_2025?.[name] || [];
+  return ROSTER_SLOTS.filter(s => s.type === 'b' && s.elig.some(e => elig.includes(e))).map(s => s.id);
+}
+
+// Bipartite matching — assign players to roster slots optimally.
+// Processes most-constrained players first for better coverage.
+function autoAssignRoster(players) {
+  const sorted = [...players].sort((a, b) => playerSlotElig(a).length - playerSlotElig(b).length);
+  const slotMatch = {}; // slotId → player name
+
+  function augment(name, vis) {
+    for (const sid of playerSlotElig(name)) {
+      if (vis.has(sid)) continue;
+      vis.add(sid);
+      const prev = slotMatch[sid];
+      if (!prev || augment(prev, vis)) {
+        slotMatch[sid] = name;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  const assigned = new Set();
+  for (const name of sorted) {
+    if (augment(name, new Set())) assigned.add(name);
+  }
+  return { slots: { ...slotMatch }, unassigned: players.filter(n => !assigned.has(n)) };
+}
+
+function renderLeague() {
+  if (!DATA) return;
+
+  const members = (localStorage.getItem('ff_league_members') || '')
+    .split('\n').map(s => s.trim()).filter(Boolean);
+
+  // Group drafted players by drafter team
+  const byTeam = {};
+  for (const name of drafted) {
+    const team = draftedBy[name];
+    if (!team) continue;
+    if (!byTeam[team]) byTeam[team] = [];
+    byTeam[team].push(name);
+  }
+  const orphans = [...drafted].filter(n => !draftedBy[n]);
+
+  // Display order: league member list first (even if empty), then any extra teams
+  const order = [...members];
+  for (const t of Object.keys(byTeam)) {
+    if (!order.includes(t)) order.push(t);
+  }
+  if (orphans.length) order.push('__orphan__');
+
+  const teamCount = order.filter(t => t !== '__orphan__' && (members.includes(t) || byTeam[t])).length;
+  document.getElementById('league-count').textContent =
+    teamCount + ' teams · ' + drafted.size + ' players drafted';
+
+  function lastName(n) { const p = n.trim().split(/\s+/); return p[p.length - 1]; }
+  function salStr(n)   { const p = draftPrice[n]; return p ? '$' + p : ''; }
+
+  const batterSlots  = ROSTER_SLOTS.filter(s => s.type === 'b');
+  const pitcherSlots = ROSTER_SLOTS.filter(s => s.type === 'p');
+
+  function buildCard(team) {
+    const players = team === '__orphan__' ? orphans : (byTeam[team] || []);
+    const label   = team === '__orphan__' ? '— No Drafter —' : team;
+    const { slots, unassigned } = autoAssignRoster(players);
+    const spent    = players.reduce((s, n) => s + (draftPrice[n] || 0), 0);
+    const filled   = Object.keys(slots).length;
+    const left     = 260 - spent;
+    const leftStr  = left >= 0
+      ? `<span style="color:#7aaa8a">$${left} left</span>`
+      : `<span style="color:#c0392b">$${-left} over</span>`;
+
+    function slotRow(slot) {
+      const name = slots[slot.id];
+      return `<div class="lslot">
+        <span class="lslot-lbl">${esc(slot.label)}</span>
+        <span class="lslot-name${name ? '' : ' empty'}" title="${name ? esc(name) : ''}">${name ? esc(lastName(name)) : '—'}</span>
+        ${name && salStr(name) ? `<span class="lslot-sal">${salStr(name)}</span>` : ''}
+      </div>`;
+    }
+
+    const unassignedHtml = unassigned.length ? `
+      <div class="league-unassigned">
+        <div class="league-unasgn-hdr">Unassigned (${unassigned.length})</div>
+        <div class="league-unasgn-pills">
+          ${unassigned.map(n => `<span class="league-unasgn-pill" title="${esc(n)}">${esc(lastName(n))}${draftPrice[n] ? ' $'+draftPrice[n] : ''}</span>`).join('')}
+        </div>
+      </div>` : '';
+
+    return `<div class="league-card">
+      <div class="league-card-header">
+        <span>${esc(label)}</span>
+        <span class="league-card-counts">${filled}/${ROSTER_SLOTS.length} · $${spent} · ${leftStr}</span>
+      </div>
+      <div class="league-card-body">
+        <div class="league-card-batters">
+          <div class="league-col-hdr">Batters</div>
+          ${batterSlots.map(slotRow).join('')}
+        </div>
+        <div class="league-card-pitchers">
+          <div class="league-col-hdr">Pitchers</div>
+          ${pitcherSlots.map(slotRow).join('')}
+        </div>
+      </div>
+      ${unassignedHtml}
+    </div>`;
+  }
+
+  const body = document.getElementById('league-body');
+  if (!order.length) {
+    body.innerHTML = '<p style="color:#9ab0c8;font-size:13px;font-style:italic">No league members defined — add names in Draft Setup.</p>';
+    return;
+  }
+  body.innerHTML = order.map(buildCard).join('');
+}
 
 // ── Utils ──────────────────────────────────────────────────────────────────
 function esc(s) {
