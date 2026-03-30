@@ -2830,7 +2830,7 @@ function renderLeague() {
       <div class="league-card-body">
         <div class="league-card-batters">
           <div class="league-col-hdr">Batters</div>
-          ${batterSlots.map(slotRow).join('')}
+          ${batterSlots.map(slot => slotRow(slot)).join('')}
         </div>
         <div class="league-card-pitchers">
           <div class="league-col-hdr">Pitchers</div>
