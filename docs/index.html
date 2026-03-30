@@ -189,6 +189,18 @@ body {
 
 /* ── Notes section ──────────────────────────────────────────────────────── */
 #notes-section { padding: 0 16px 24px; display: none; }
+#setup-section { padding: 0 16px 24px; display: none; }
+#setup-header { display: flex; align-items: center; gap: 12px; padding: 12px 0 8px; border-top: 2px solid #c8d3e0; }
+#setup-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
+#setup-label { font-size: 12px; color: #4a6a8a; margin: 0 0 6px; }
+#league-members-area {
+  width: 100%; max-width: 400px; height: 320px;
+  font-family: inherit; font-size: 13px; line-height: 1.7;
+  padding: 10px 12px; border: 1px solid #c8d3e0; border-radius: 6px;
+  background: white; color: #1a2035; resize: vertical;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.06);
+}
+#league-members-area:focus { outline: none; border-color: #1e3a5f; box-shadow: inset 0 1px 3px rgba(0,0,0,.06), 0 0 0 2px rgba(30,58,95,.12); }
 #notes-header { display: flex; align-items: center; gap: 12px; padding: 12px 0 8px; }
 #notes-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
 #btn-clear-notes {
@@ -586,6 +598,7 @@ body {
   <button class="tab-btn" onclick="switchTab('injuries',this)">Injuries</button>
   <button class="tab-btn" onclick="switchTab('news',this)">Last Week</button>
   <button class="tab-btn" onclick="switchTab('mystats',this)">My Team</button>
+  <button class="tab-btn" onclick="switchTab('setup',this)">Draft Setup</button>
   <button class="tab-btn" onclick="switchTab('notes',this)">Notes</button>
 </div>
 
@@ -725,6 +738,15 @@ body {
     <thead id="drafted-head"></thead>
     <tbody id="drafted-body"></tbody>
   </table>
+</div>
+
+<!-- Draft Setup -->
+<div id="setup-section">
+  <div id="setup-header">
+    <h2>Draft Setup</h2>
+  </div>
+  <p id="setup-label">League members — one name per line</p>
+  <textarea id="league-members-area" placeholder="e.g.&#10;Alice&#10;Bob&#10;Charlie" oninput="saveLeagueMembers()"></textarea>
 </div>
 
 <!-- Notes -->
@@ -895,6 +917,8 @@ async function init() {
     renderRoster();
     const saved = localStorage.getItem('ff_notes');
     if (saved) document.getElementById('notes-area').value = saved;
+    const savedMembers = localStorage.getItem('ff_league_members');
+    if (savedMembers) document.getElementById('league-members-area').value = savedMembers;
   } catch (e) {
     document.getElementById('grid-body').innerHTML =
       `<tr><td colspan="20" style="padding:20px;color:#c0392b">
@@ -961,6 +985,10 @@ function renderBudget() {
   document.getElementById('roster-budget').innerHTML =
     `<span style="color:#a0d080">$${spent} spent</span>` +
     `<span style="${remaining < 0 ? 'color:#e05050' : 'color:#9ab0c8'}">$${remaining} left${perSlotStr}</span>`;
+}
+
+function saveLeagueMembers() {
+  localStorage.setItem('ff_league_members', document.getElementById('league-members-area').value);
 }
 
 function saveNotes() {
@@ -1044,6 +1072,7 @@ function render() {
   const isStats    = currentTab === 'mystats';
   const isReadme   = currentTab === 'readme';
   const isNotes    = currentTab === 'notes';
+  const isSetup    = currentTab === 'setup';
   const isPlayer   = currentTab === 'player';
   const isDrafted  = currentTab === 'drafted';
   document.getElementById('readme-section').style.display   = isReadme   ? 'block' : 'none';
@@ -1055,8 +1084,10 @@ function render() {
   document.getElementById('news-section').style.display     = isNews     ? 'block' : 'none';
   document.getElementById('stats-section').style.display    = isStats    ? 'block' : 'none';
   document.getElementById('notes-section').style.display    = isNotes    ? 'block' : 'none';
+  document.getElementById('setup-section').style.display    = isSetup    ? 'block' : 'none';
   if (isReadme)     return;
   if (isNotes)      return;
+  if (isSetup)      return;
   if (isInjuries)   renderInjuries();
   else if (isNews)  renderNews();
   else if (isStats) renderStats();
