@@ -1458,6 +1458,12 @@ function renderList() {
   const salaries    = DATA.salaries || {};
   const hasSal      = Object.keys(salaries).length > 0;
 
+  // Build depth-chart name set for "Starting" column
+  const dcNames = new Set();
+  Object.values(dc).forEach(positions =>
+    Object.values(positions).forEach(list => list.forEach(p => dcNames.add(p.name)))
+  );
+
   // ── Rebuild thead ────────────────────────────────────────────────────────
   const eligData  = (DATA.eligibility?.positions_2025) || {};
   const hasElig   = isBatters && Object.keys(eligData).length > 0;
@@ -1473,10 +1479,11 @@ function renderList() {
   const projHeads = hasProj
     ? projCols.map(c => `<th ${thAttrs(c, 'proj-col', 'width:42px')}>${c}${thArrow(c)}</th>`).join('')
     : '';
-  const totalCols = 5 + (hasElig ? 1 : 0) + (hasSal ? 1 : 0) + (hasProj ? projCols.length : 0);
+  const totalCols = 6 + (hasElig ? 1 : 0) + (hasSal ? 1 : 0) + (hasProj ? projCols.length : 0);
   document.getElementById('list-head').innerHTML =
     `<tr>
        <th ${thAttrs('rank', '', 'width:36px')}>Rank${thArrow('rank')}</th>
+       <th style="width:58px;text-align:center">Starting</th>
        <th ${thAttrs('name')}>Name${thArrow('name')}</th>
        <th ${thAttrs('team', '', 'width:42px')}>Team${thArrow('team')}</th>
        <th ${thAttrs('pos', '', 'width:42px')}>Pos${thArrow('pos')}</th>
@@ -1597,10 +1604,16 @@ function renderList() {
       }).join('');
     }
 
+    const isStarting = dcNames.has(p.name);
+    const startCell  = isStarting
+      ? `<td style="text-align:center;font-weight:700;color:#1a6640">Yes</td>`
+      : `<td style="text-align:center;color:#9ab0c8">No</td>`;
+
     html += `<tr class="${dftCls}"
                  onmouseenter="showTip(event,'${jsStr(p.name)}','${jsStr(p.injury||'')}')"
                  onmouseleave="hideTip()">
                <td class="rank-num">${rankStr}</td>
+               ${startCell}
                <td>
                  <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
                    <input type="checkbox" ${isDrafted?'checked':''}
@@ -1697,7 +1710,7 @@ function buildAllPlayerMap() {
   return players;
 }
 
-function renderPlayerTableInto(headId, bodyId, list) {
+function renderPlayerTableInto(headId, bodyId, list, showElig) {
   if (!DATA) return;
   const projections = DATA.projections || {};
   const batProj     = projections.batters  || {};
@@ -1708,7 +1721,16 @@ function renderPlayerTableInto(headId, bodyId, list) {
   const hasSal      = Object.keys(salaries).length > 0;
   const batCols     = hasBatProj ? BATTER_PROJ_COLS  : [];
   const pitCols     = hasPitProj ? PITCHER_PROJ_COLS : [];
-  const colspan     = 4 + (hasSal ? 1 : 0) + batCols.length + pitCols.length;
+  const eligData    = showElig ? ((DATA.eligibility?.positions_2025) || {}) : {};
+  const hasElig     = showElig && Object.keys(eligData).length > 0;
+  const colspan     = 5 + (hasElig ? 1 : 0) + (hasSal ? 1 : 0) + batCols.length + pitCols.length;
+
+  // Build depth-chart name set for "Starting" column
+  const dc      = DATA.depth_chart || {};
+  const dcNames = new Set();
+  Object.values(dc).forEach(positions =>
+    Object.values(positions).forEach(lst => lst.forEach(p => dcNames.add(p.name)))
+  );
 
   const thW = (w, extra) =>
     `<th style="width:${w}"${extra ? ` class="${extra}"` : ''}>`;
@@ -1716,9 +1738,11 @@ function renderPlayerTableInto(headId, bodyId, list) {
   document.getElementById(headId).innerHTML =
     `<tr>
        ${thW('36px','')}Rank</th>
+       <th style="width:58px;text-align:center">Starting</th>
        <th>Name</th>
        ${thW('42px','')}Team</th>
        ${thW('42px','')}Pos</th>
+       ${hasElig ? `<th style="width:90px">Eligible</th>` : ''}
        ${hasSal ? `${thW('42px','proj-col')}Sal</th>` : ''}
        ${batCols.map(c => `${thW('42px','proj-col')}${c}</th>`).join('')}
        ${pitCols.map(c => `${thW('42px','proj-col')}${c}</th>`).join('')}
@@ -1732,11 +1756,15 @@ function renderPlayerTableInto(headId, bodyId, list) {
 
   let html = '';
   list.forEach(p => {
-    const isDrafted = drafted.has(p.name);
-    const dftCls    = isDrafted ? ' row-drafted' : '';
-    const rankStr   = p.rank < 99999 ? p.rank : '—';
-    const bStats    = batProj[p.name] || {};
-    const pStats    = pitProj[p.name] || {};
+    const isDrafted  = drafted.has(p.name);
+    const dftCls     = isDrafted ? ' row-drafted' : '';
+    const rankStr    = p.rank < 99999 ? p.rank : '—';
+    const isStarting = dcNames.has(p.name);
+    const startCell  = isStarting
+      ? `<td style="text-align:center;font-weight:700;color:#1a6640">Yes</td>`
+      : `<td style="text-align:center;color:#9ab0c8">No</td>`;
+    const bStats     = batProj[p.name] || {};
+    const pStats     = pitProj[p.name] || {};
 
     const batCells = batCols.map(col => {
       const val = bStats[col];
@@ -1753,11 +1781,24 @@ function renderPlayerTableInto(headId, bodyId, list) {
                      : `<td class="proj-val missing">—</td>`;
         })()
       : '';
+    const eligCell = hasElig
+      ? (() => {
+          const ep = eligData[p.name];
+          if (!ep) return '<td style="color:#c0ccd8">—</td>';
+          const nonDH  = ep.filter(x => x !== 'DH');
+          const posStr = nonDH.length > 0 ? nonDH.join(', ') : 'DH-only';
+          const g2025  = DATA.eligibility?.games_2025?.[p.name] || {};
+          const totalG = Object.values(g2025).reduce((s, v) => s + v, 0);
+          const gStr   = totalG > 0 ? ` <span style="color:#9ab0c8">(${totalG}g)</span>` : '';
+          return `<td style="font-size:11px;color:#2a4a6a">${posStr}${gStr}</td>`;
+        })()
+      : '';
 
     html += `<tr class="${dftCls}"
                  onmouseenter="showTip(event,'${jsStr(p.name)}','${jsStr(p.injury||'')}')"
                  onmouseleave="hideTip()">
                <td class="rank-num">${rankStr}</td>
+               ${startCell}
                <td>
                  <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
                    <input type="checkbox" ${isDrafted ? 'checked' : ''}
@@ -1767,7 +1808,7 @@ function renderPlayerTableInto(headId, bodyId, list) {
                </td>
                <td>${esc(p.team || '')}</td>
                <td>${esc(p.pos  || '')}</td>
-               ${salCell}${batCells}${pitCells}
+               ${eligCell}${salCell}${batCells}${pitCells}
              </tr>`;
   });
 
@@ -1788,7 +1829,7 @@ function renderPlayerTab() {
     return true;
   });
   matched.sort((a, b) => a.rank - b.rank);
-  renderPlayerTableInto('player-head', 'player-body', matched);
+  renderPlayerTableInto('player-head', 'player-body', matched, true);
 
   // Collect normalized position groups from matched players
   const posGroups = new Set();
@@ -1811,7 +1852,7 @@ function renderPlayerTab() {
       ? `Remaining Available — ${posLabel} (${remaining.length})`
       : 'Remaining at Position';
 
-  renderPlayerTableInto('pos-pool-head', 'pos-pool-body', remaining);
+  renderPlayerTableInto('pos-pool-head', 'pos-pool-body', remaining, false);
 }
 
 // ── News ───────────────────────────────────────────────────────────────────
