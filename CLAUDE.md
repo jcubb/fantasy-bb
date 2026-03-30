@@ -100,7 +100,7 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
 ### Web App (`docs/index.html`)
 
-**Tab order:** Read Me | Player | Batters | Pitchers | Drafted | Injuries | Last Week | My Team | Draft Setup | Notes
+**Tab order:** Read Me | Player | League | Batters | Pitchers | Drafted | Injuries | Last Week | My Team | Draft Setup | Notes
 
 **Read Me tab** — static documentation page (no JS needed):
 - Usage guide covering all features, keyboard shortcuts, and the roster panel
@@ -114,6 +114,30 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 - OF is grouped (LF/CF/RF all → OF) for the position pool; SP/CL/RP stay separate
 - Search box is synced bidirectionally with the Batters/Pitchers tab search box — switching tabs carries the value over
 - Typical use: type enough of a name to uniquely identify a player being bid on; top table shows that player, bottom table shows the full remaining pool at their position(s)
+
+**League tab** — grid of roster cards for every league team (one card per member defined in Draft Setup):
+- Cards laid out in a wrapping flex grid; each card is 330px wide
+- Card header: team name + filled slots count (e.g. `21/23`) + `$spent` + `$left` remaining vs $260 budget
+- Card body: two columns — Batters (14 slots) on left, Pitchers (9 slots) on right
+  - Each slot row: slot label + player last name + draft price in green; empty slots shown as `—`
+  - For pitcher slots, the label shows the player's actual position (`SP` or `RP`) instead of the slot type
+  - Pitchers sorted SP first, then RP within each card
+- Unassigned section at card bottom (orange pills) for any players who couldn't be fit into a slot
+- Display order: league members list first (even if empty/undrafted), then any extra teams found in `draftedBy`, then a `— No Drafter —` card for players with no team assigned
+- Summary line above grid: `N teams · M players drafted`
+
+**League tab — auto-assignment logic (`autoAssignRoster`):**
+- Bipartite matching via augmenting-path DFS (same algorithm as `fantasy_bb.py`)
+- Players processed most-constrained first (fewest eligible slots) for better slot coverage
+- `playerSlotElig(name)` maps each player to eligible ROSTER_SLOT IDs:
+  - Pitchers: eligible for all 9 pitcher slots (type = 'p') regardless of SP/RP/CL distinction
+  - Batters: uses union of `positions_2025` eligibility AND the player's natural position from rankings/projections (so a player like Murakami listed at 1B but with only DH calculated eligibility is still placed at 1B)
+  - LF/CF/RF normalized to OF for slot matching
+- `pitcherDisplayPos(name)`: uses `DATA.rankings[name].pos` as the source for SP vs RP display (projections `_pos` is always the generic `'P'` for all pitchers and cannot be used)
+- `getPitcherPos(name)`: determines whether a player is a pitcher at all (for matching); checks projections → rankings → depth chart; treats `'P'` and `'SP'` both as pitcher
+
+**League tab — next planned features:**
+- Supply/demand view: for a given position, how many teams have open slots + budget to spend vs. how many undrafted quality players remain
 
 **Batters tab** — columns: C, 1B, 2B, 3B, SS, LF, CF, RF, DH
 - Each cell: starter (bold) + 1 backup (gray/small)
