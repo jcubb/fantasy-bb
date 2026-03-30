@@ -846,7 +846,7 @@ body {
     <div id="assign-actions">
       <button id="assign-remove-btn" class="assign-act-btn" style="display:none"
               onclick="doRemoveFromRoster()">Remove from roster</button>
-      <button id="assign-cancel-btn" class="assign-act-btn" onclick="closeAssign()">Cancel</button>
+      <button id="assign-cancel-btn" class="assign-act-btn" onclick="cancelAssign()">Cancel</button>
     </div>
   </div>
 </div>
@@ -962,7 +962,7 @@ function handleCheck(cb, name) {
     }
     localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
     if (!isOnRoster(name)) { rosterAdd(name, '__unassigned', true); saveRoster(); }
-    openAssign(name);
+    openAssign(name, true);
   } else {
     drafted.delete(name);
     delete draftTimes[name];
@@ -2156,7 +2156,7 @@ function renderDrafted() {
                    const members = getLeagueMembers();
                    const cur = draftedBy[p.name] || '';
                    if (!members.length) return `<span style="color:#c0ccd8;font-size:11px">—</span>`;
-                   return `<select class="draft-price-input" style="width:100%;font-weight:400;color:#1a2035"
+                   return `<select style="width:100%;padding:2px 4px;border:1px solid #b0c4d8;border-radius:4px;font-size:12px;background:white;color:#1a2035"
                                    onchange="setDraftedBy('${jsStr(p.name)}',this.value)">
                              <option value=""></option>
                              ${members.map(m => `<option value="${esc(m)}"${m===cur?' selected':''}>${esc(m)}</option>`).join('')}
@@ -2425,8 +2425,8 @@ function playerEligSlots(name) {
   return nonDH.length ? nonDH : [];
 }
 
-function openAssign(name) {
-  assignTarget = { name, prevSlot: getRosteredSlot(name) };
+function openAssign(name, isNewDraft) {
+  assignTarget = { name, prevSlot: getRosteredSlot(name), isNewDraft: !!isNewDraft };
   const elig   = playerEligSlots(name);
   const isPitch = ['SP','CL','RP','P'].includes((DATA?.rankings?.[name]?.pos||'').toUpperCase());
 
@@ -2526,8 +2526,25 @@ function closeAssign() {
   assignTarget = null;
 }
 
+function cancelAssign() {
+  if (assignTarget?.isNewDraft) {
+    const name = assignTarget.name;
+    drafted.delete(name);
+    delete draftTimes[name];
+    delete draftPrice[name];
+    delete draftedBy[name];
+    localStorage.setItem('ff_drafted',     JSON.stringify([...drafted]));
+    localStorage.setItem('ff_draft_times', JSON.stringify(draftTimes));
+    localStorage.setItem('ff_draft_price', JSON.stringify(draftPrice));
+    localStorage.setItem('ff_drafted_by',  JSON.stringify(draftedBy));
+    rosterRemove(name);
+  }
+  closeAssign();
+  render(); renderRoster();
+}
+
 function assignOverlayClick(e) {
-  if (e.target === document.getElementById('assign-overlay')) closeAssign();
+  if (e.target === document.getElementById('assign-overlay')) cancelAssign();
 }
 
 // ── Floating search (press /) ───────────────────────────────────────────────
@@ -2609,7 +2626,7 @@ function selectFloat(i) {
     rosterAdd(p.name, '__unassigned', true);
     saveRoster();
   }
-  openAssign(p.name);
+  openAssign(p.name, true);
 }
 
 function handleSearchKey(e) {
@@ -2627,7 +2644,7 @@ document.addEventListener('keydown', e => {
   }
   if (e.key === 'Escape') {
     document.getElementById('search-overlay').style.display = 'none';
-    closeAssign();
+    cancelAssign();
   }
 });
 
