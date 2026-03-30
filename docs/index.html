@@ -2711,10 +2711,18 @@ function playerSlotElig(name) {
   return ROSTER_SLOTS.filter(s => s.type === 'b' && s.elig.some(e => elig.has(e))).map(s => s.id);
 }
 
-// Returns 'SP' or 'RP' display label for a pitcher
+// Returns 'SP' or 'RP' display label for a pitcher.
+// Uses rankings.pos as primary source (projections._pos is always 'P').
 function pitcherDisplayPos(name) {
-  const p = getPitcherPos(name);
-  return (p === 'SP') ? 'SP' : 'RP';
+  const rp = (DATA?.rankings?.[name]?.pos || '').toUpperCase();
+  if (rp === 'SP') return 'SP';
+  if (rp) return 'RP'; // CL, RP, etc.
+  // Fallback: depth chart
+  const dc = DATA?.depth_chart || {};
+  for (const td of Object.values(dc)) {
+    if ((td.SP || []).some(p => p.name === name)) return 'SP';
+  }
+  return 'RP';
 }
 
 // Bipartite matching — assign players to roster slots optimally.
@@ -2787,8 +2795,8 @@ function renderLeague() {
       ? `<span style="color:#7aaa8a">$${left} left</span>`
       : `<span style="color:#c0392b">$${-left} over</span>`;
 
-    function slotRow(slot) {
-      const name = slots[slot.id];
+    function slotRow(slot, nameOverride) {
+      const name = nameOverride !== undefined ? nameOverride : slots[slot.id];
       const lbl  = (slot.type === 'p' && name) ? pitcherDisplayPos(name) : slot.label;
       return `<div class="lslot">
         <span class="lslot-lbl">${esc(lbl)}</span>
@@ -2796,6 +2804,15 @@ function renderLeague() {
         ${name && salStr(name) ? `<span class="lslot-sal">${salStr(name)}</span>` : ''}
       </div>`;
     }
+
+    // Sort pitcher assignments: SP first, then RP
+    const pitcherNames = pitcherSlots.map(s => slots[s.id] || null)
+      .sort((a, b) => {
+        if (!a && !b) return 0;
+        if (!a) return 1;
+        if (!b) return -1;
+        return (pitcherDisplayPos(a) === 'SP' ? 0 : 1) - (pitcherDisplayPos(b) === 'SP' ? 0 : 1);
+      });
 
     const unassignedHtml = unassigned.length ? `
       <div class="league-unassigned">
@@ -2817,7 +2834,7 @@ function renderLeague() {
         </div>
         <div class="league-card-pitchers">
           <div class="league-col-hdr">Pitchers</div>
-          ${pitcherSlots.map(slotRow).join('')}
+          ${pitcherSlots.map((slot, i) => slotRow(slot, pitcherNames[i])).join('')}
         </div>
       </div>
       ${unassignedHtml}
