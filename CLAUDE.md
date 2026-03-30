@@ -100,13 +100,20 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
 ### Web App (`docs/index.html`)
 
-**Tab order:** Read Me | Batters | Pitchers | Injuries | Last Week | My Team | Notes
+**Tab order:** Read Me | Player | Batters | Pitchers | Drafted | Injuries | Last Week | My Team | Draft Setup | Notes
 
 **Read Me tab** — static documentation page (no JS needed):
 - Usage guide covering all features, keyboard shortcuts, and the roster panel
 - Data sources section: depth charts, rankings, projections, eligibility, injury notes
 - Warnings callout: eligibility is approximate (Lahman, not official CBS), projections may be stale, scraper fragility, name-matching edge cases, no independent data validation
 - Draft state localStorage note (local to each browser, not shared)
+
+**Player tab** — combined batter + pitcher search and position-pool view:
+- **Top table (Available Players)**: all players (batters and pitchers) filtered by the search box; columns: Rank, Starting, Name, Team, Pos, Eligible, Sal, batter stats (AVG/HR/RBI/SB/R), pitcher stats (ERA/W/S/WHIP/K)
+- **Bottom table (Remaining Available — POS (N))**: all non-drafted players at the union of positions of the matched players; same columns minus Eligible; title updates dynamically with position group(s) and count
+- OF is grouped (LF/CF/RF all → OF) for the position pool; SP/CL/RP stay separate
+- Search box is synced bidirectionally with the Batters/Pitchers tab search box — switching tabs carries the value over
+- Typical use: type enough of a name to uniquely identify a player being bid on; top table shows that player, bottom table shows the full remaining pool at their position(s)
 
 **Batters tab** — columns: C, 1B, 2B, 3B, SS, LF, CF, RF, DH
 - Each cell: starter (bold) + 1 backup (gray/small)
@@ -123,15 +130,32 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 - "Hide drafted" toggle for the grid
 - Ranked list below grid: filtered to current tab (batters on Batters tab, pitchers on Pitchers tab), with search, position filter, and hide-drafted toggle
 - Position filter rebuilds on tab switch (only shows relevant positions)
-- Batter ranked list columns: Rank, Name, Team, Pos, Eligible (with 2025 games count), Sal, AVG, HR, RBI, SB, R, Injury
-- Pitcher ranked list columns: Rank, Name, Team, Pos, Sal, ERA, W, S, WHIP, K, Injury
+- Batter ranked list columns: Rank, Starting, Name, Team, Pos, Eligible (with 2025 games count), Sal, AVG, HR, RBI, SB, R, Injury
+- Pitcher ranked list columns: Rank, Starting, Name, Team, Pos, Sal, ERA, W, S, WHIP, K, Injury
+- **Starting column**: bold green "Yes" if the player appears anywhere in the depth chart; gray "No" if ranking/projection-only
 - **Sal column**: AL-only salary projection from `data.json` salaries; shown in green/bold; missing = `—`
 - **Team fallback**: if a player is missing from the depth chart (e.g. projection-only), team and pos are filled from `_team`/`_pos` fields stored in the projections entry
 - **Click-to-sort**: all columns in the ranked list are sortable by clicking the header; active column shows ▲/▼ arrow; sort resets to Rank on tab switch; missing values always sort to the end
 
+**Drafted tab** — log of all drafted players across the whole league:
+- Sorted newest-first (most recently drafted at the top)
+- Columns: Rank, Starting, Name, Team, Pos, Eligible, Draft $, Sal, batter stats, pitcher stats, Time, Drafter
+- **Name** is a clickable link — opens the Assign modal pre-filled with existing price and drafter for editing
+- **Draft $**: auction price paid (entered via Assign modal); plain text display
+- **Drafter**: league team that drafted them (entered via Assign modal); plain text display
+- **Time**: time of day the player was marked as drafted (HH:MM AM/PM), formatted by `fmtDraftTime()`
+- To undraft a player, uncheck them in the Batters/Pitchers/Player tab
+
 **Injuries tab**: lists all players with real injury notes, sorted by CBS rank; shows likely replacement (first healthy player at same position, with MI/CI/OF/CL overlaps)
 
 **Last Week tab**: MLB.com news from the past 7 days, organized by team; only player-relevant headlines (blocklist filters out TV/streaming/tickets/nostalgia/odds); deduplicated by normalized headline; shows "as of" timestamp
+
+**Draft Setup tab** — league configuration and one-time data imports:
+- **League members textarea**: one name per line; persists to `localStorage` (`ff_league_members`); used to populate the Drafter dropdown in the Assign modal and Drafted tab
+- **Import Draft Prices / Teams button**: reads a JSON file (format below) and *merges* prices, team assignments, and drafted status into existing state without touching roster, notes, or sal_paid for already-set players
+  - `importDraftPrices()` — merges `drafted`, `draft_price`, `drafted_by`; pre-fills `sal_paid` only where not already set
+  - Import file format: `{ "drafted": [...], "draft_price": {"Name": price}, "drafted_by": {"Name": "Team"} }`
+  - `docs/draft_import_2026.json`: pre-built import file for the 2026 draft (230 players, 10 teams), generated from `draft_results_2026.txt` via Python
 
 **Notes tab** — free-text scratch pad for draft-day notes:
 - Single `<textarea>` that auto-saves to `localStorage` (`ff_notes` key) on every keystroke
@@ -158,18 +182,21 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
 **Other header controls:**
 - **Run Scraper** button → opens GitHub Actions page to trigger a fresh scrape
-- **Save Draft** button → downloads `fantasy-bb-draft-YYYY-MM-DD.json` snapshot of all draft state (drafted players, roster slots, salaries paid, notes)
+- **Save Draft** button → downloads `fantasy-bb-draft-YYYY-MM-DD.json` snapshot of all draft state
 - **Load Draft** button → file picker; shows save timestamp and confirmation before restoring; fully replaces current draft state in memory and localStorage
-- **Reset Draft** button → clears all drafted marks, roster assignments, and salaries paid
+- **Reset Draft** button → clears all drafted marks, roster assignments, salaries paid, draft prices, timestamps, and drafter assignments
 
 **Draft snapshot format** (`fantasy-bb-draft-YYYY-MM-DD.json`):
 ```json
 {
-  "saved_at": "2026-03-29T...",
-  "drafted":  ["Aaron Judge", ...],
-  "roster":   { "slots": {"C1": "Austin Wells", ...}, "unassigned": [...] },
-  "sal_paid": {"Aaron Judge": 46, ...},
-  "notes":    "..."
+  "saved_at":    "2026-03-29T...",
+  "drafted":     ["Aaron Judge", ...],
+  "roster":      { "slots": {"C1": "Austin Wells", ...}, "unassigned": [...] },
+  "sal_paid":    {"Aaron Judge": 46, ...},
+  "draft_price": {"Aaron Judge": 65, ...},
+  "draft_times": {"Aaron Judge": "2026-03-29T14:23:00Z", ...},
+  "drafted_by":  {"Aaron Judge": "Merda", ...},
+  "notes":       "..."
 }
 ```
 
