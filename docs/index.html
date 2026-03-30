@@ -243,6 +243,7 @@ body {
 
 /* ── Ranked list ─────────────────────────────────────────────────────────── */
 #ranked-section { padding: 0 16px 24px; }
+#player-section { padding: 0 16px 24px; }
 #ranked-header {
   display: flex;
   align-items: center;
@@ -252,18 +253,39 @@ body {
   flex-wrap: wrap;
 }
 #ranked-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
-#list-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-left: auto; }
-#pos-filter, #search-box {
+#list-controls, #player-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-left: auto; }
+#player-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0 8px;
+  border-top: 2px solid #c8d3e0;
+  flex-wrap: wrap;
+}
+#player-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
+#pos-pool-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 0 8px;
+  border-top: 1px solid #c8d3e0;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+#pos-pool-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
+#pos-filter, #search-box, #search-box-player {
   padding: 4px 8px;
   border: 1px solid #b0c4d8;
   border-radius: 4px;
   font-size: 12px;
   background: white;
 }
-#search-box { width: 140px; }
+#search-box, #search-box-player { width: 140px; }
 
-#ranked-table { border-collapse: collapse; width: 100%; max-width: 960px; }
-#ranked-table thead th {
+#ranked-table, #player-table, #pos-pool-table { border-collapse: collapse; width: 100%; max-width: 960px; }
+#ranked-table thead th,
+#player-table thead th,
+#pos-pool-table thead th {
   background: #1e3a5f;
   color: #cfe0f8;
   padding: 5px 10px;
@@ -272,14 +294,22 @@ body {
   font-weight: 700;
   letter-spacing: .4px;
 }
-#ranked-table thead th.proj-col { text-align: right; }
-#ranked-table tbody td {
+#ranked-table thead th.proj-col,
+#player-table thead th.proj-col,
+#pos-pool-table thead th.proj-col { text-align: right; }
+#ranked-table tbody td,
+#player-table tbody td,
+#pos-pool-table tbody td {
   padding: 4px 10px;
   border-bottom: 1px solid #e8eef5;
   font-size: 12px;
 }
-#ranked-table tbody tr:hover td { background: #f5f8ff; cursor: default; }
-#ranked-table .rank-num { color: #7a8ca0; text-align: right; width: 36px; }
+#ranked-table tbody tr:hover td,
+#player-table tbody tr:hover td,
+#pos-pool-table tbody tr:hover td { background: #f5f8ff; cursor: default; }
+#ranked-table .rank-num,
+#player-table .rank-num,
+#pos-pool-table .rank-num { color: #7a8ca0; text-align: right; width: 36px; }
 .row-drafted td { opacity: .5; }
 .row-drafted .r-name { text-decoration: line-through; }
 .r-injury { color: #c0392b; font-size: 11px; }
@@ -527,6 +557,7 @@ body {
 <!-- Tabs -->
 <div id="tabs">
   <button class="tab-btn" onclick="switchTab('readme',this)">Read Me</button>
+  <button class="tab-btn" onclick="switchTab('player',this)">Player</button>
   <button class="tab-btn active" onclick="switchTab('batters',this)">Batters</button>
   <button class="tab-btn" onclick="switchTab('pitchers',this)">Pitchers</button>
   <button class="tab-btn" onclick="switchTab('injuries',this)">Injuries</button>
@@ -627,7 +658,7 @@ body {
   <div id="ranked-header">
     <h2>Available Players — by Rank</h2>
     <div id="list-controls">
-      <input type="text" id="search-box" placeholder="Search name..." oninput="renderList()">
+      <input type="text" id="search-box" placeholder="Search name..." oninput="syncSearchBoxes(this,'search-box-player'); renderList()">
       <select id="pos-filter" onchange="renderList()"></select>
       <label><input type="checkbox" id="list-hide-drafted" onchange="renderList()"> Hide drafted</label>
     </div>
@@ -635,6 +666,29 @@ body {
   <table id="ranked-table">
     <thead id="list-head"></thead>
     <tbody id="list-body"></tbody>
+  </table>
+</div>
+
+<!-- Player tab -->
+<div id="player-section" style="display:none">
+  <div id="player-header">
+    <h2>Available Players</h2>
+    <div id="player-controls">
+      <input type="text" id="search-box-player" placeholder="Search name..."
+             oninput="syncSearchBoxes(this,'search-box'); renderPlayerTab()">
+      <label><input type="checkbox" id="player-hide-drafted" onchange="renderPlayerTab()"> Hide drafted</label>
+    </div>
+  </div>
+  <table id="player-table">
+    <thead id="player-head"></thead>
+    <tbody id="player-body"></tbody>
+  </table>
+  <div id="pos-pool-header">
+    <h2 id="pos-pool-title">Remaining at Position</h2>
+  </div>
+  <table id="pos-pool-table">
+    <thead id="pos-pool-head"></thead>
+    <tbody id="pos-pool-body"></tbody>
   </table>
 </div>
 
@@ -922,9 +976,11 @@ function render() {
   const isStats    = currentTab === 'mystats';
   const isReadme   = currentTab === 'readme';
   const isNotes    = currentTab === 'notes';
+  const isPlayer   = currentTab === 'player';
   document.getElementById('readme-section').style.display   = isReadme   ? 'block' : 'none';
   document.getElementById('grid-wrapper').style.display     = isGrid     ? '' : 'none';
   document.getElementById('ranked-section').style.display   = isGrid     ? '' : 'none';
+  document.getElementById('player-section').style.display   = isPlayer   ? '' : 'none';
   document.getElementById('injuries-section').style.display = isInjuries ? 'block' : 'none';
   document.getElementById('news-section').style.display     = isNews     ? 'block' : 'none';
   document.getElementById('stats-section').style.display    = isStats    ? 'block' : 'none';
@@ -934,6 +990,7 @@ function render() {
   if (isInjuries)   renderInjuries();
   else if (isNews)  renderNews();
   else if (isStats) renderStats();
+  else if (isPlayer) renderPlayerTab();
   else { buildPosFilter(); renderGrid(); renderList(); }
 }
 
@@ -1214,6 +1271,13 @@ function sortList(col) {
 }
 
 function switchTab(tab, btn) {
+  const mainBox   = document.getElementById('search-box');
+  const playerBox = document.getElementById('search-box-player');
+  if (tab === 'player') {
+    playerBox.value = mainBox.value;
+  } else if (currentTab === 'player') {
+    mainBox.value = playerBox.value;
+  }
   currentTab = tab;
   listSortCol = 'rank';
   listSortDir = 'asc';
@@ -1576,6 +1640,178 @@ function renderList() {
     const name = (el.dataset.name || '').toLowerCase();
     el.classList.toggle('search-hl', q.length > 0 && name.includes(q));
   });
+}
+
+// ── Player tab ─────────────────────────────────────────────────────────────
+function syncSearchBoxes(src, otherId) {
+  const other = document.getElementById(otherId);
+  if (other) other.value = src.value;
+}
+
+function normPosGroup(pos) {
+  if (['LF', 'CF', 'RF', 'OF'].includes(pos)) return 'OF';
+  return pos;
+}
+
+function buildAllPlayerMap() {
+  const rankings    = DATA.rankings    || {};
+  const dc          = DATA.depth_chart || {};
+  const projections = DATA.projections || {};
+  const batProj     = projections.batters  || {};
+  const pitProj     = projections.pitchers || {};
+  const players     = {};
+
+  Object.entries(dc).forEach(([team, positions]) => {
+    Object.entries(positions).forEach(([pos, list]) => {
+      list.forEach(p => {
+        if (!players[p.name]) {
+          players[p.name] = { name: p.name, team, pos, injury: p.injury, rank: 99999 };
+        } else if (p.injury && !players[p.name].injury) {
+          players[p.name].injury = p.injury;
+        }
+      });
+    });
+  });
+
+  Object.entries(rankings).forEach(([name, info]) => {
+    if (!players[name]) {
+      players[name] = { name, team: info.team, pos: info.pos, injury: null, rank: info.rank };
+    } else {
+      players[name].rank = info.rank;
+      if (info.pos) players[name].pos = info.pos;
+    }
+  });
+
+  [batProj, pitProj].forEach(projMap => {
+    Object.keys(projMap).forEach(name => {
+      const s = projMap[name];
+      if (!players[name]) {
+        players[name] = { name, team: s._team || '', pos: s._pos || '', injury: null, rank: 99999 };
+      } else {
+        if (!players[name].team && s._team) players[name].team = s._team;
+        if (!players[name].pos  && s._pos)  players[name].pos  = s._pos;
+      }
+    });
+  });
+
+  return players;
+}
+
+function renderPlayerTableInto(headId, bodyId, list) {
+  if (!DATA) return;
+  const projections = DATA.projections || {};
+  const batProj     = projections.batters  || {};
+  const pitProj     = projections.pitchers || {};
+  const hasBatProj  = Object.keys(batProj).length > 0;
+  const hasPitProj  = Object.keys(pitProj).length > 0;
+  const salaries    = DATA.salaries || {};
+  const hasSal      = Object.keys(salaries).length > 0;
+  const batCols     = hasBatProj ? BATTER_PROJ_COLS  : [];
+  const pitCols     = hasPitProj ? PITCHER_PROJ_COLS : [];
+  const colspan     = 4 + (hasSal ? 1 : 0) + batCols.length + pitCols.length;
+
+  const thW = (w, extra) =>
+    `<th style="width:${w}"${extra ? ` class="${extra}"` : ''}>`;
+
+  document.getElementById(headId).innerHTML =
+    `<tr>
+       ${thW('36px','')}Rank</th>
+       <th>Name</th>
+       ${thW('42px','')}Team</th>
+       ${thW('42px','')}Pos</th>
+       ${hasSal ? `${thW('42px','proj-col')}Sal</th>` : ''}
+       ${batCols.map(c => `${thW('42px','proj-col')}${c}</th>`).join('')}
+       ${pitCols.map(c => `${thW('42px','proj-col')}${c}</th>`).join('')}
+     </tr>`;
+
+  if (!list.length) {
+    document.getElementById(bodyId).innerHTML =
+      `<tr><td colspan="${colspan}" style="padding:12px;color:#7a8ca0">No players found.</td></tr>`;
+    return;
+  }
+
+  let html = '';
+  list.forEach(p => {
+    const isDrafted = drafted.has(p.name);
+    const dftCls    = isDrafted ? ' row-drafted' : '';
+    const rankStr   = p.rank < 99999 ? p.rank : '—';
+    const bStats    = batProj[p.name] || {};
+    const pStats    = pitProj[p.name] || {};
+
+    const batCells = batCols.map(col => {
+      const val = bStats[col];
+      return `<td class="${val ? 'proj-val' : 'proj-val missing'}">${val ? esc(val) : '—'}</td>`;
+    }).join('');
+    const pitCells = pitCols.map(col => {
+      const val = pStats[col];
+      return `<td class="${val ? 'proj-val' : 'proj-val missing'}">${val ? esc(val) : '—'}</td>`;
+    }).join('');
+    const salCell = hasSal
+      ? (() => {
+          const sal = salaries[p.name];
+          return sal ? `<td class="proj-val sal-val">${esc(sal)}</td>`
+                     : `<td class="proj-val missing">—</td>`;
+        })()
+      : '';
+
+    html += `<tr class="${dftCls}"
+                 onmouseenter="showTip(event,'${jsStr(p.name)}','${jsStr(p.injury||'')}')"
+                 onmouseleave="hideTip()">
+               <td class="rank-num">${rankStr}</td>
+               <td>
+                 <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
+                   <input type="checkbox" ${isDrafted ? 'checked' : ''}
+                          onchange="handleCheck(this,'${jsStr(p.name)}')">
+                   <span class="r-name">${esc(p.name)}</span>
+                 </label>
+               </td>
+               <td>${esc(p.team || '')}</td>
+               <td>${esc(p.pos  || '')}</td>
+               ${salCell}${batCells}${pitCells}
+             </tr>`;
+  });
+
+  document.getElementById(bodyId).innerHTML = html;
+}
+
+function renderPlayerTab() {
+  if (!DATA) return;
+
+  const searchVal   = document.getElementById('search-box-player').value.trim().toLowerCase();
+  const hideDrafted = document.getElementById('player-hide-drafted').checked;
+  const allPlayers  = Object.values(buildAllPlayerMap());
+
+  // Top table: players matching the search (optionally hiding drafted)
+  const matched = allPlayers.filter(p => {
+    if (hideDrafted && drafted.has(p.name)) return false;
+    if (searchVal && !p.name.toLowerCase().includes(searchVal)) return false;
+    return true;
+  });
+  matched.sort((a, b) => a.rank - b.rank);
+  renderPlayerTableInto('player-head', 'player-body', matched);
+
+  // Collect normalized position groups from matched players
+  const posGroups = new Set();
+  matched.forEach(p => {
+    const pg = normPosGroup((p.pos || '').toUpperCase());
+    if (pg) posGroups.add(pg);
+  });
+
+  // Bottom table: all non-drafted players at those positions
+  const remaining = allPlayers.filter(p => {
+    if (drafted.has(p.name)) return false;
+    const pg = normPosGroup((p.pos || '').toUpperCase());
+    return posGroups.has(pg);
+  });
+  remaining.sort((a, b) => a.rank - b.rank);
+
+  const posLabel = [...posGroups].sort().join(', ');
+  document.getElementById('pos-pool-title').textContent =
+    posLabel
+      ? `Remaining Available — ${posLabel} (${remaining.length})`
+      : 'Remaining at Position';
+
+  renderPlayerTableInto('pos-pool-head', 'pos-pool-body', remaining);
 }
 
 // ── News ───────────────────────────────────────────────────────────────────
