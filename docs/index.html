@@ -2696,18 +2696,17 @@ function getPitcherPos(name) {
 
 // Returns the ROSTER_SLOT IDs this player is eligible to fill
 function playerSlotElig(name) {
-  const pitPos = getPitcherPos(name);
-  if (pitPos) {
-    return ROSTER_SLOTS.filter(s => {
-      if (s.type !== 'p') return false;
-      if (pitPos === 'SP') return s.elig.includes('SP');
-      if (pitPos === 'CL') return s.elig.includes('CL') || s.elig.includes('RP');
-      if (pitPos === 'RP') return s.elig.includes('RP');
-      return false;
-    }).map(s => s.id);
+  if (getPitcherPos(name)) {
+    return ROSTER_SLOTS.filter(s => s.type === 'p').map(s => s.id);
   }
   const elig = DATA?.eligibility?.positions_2025?.[name] || [];
   return ROSTER_SLOTS.filter(s => s.type === 'b' && s.elig.some(e => elig.includes(e))).map(s => s.id);
+}
+
+// Returns 'SP' or 'RP' display label for a pitcher
+function pitcherDisplayPos(name) {
+  const p = getPitcherPos(name);
+  return (p === 'SP') ? 'SP' : 'RP';
 }
 
 // Bipartite matching — assign players to roster slots optimally.
@@ -2782,8 +2781,9 @@ function renderLeague() {
 
     function slotRow(slot) {
       const name = slots[slot.id];
+      const lbl  = (slot.type === 'p' && name) ? pitcherDisplayPos(name) : slot.label;
       return `<div class="lslot">
-        <span class="lslot-lbl">${esc(slot.label)}</span>
+        <span class="lslot-lbl">${esc(lbl)}</span>
         <span class="lslot-name${name ? '' : ' empty'}" title="${name ? esc(name) : ''}">${name ? esc(lastName(name)) : '—'}</span>
         ${name && salStr(name) ? `<span class="lslot-sal">${salStr(name)}</span>` : ''}
       </div>`;
