@@ -203,11 +203,12 @@ body {
 #league-members-area:focus { outline: none; border-color: #1e3a5f; box-shadow: inset 0 1px 3px rgba(0,0,0,.06), 0 0 0 2px rgba(30,58,95,.12); }
 #notes-header { display: flex; align-items: center; gap: 12px; padding: 12px 0 8px; }
 #notes-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
-#btn-clear-notes {
+#btn-clear-notes, #btn-import-prices {
   background: none; border: 1px solid #c0ccd8; color: #7a8ca0;
   padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;
 }
 #btn-clear-notes:hover { background: #f5f8ff; color: #c0392b; border-color: #c0392b; }
+#btn-import-prices:hover { background: #f5f8ff; color: #1e3a5f; border-color: #1e3a5f; }
 #notes-area {
   width: 100%; max-width: 800px; height: 480px;
   font-family: inherit; font-size: 13px; line-height: 1.6;
@@ -751,6 +752,16 @@ body {
   </div>
   <p id="setup-label">League members — one name per line</p>
   <textarea id="league-members-area" placeholder="e.g.&#10;Alice&#10;Bob&#10;Charlie" oninput="saveLeagueMembers()"></textarea>
+  <div style="margin-top:20px;padding-top:16px;border-top:1px solid #c8d3e0">
+    <p style="font-size:12px;color:#4a6a8a;margin-bottom:8px">
+      Import draft results — merges prices, teams, and drafted status without touching your roster or notes.
+    </p>
+    <button id="btn-import-prices" onclick="document.getElementById('import-prices-input').click()">
+      Import Draft Prices / Teams
+    </button>
+    <input type="file" id="import-prices-input" accept=".json" style="display:none" onchange="importDraftPrices(this)">
+    <span id="import-status" style="margin-left:10px;font-size:12px;color:#1a6640"></span>
+  </div>
 </div>
 
 <!-- Notes -->
@@ -1002,6 +1013,38 @@ function renderBudget() {
 
 function saveLeagueMembers() {
   localStorage.setItem('ff_league_members', document.getElementById('league-members-area').value);
+}
+
+function importDraftPrices(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imp = JSON.parse(e.target.result);
+      // Merge drafted names
+      (imp.drafted || []).forEach(n => drafted.add(n));
+      localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
+      // Merge prices (imported value wins)
+      Object.assign(draftPrice, imp.draft_price || {});
+      localStorage.setItem('ff_draft_price', JSON.stringify(draftPrice));
+      // Merge teams (imported value wins)
+      Object.assign(draftedBy, imp.drafted_by || {});
+      localStorage.setItem('ff_drafted_by', JSON.stringify(draftedBy));
+      // Pre-fill salPaid only where not already set by user
+      Object.entries(imp.draft_price || {}).forEach(([name, price]) => {
+        if (!salPaid[name]) salPaid[name] = price;
+      });
+      localStorage.setItem('ff_sal_paid', JSON.stringify(salPaid));
+      const count = (imp.drafted || []).length;
+      document.getElementById('import-status').textContent = `✓ Imported ${count} players`;
+      render(); renderRoster();
+    } catch(err) {
+      document.getElementById('import-status').textContent = '✗ ' + err.message;
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
 }
 
 function getLeagueMembers() {
