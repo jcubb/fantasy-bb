@@ -478,10 +478,14 @@ body {
 .aslot-btn.au  { background: #f8f8e0; border-color: #c8c840; color: #606000; }
 .aslot-btn.au:hover { background: #f0f0c0; }
 #assign-legend { font-size: 10px; color: #9ab0c8; margin-bottom: 10px; }
-#assign-price-row { margin: 0 0 12px; font-size: 12px; color: #2a4a6a; }
+#assign-price-row { margin: 0 0 12px; font-size: 12px; color: #2a4a6a; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 #assign-price-row input {
   width: 60px; padding: 3px 6px; border: 1px solid #b0c4d8;
   border-radius: 4px; font-size: 12px; margin-left: 3px;
+}
+#assign-drafter-select {
+  padding: 3px 6px; border: 1px solid #b0c4d8;
+  border-radius: 4px; font-size: 12px; background: white; color: #1a2035;
 }
 #drafted-section { padding: 0 16px 24px; }
 #drafted-header {
@@ -823,7 +827,8 @@ body {
     <div id="assign-title"></div>
     <div id="assign-elig"></div>
     <div id="assign-price-row">
-      Draft price: $<input type="number" id="assign-price-input" min="0" max="999" placeholder="0">
+      <span>Draft price: $<input type="number" id="assign-price-input" min="0" max="999" placeholder="0"></span>
+      <span>Team: <select id="assign-drafter-select"></select></span>
     </div>
     <div id="assign-slots"></div>
     <div id="assign-legend"></div>
@@ -903,6 +908,7 @@ let roster      = JSON.parse(localStorage.getItem('ff_roster') || 'null')
 let salPaid     = JSON.parse(localStorage.getItem('ff_sal_paid') || '{}');
 let draftPrice  = JSON.parse(localStorage.getItem('ff_draft_price') || '{}');
 let draftTimes  = JSON.parse(localStorage.getItem('ff_draft_times') || '{}');
+let draftedBy   = JSON.parse(localStorage.getItem('ff_drafted_by')  || '{}');
 
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
@@ -950,12 +956,19 @@ function handleCheck(cb, name) {
     drafted.delete(name);
     delete draftTimes[name];
     delete draftPrice[name];
+    delete draftedBy[name];
     localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
     localStorage.setItem('ff_draft_times', JSON.stringify(draftTimes));
     localStorage.setItem('ff_draft_price', JSON.stringify(draftPrice));
+    localStorage.setItem('ff_drafted_by',  JSON.stringify(draftedBy));
     rosterRemove(name);
     render(); renderRoster();
   }
+}
+
+function setDraftedBy(name, val) {
+  if (val) draftedBy[name] = val; else delete draftedBy[name];
+  localStorage.setItem('ff_drafted_by', JSON.stringify(draftedBy));
 }
 
 function setDraftPrice(name, val) {
@@ -991,6 +1004,11 @@ function saveLeagueMembers() {
   localStorage.setItem('ff_league_members', document.getElementById('league-members-area').value);
 }
 
+function getLeagueMembers() {
+  return (localStorage.getItem('ff_league_members') || '')
+    .split('\n').map(s => s.trim()).filter(Boolean);
+}
+
 function saveNotes() {
   localStorage.setItem('ff_notes', document.getElementById('notes-area').value);
 }
@@ -1008,6 +1026,7 @@ function saveDraft() {
     sal_paid:    salPaid,
     draft_price: draftPrice,
     draft_times: draftTimes,
+    drafted_by:  draftedBy,
     notes:       document.getElementById('notes-area').value,
   };
   const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json' });
@@ -1032,11 +1051,13 @@ function loadDraft(input) {
       salPaid    = snap.sal_paid    || {};
       draftPrice = snap.draft_price || {};
       draftTimes = snap.draft_times || {};
+      draftedBy  = snap.drafted_by  || {};
       localStorage.setItem('ff_drafted',     JSON.stringify([...drafted]));
       localStorage.setItem('ff_roster',      JSON.stringify(roster));
       localStorage.setItem('ff_sal_paid',    JSON.stringify(salPaid));
       localStorage.setItem('ff_draft_price', JSON.stringify(draftPrice));
       localStorage.setItem('ff_draft_times', JSON.stringify(draftTimes));
+      localStorage.setItem('ff_drafted_by',  JSON.stringify(draftedBy));
       const notes = snap.notes || '';
       document.getElementById('notes-area').value = notes;
       localStorage.setItem('ff_notes', notes);
@@ -1058,9 +1079,11 @@ function resetDraft() {
   salPaid    = {};
   draftPrice = {};
   draftTimes = {};
+  draftedBy  = {};
   localStorage.removeItem('ff_sal_paid');
   localStorage.removeItem('ff_draft_price');
   localStorage.removeItem('ff_draft_times');
+  localStorage.removeItem('ff_drafted_by');
   render(); renderRoster();
 }
 
@@ -2015,6 +2038,7 @@ function renderDrafted() {
        ${batCols.map(c => `${thW('42px','proj-col')}${c}</th>`).join('')}
        ${pitCols.map(c => `${thW('42px','proj-col')}${c}</th>`).join('')}
        <th style="width:60px">Time</th>
+       <th style="width:110px">Drafter</th>
      </tr>`;
 
   if (!draftedList.length) {
@@ -2085,6 +2109,16 @@ function renderDrafted() {
                </td>
                ${salCell}${batCells}${pitCells}
                <td class="draft-time-cell">${fmtDraftTime(draftTimes[p.name])}</td>
+               <td>${(() => {
+                   const members = getLeagueMembers();
+                   const cur = draftedBy[p.name] || '';
+                   if (!members.length) return `<span style="color:#c0ccd8;font-size:11px">—</span>`;
+                   return `<select class="draft-price-input" style="width:100%;font-weight:400;color:#1a2035"
+                                   onchange="setDraftedBy('${jsStr(p.name)}',this.value)">
+                             <option value=""></option>
+                             ${members.map(m => `<option value="${esc(m)}"${m===cur?' selected':''}>${esc(m)}</option>`).join('')}
+                           </select>`;
+                 })()}</td>
              </tr>`;
   });
 
@@ -2398,6 +2432,13 @@ function openAssign(name) {
     'Blue = eligible & open  •  Orange = eligible but filled (will displace)';
   const priceInput = document.getElementById('assign-price-input');
   priceInput.value = draftPrice[name] ? draftPrice[name] : '';
+
+  const members = getLeagueMembers();
+  const sel = document.getElementById('assign-drafter-select');
+  const current = draftedBy[name] || '';
+  sel.innerHTML = `<option value="">— who drafted? —</option>` +
+    members.map(m => `<option value="${esc(m)}"${m === current ? ' selected' : ''}>${esc(m)}</option>`).join('');
+
   document.getElementById('assign-overlay').style.display = 'flex';
   setTimeout(() => priceInput.focus(), 30);
 }
@@ -2405,12 +2446,17 @@ function openAssign(name) {
 function confirmAssign(slotId) {
   if (!assignTarget) return;
   const { name } = assignTarget;
-  const priceVal = parseInt(document.getElementById('assign-price-input').value, 10);
+  const priceVal   = parseInt(document.getElementById('assign-price-input').value, 10);
+  const drafterVal = document.getElementById('assign-drafter-select').value;
   if (priceVal > 0) {
     draftPrice[name] = priceVal;
     localStorage.setItem('ff_draft_price', JSON.stringify(draftPrice));
     salPaid[name] = priceVal;
     localStorage.setItem('ff_sal_paid', JSON.stringify(salPaid));
+  }
+  if (drafterVal) {
+    draftedBy[name] = drafterVal;
+    localStorage.setItem('ff_drafted_by', JSON.stringify(draftedBy));
   }
   drafted.add(name);
   if (!draftTimes[name]) {
