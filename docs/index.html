@@ -282,10 +282,11 @@ body {
 }
 #search-box, #search-box-player { width: 140px; }
 
-#ranked-table, #player-table, #pos-pool-table { border-collapse: collapse; width: 100%; max-width: 960px; }
+#ranked-table, #player-table, #pos-pool-table, #drafted-table { border-collapse: collapse; width: 100%; max-width: 960px; }
 #ranked-table thead th,
 #player-table thead th,
-#pos-pool-table thead th {
+#pos-pool-table thead th,
+#drafted-table thead th {
   background: #1e3a5f;
   color: #cfe0f8;
   padding: 5px 10px;
@@ -296,20 +297,24 @@ body {
 }
 #ranked-table thead th.proj-col,
 #player-table thead th.proj-col,
-#pos-pool-table thead th.proj-col { text-align: right; }
+#pos-pool-table thead th.proj-col,
+#drafted-table thead th.proj-col { text-align: right; }
 #ranked-table tbody td,
 #player-table tbody td,
-#pos-pool-table tbody td {
+#pos-pool-table tbody td,
+#drafted-table tbody td {
   padding: 4px 10px;
   border-bottom: 1px solid #e8eef5;
   font-size: 12px;
 }
 #ranked-table tbody tr:hover td,
 #player-table tbody tr:hover td,
-#pos-pool-table tbody tr:hover td { background: #f5f8ff; cursor: default; }
+#pos-pool-table tbody tr:hover td,
+#drafted-table tbody tr:hover td { background: #f5f8ff; cursor: default; }
 #ranked-table .rank-num,
 #player-table .rank-num,
-#pos-pool-table .rank-num { color: #7a8ca0; text-align: right; width: 36px; }
+#pos-pool-table .rank-num,
+#drafted-table .rank-num { color: #7a8ca0; text-align: right; width: 36px; }
 .row-drafted td { opacity: .5; }
 .row-drafted .r-name { text-decoration: line-through; }
 .r-injury { color: #c0392b; font-size: 11px; }
@@ -461,6 +466,23 @@ body {
 .aslot-btn.au  { background: #f8f8e0; border-color: #c8c840; color: #606000; }
 .aslot-btn.au:hover { background: #f0f0c0; }
 #assign-legend { font-size: 10px; color: #9ab0c8; margin-bottom: 10px; }
+#assign-price-row { margin: 0 0 12px; font-size: 12px; color: #2a4a6a; }
+#assign-price-row input {
+  width: 60px; padding: 3px 6px; border: 1px solid #b0c4d8;
+  border-radius: 4px; font-size: 12px; margin-left: 3px;
+}
+#drafted-section { padding: 0 16px 24px; }
+#drafted-header {
+  display: flex; align-items: center; gap: 14px; padding: 12px 0 8px;
+  border-top: 2px solid #c8d3e0; flex-wrap: wrap;
+}
+#drafted-header h2 { font-size: 14px; font-weight: 700; color: #1e3a5f; }
+.draft-price-input {
+  width: 52px; padding: 2px 5px; border: 1px solid #b0c4d8;
+  border-radius: 4px; font-size: 12px; text-align: right;
+  font-weight: 600; color: #1a6640; background: white;
+}
+.draft-time-cell { color: #7a8ca0; font-size: 11px; white-space: nowrap; }
 #assign-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .assign-act-btn {
   padding: 6px 14px; border-radius: 5px; font-size: 12px; cursor: pointer;
@@ -560,6 +582,7 @@ body {
   <button class="tab-btn" onclick="switchTab('player',this)">Player</button>
   <button class="tab-btn active" onclick="switchTab('batters',this)">Batters</button>
   <button class="tab-btn" onclick="switchTab('pitchers',this)">Pitchers</button>
+  <button class="tab-btn" onclick="switchTab('drafted',this)">Drafted</button>
   <button class="tab-btn" onclick="switchTab('injuries',this)">Injuries</button>
   <button class="tab-btn" onclick="switchTab('news',this)">Last Week</button>
   <button class="tab-btn" onclick="switchTab('mystats',this)">My Team</button>
@@ -692,6 +715,18 @@ body {
   </table>
 </div>
 
+<!-- Drafted tab -->
+<div id="drafted-section" style="display:none">
+  <div id="drafted-header">
+    <h2>Drafted Players</h2>
+    <span id="drafted-count" style="font-size:11px;color:#7a8ca0"></span>
+  </div>
+  <table id="drafted-table">
+    <thead id="drafted-head"></thead>
+    <tbody id="drafted-body"></tbody>
+  </table>
+</div>
+
 <!-- Notes -->
 <div id="notes-section">
   <div id="notes-header">
@@ -765,6 +800,9 @@ body {
   <div id="assign-box">
     <div id="assign-title"></div>
     <div id="assign-elig"></div>
+    <div id="assign-price-row">
+      Draft price: $<input type="number" id="assign-price-input" min="0" max="999" placeholder="0">
+    </div>
     <div id="assign-slots"></div>
     <div id="assign-legend"></div>
     <div id="assign-actions">
@@ -841,6 +879,8 @@ let listSortDir = 'asc';
 let roster      = JSON.parse(localStorage.getItem('ff_roster') || 'null')
                   || { slots: {}, unassigned: [] };
 let salPaid     = JSON.parse(localStorage.getItem('ff_sal_paid') || '{}');
+let draftPrice  = JSON.parse(localStorage.getItem('ff_draft_price') || '{}');
+let draftTimes  = JSON.parse(localStorage.getItem('ff_draft_times') || '{}');
 
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
@@ -875,15 +915,33 @@ function toggleDrafted(name) {
 function handleCheck(cb, name) {
   if (cb.checked) {
     drafted.add(name);
+    if (!draftTimes[name]) {
+      draftTimes[name] = new Date().toISOString();
+      localStorage.setItem('ff_draft_times', JSON.stringify(draftTimes));
+    }
     localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
     if (!isOnRoster(name)) { rosterAdd(name, '__unassigned', true); saveRoster(); }
     openAssign(name);
   } else {
     drafted.delete(name);
+    delete draftTimes[name];
+    delete draftPrice[name];
     localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
+    localStorage.setItem('ff_draft_times', JSON.stringify(draftTimes));
+    localStorage.setItem('ff_draft_price', JSON.stringify(draftPrice));
     rosterRemove(name);
     render(); renderRoster();
   }
+}
+
+function setDraftPrice(name, val) {
+  const n = parseInt(val, 10);
+  if (n > 0) draftPrice[name] = n; else delete draftPrice[name];
+  localStorage.setItem('ff_draft_price', JSON.stringify(draftPrice));
+  // Keep salPaid in sync so My Roster reflects the updated price
+  if (n > 0) salPaid[name] = n; else delete salPaid[name];
+  localStorage.setItem('ff_sal_paid', JSON.stringify(salPaid));
+  renderBudget();
 }
 
 function setSalPaid(name, val) {
@@ -916,11 +974,13 @@ function clearNotes() {
 
 function saveDraft() {
   const snapshot = {
-    saved_at: new Date().toISOString(),
-    drafted:  [...drafted],
-    roster:   roster,
-    sal_paid: salPaid,
-    notes:    document.getElementById('notes-area').value,
+    saved_at:    new Date().toISOString(),
+    drafted:     [...drafted],
+    roster:      roster,
+    sal_paid:    salPaid,
+    draft_price: draftPrice,
+    draft_times: draftTimes,
+    notes:       document.getElementById('notes-area').value,
   };
   const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json' });
   const a    = document.createElement('a');
@@ -939,12 +999,16 @@ function loadDraft(input) {
       const snap = JSON.parse(e.target.result);
       if (!snap.drafted || !snap.roster) throw new Error('Unrecognized file format.');
       if (!confirm(`Load draft saved at ${new Date(snap.saved_at).toLocaleString()}?\nThis will replace your current draft state.`)) return;
-      drafted = new Set(snap.drafted);
-      roster  = snap.roster;
-      salPaid = snap.sal_paid || {};
-      localStorage.setItem('ff_drafted',  JSON.stringify([...drafted]));
-      localStorage.setItem('ff_roster',   JSON.stringify(roster));
-      localStorage.setItem('ff_sal_paid', JSON.stringify(salPaid));
+      drafted    = new Set(snap.drafted);
+      roster     = snap.roster;
+      salPaid    = snap.sal_paid    || {};
+      draftPrice = snap.draft_price || {};
+      draftTimes = snap.draft_times || {};
+      localStorage.setItem('ff_drafted',     JSON.stringify([...drafted]));
+      localStorage.setItem('ff_roster',      JSON.stringify(roster));
+      localStorage.setItem('ff_sal_paid',    JSON.stringify(salPaid));
+      localStorage.setItem('ff_draft_price', JSON.stringify(draftPrice));
+      localStorage.setItem('ff_draft_times', JSON.stringify(draftTimes));
       const notes = snap.notes || '';
       document.getElementById('notes-area').value = notes;
       localStorage.setItem('ff_notes', notes);
@@ -963,8 +1027,12 @@ function resetDraft() {
   localStorage.removeItem('ff_drafted');
   roster = { slots: {}, unassigned: [] };
   localStorage.removeItem('ff_roster');
-  salPaid = {};
+  salPaid    = {};
+  draftPrice = {};
+  draftTimes = {};
   localStorage.removeItem('ff_sal_paid');
+  localStorage.removeItem('ff_draft_price');
+  localStorage.removeItem('ff_draft_times');
   render(); renderRoster();
 }
 
@@ -977,10 +1045,12 @@ function render() {
   const isReadme   = currentTab === 'readme';
   const isNotes    = currentTab === 'notes';
   const isPlayer   = currentTab === 'player';
+  const isDrafted  = currentTab === 'drafted';
   document.getElementById('readme-section').style.display   = isReadme   ? 'block' : 'none';
   document.getElementById('grid-wrapper').style.display     = isGrid     ? '' : 'none';
   document.getElementById('ranked-section').style.display   = isGrid     ? '' : 'none';
   document.getElementById('player-section').style.display   = isPlayer   ? '' : 'none';
+  document.getElementById('drafted-section').style.display  = isDrafted  ? '' : 'none';
   document.getElementById('injuries-section').style.display = isInjuries ? 'block' : 'none';
   document.getElementById('news-section').style.display     = isNews     ? 'block' : 'none';
   document.getElementById('stats-section').style.display    = isStats    ? 'block' : 'none';
@@ -991,6 +1061,7 @@ function render() {
   else if (isNews)  renderNews();
   else if (isStats) renderStats();
   else if (isPlayer) renderPlayerTab();
+  else if (isDrafted) renderDrafted();
   else { buildPosFilter(); renderGrid(); renderList(); }
 }
 
@@ -1855,6 +1926,140 @@ function renderPlayerTab() {
   renderPlayerTableInto('pos-pool-head', 'pos-pool-body', remaining, true);
 }
 
+// ── Drafted tab ─────────────────────────────────────────────────────────────
+function fmtDraftTime(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+function renderDrafted() {
+  if (!DATA) return;
+
+  const allPlayers  = Object.values(buildAllPlayerMap());
+  const draftedList = allPlayers.filter(p => drafted.has(p.name));
+  // Sort by draft time descending (most recently drafted first)
+  draftedList.sort((a, b) => {
+    const ta = draftTimes[a.name] || '';
+    const tb = draftTimes[b.name] || '';
+    if (ta && tb) return tb.localeCompare(ta);
+    if (ta) return -1;
+    if (tb) return 1;
+    return a.rank - b.rank;
+  });
+
+  document.getElementById('drafted-count').textContent =
+    draftedList.length ? `${draftedList.length} player${draftedList.length !== 1 ? 's' : ''}` : '';
+
+  const projections = DATA.projections || {};
+  const batProj     = projections.batters  || {};
+  const pitProj     = projections.pitchers || {};
+  const hasBatProj  = Object.keys(batProj).length > 0;
+  const hasPitProj  = Object.keys(pitProj).length > 0;
+  const salaries    = DATA.salaries || {};
+  const hasSal      = Object.keys(salaries).length > 0;
+  const batCols     = hasBatProj ? BATTER_PROJ_COLS  : [];
+  const pitCols     = hasPitProj ? PITCHER_PROJ_COLS : [];
+  const eligData    = (DATA.eligibility?.positions_2025) || {};
+  const hasElig     = Object.keys(eligData).length > 0;
+
+  const dc      = DATA.depth_chart || {};
+  const dcNames = new Set();
+  Object.values(dc).forEach(positions =>
+    Object.values(positions).forEach(lst => lst.forEach(p => dcNames.add(p.name)))
+  );
+
+  const thW = (w, extra) =>
+    `<th style="width:${w}"${extra ? ` class="${extra}"` : ''}>`;
+
+  document.getElementById('drafted-head').innerHTML =
+    `<tr>
+       ${thW('36px','')}Rank</th>
+       <th style="width:58px;text-align:center">Starting</th>
+       <th>Name</th>
+       ${thW('42px','')}Team</th>
+       ${thW('42px','')}Pos</th>
+       ${hasElig ? `<th style="width:90px">Eligible</th>` : ''}
+       <th style="width:68px" class="proj-col">Draft $</th>
+       ${hasSal ? `${thW('42px','proj-col')}Sal</th>` : ''}
+       ${batCols.map(c => `${thW('42px','proj-col')}${c}</th>`).join('')}
+       ${pitCols.map(c => `${thW('42px','proj-col')}${c}</th>`).join('')}
+       <th style="width:60px">Time</th>
+     </tr>`;
+
+  if (!draftedList.length) {
+    const colspan = 6 + (hasElig ? 1 : 0) + (hasSal ? 1 : 0) + batCols.length + pitCols.length;
+    document.getElementById('drafted-body').innerHTML =
+      `<tr><td colspan="${colspan}" style="padding:12px;color:#7a8ca0">No drafted players yet.</td></tr>`;
+    return;
+  }
+
+  let html = '';
+  draftedList.forEach(p => {
+    const isDraftedP  = drafted.has(p.name);
+    const rankStr     = p.rank < 99999 ? p.rank : '—';
+    const isStarting  = dcNames.has(p.name);
+    const startCell   = isStarting
+      ? `<td style="text-align:center;font-weight:700;color:#1a6640">Yes</td>`
+      : `<td style="text-align:center;color:#9ab0c8">No</td>`;
+    const bStats      = batProj[p.name] || {};
+    const pStats      = pitProj[p.name] || {};
+    const price       = draftPrice[p.name];
+
+    const batCells = batCols.map(col => {
+      const val = bStats[col];
+      return `<td class="${val ? 'proj-val' : 'proj-val missing'}">${val ? esc(val) : '—'}</td>`;
+    }).join('');
+    const pitCells = pitCols.map(col => {
+      const val = pStats[col];
+      return `<td class="${val ? 'proj-val' : 'proj-val missing'}">${val ? esc(val) : '—'}</td>`;
+    }).join('');
+    const salCell = hasSal
+      ? (() => {
+          const sal = salaries[p.name];
+          return sal ? `<td class="proj-val sal-val">${esc(sal)}</td>`
+                     : `<td class="proj-val missing">—</td>`;
+        })()
+      : '';
+    const eligCell = hasElig
+      ? (() => {
+          const ep = eligData[p.name];
+          if (!ep) return '<td style="color:#c0ccd8">—</td>';
+          const nonDH  = ep.filter(x => x !== 'DH');
+          const posStr = nonDH.length > 0 ? nonDH.join(', ') : 'DH-only';
+          const g2025  = DATA.eligibility?.games_2025?.[p.name] || {};
+          const totalG = Object.values(g2025).reduce((s, v) => s + v, 0);
+          const gStr   = totalG > 0 ? ` <span style="color:#9ab0c8">(${totalG}g)</span>` : '';
+          return `<td style="font-size:11px;color:#2a4a6a">${posStr}${gStr}</td>`;
+        })()
+      : '';
+
+    html += `<tr onmouseenter="showTip(event,'${jsStr(p.name)}','${jsStr(p.injury||'')}')"
+                 onmouseleave="hideTip()">
+               <td class="rank-num">${rankStr}</td>
+               ${startCell}
+               <td>
+                 <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
+                   <input type="checkbox" checked
+                          onchange="handleCheck(this,'${jsStr(p.name)}')">
+                   <span class="r-name">${esc(p.name)}</span>
+                 </label>
+               </td>
+               <td>${esc(p.team || '')}</td>
+               <td>${esc(p.pos  || '')}</td>
+               ${eligCell}
+               <td class="proj-val">
+                 <input type="number" class="draft-price-input" min="0" max="999"
+                        value="${price || ''}" placeholder="—"
+                        onchange="setDraftPrice('${jsStr(p.name)}',this.value)">
+               </td>
+               ${salCell}${batCells}${pitCells}
+               <td class="draft-time-cell">${fmtDraftTime(draftTimes[p.name])}</td>
+             </tr>`;
+  });
+
+  document.getElementById('drafted-body').innerHTML = html;
+}
+
 // ── News ───────────────────────────────────────────────────────────────────
 function renderNews() {
   if (!DATA) return;
@@ -2160,13 +2365,27 @@ function openAssign(name) {
   document.getElementById('assign-slots').innerHTML = html;
   document.getElementById('assign-legend').textContent =
     'Blue = eligible & open  •  Orange = eligible but filled (will displace)';
+  const priceInput = document.getElementById('assign-price-input');
+  priceInput.value = draftPrice[name] ? draftPrice[name] : '';
   document.getElementById('assign-overlay').style.display = 'flex';
+  setTimeout(() => priceInput.focus(), 30);
 }
 
 function confirmAssign(slotId) {
   if (!assignTarget) return;
   const { name } = assignTarget;
+  const priceVal = parseInt(document.getElementById('assign-price-input').value, 10);
+  if (priceVal > 0) {
+    draftPrice[name] = priceVal;
+    localStorage.setItem('ff_draft_price', JSON.stringify(draftPrice));
+    salPaid[name] = priceVal;
+    localStorage.setItem('ff_sal_paid', JSON.stringify(salPaid));
+  }
   drafted.add(name);
+  if (!draftTimes[name]) {
+    draftTimes[name] = new Date().toISOString();
+    localStorage.setItem('ff_draft_times', JSON.stringify(draftTimes));
+  }
   localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
   rosterAdd(name, slotId);
   closeAssign();
@@ -2261,8 +2480,11 @@ function selectFloat(i) {
   if (!p) return;
   document.getElementById('search-overlay').style.display = 'none';
   if (!isOnRoster(p.name)) {
-    // Pre-add to unassigned so cancel is safe
     drafted.add(p.name);
+    if (!draftTimes[p.name]) {
+      draftTimes[p.name] = new Date().toISOString();
+      localStorage.setItem('ff_draft_times', JSON.stringify(draftTimes));
+    }
     localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
     rosterAdd(p.name, '__unassigned', true);
     saveRoster();
