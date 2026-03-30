@@ -500,6 +500,8 @@ body {
   font-weight: 600; color: #1a6640; background: white;
 }
 .draft-time-cell { color: #7a8ca0; font-size: 11px; white-space: nowrap; }
+.drafted-name-link { cursor: pointer; color: #1e3a5f; text-decoration: underline; text-underline-offset: 2px; }
+.drafted-name-link:hover { color: #2a6aaa; }
 #assign-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .assign-act-btn {
   padding: 6px 14px; border-radius: 5px; font-size: 12px; cursor: pointer;
@@ -2136,32 +2138,16 @@ function renderDrafted() {
                <td class="rank-num">${rankStr}</td>
                ${startCell}
                <td>
-                 <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
-                   <input type="checkbox" checked
-                          onchange="handleCheck(this,'${jsStr(p.name)}')">
-                   <span class="r-name">${esc(p.name)}</span>
-                 </label>
+                 <span class="r-name drafted-name-link"
+                       onclick="openAssign('${jsStr(p.name)}')">${esc(p.name)}</span>
                </td>
                <td>${esc(p.team || '')}</td>
                <td>${esc(p.pos  || '')}</td>
                ${eligCell}
-               <td class="proj-val">
-                 <input type="number" class="draft-price-input" min="0" max="999"
-                        value="${price || ''}" placeholder="—"
-                        onchange="setDraftPrice('${jsStr(p.name)}',this.value)">
-               </td>
+               <td class="proj-val">${price ? '$' + price : '<span style="color:#c0ccd8">—</span>'}</td>
                ${salCell}${batCells}${pitCells}
                <td class="draft-time-cell">${fmtDraftTime(draftTimes[p.name])}</td>
-               <td>${(() => {
-                   const members = getLeagueMembers();
-                   const cur = draftedBy[p.name] || '';
-                   if (!members.length) return `<span style="color:#c0ccd8;font-size:11px">—</span>`;
-                   return `<select style="width:100%;padding:2px 4px;border:1px solid #b0c4d8;border-radius:4px;font-size:12px;background:white;color:#1a2035"
-                                   onchange="setDraftedBy('${jsStr(p.name)}',this.value)">
-                             <option value=""></option>
-                             ${members.map(m => `<option value="${esc(m)}"${m===cur?' selected':''}>${esc(m)}</option>`).join('')}
-                           </select>`;
-                 })()}</td>
+               <td>${draftedBy[p.name] ? esc(draftedBy[p.name]) : '<span style="color:#c0ccd8">—</span>'}</td>
              </tr>`;
   });
 
