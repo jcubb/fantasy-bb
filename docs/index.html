@@ -2699,8 +2699,16 @@ function playerSlotElig(name) {
   if (getPitcherPos(name)) {
     return ROSTER_SLOTS.filter(s => s.type === 'p').map(s => s.id);
   }
-  const elig = DATA?.eligibility?.positions_2025?.[name] || [];
-  return ROSTER_SLOTS.filter(s => s.type === 'b' && s.elig.some(e => elig.includes(e))).map(s => s.id);
+  // Start with calculated eligibility, then add the player's natural position
+  // from rankings/projections so DH-only edge cases (e.g. Murakami at 1B) still
+  // get placed at their listed position.
+  const elig = new Set(DATA?.eligibility?.positions_2025?.[name] || []);
+  const naturalPos = DATA?.rankings?.[name]?.pos || DATA?.projections?.batters?.[name]?._pos || '';
+  if (naturalPos) {
+    const norm = ['LF','CF','RF'].includes(naturalPos) ? 'OF' : naturalPos;
+    if (['C','1B','2B','3B','SS','OF','DH'].includes(norm)) elig.add(norm);
+  }
+  return ROSTER_SLOTS.filter(s => s.type === 'b' && s.elig.some(e => elig.has(e))).map(s => s.id);
 }
 
 // Returns 'SP' or 'RP' display label for a pitcher
