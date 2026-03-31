@@ -493,6 +493,7 @@ body {
   padding: 3px 6px; border: 1px solid #b0c4d8;
   border-radius: 4px; font-size: 12px; background: white; color: #1a2035;
 }
+#assign-tbd-btn { padding: 4px 8px; font-size: 11px; line-height: 1.2; }
 #drafted-section { padding: 0 16px 24px; }
 #drafted-header {
   display: flex; align-items: center; gap: 14px; padding: 12px 0 8px;
@@ -879,6 +880,7 @@ body {
     <div id="assign-price-row">
       <span>Draft price: $<input type="number" id="assign-price-input" min="0" max="999" placeholder="0"></span>
       <span>Team: <select id="assign-drafter-select"></select></span>
+      <button id="assign-tbd-btn" class="aslot-btn au" onclick="confirmAssign('__unassigned')">?<small>TBD</small></button>
     </div>
     <div id="assign-slots"></div>
     <div id="assign-legend"></div>
@@ -2522,12 +2524,9 @@ function openAssign(name, isNewDraft) {
     });
   });
 
-  // Unassigned button
+  // TBD button state in the price row
   const isUnassigned = assignTarget.prevSlot === '__unassigned';
-  html += `<div style="font-size:10px;font-weight:700;color:#9ab0c8;letter-spacing:.5px;
-                       text-transform:uppercase;width:100%;margin-top:8px">Other</div>
-           <button class="aslot-btn ${isUnassigned ? 'ac' : 'au'}"
-                   onclick="confirmAssign('__unassigned')">?<small>TBD</small></button>`;
+  document.getElementById('assign-tbd-btn').className = `aslot-btn ${isUnassigned ? 'ac' : 'au'}`;
 
   document.getElementById('assign-slots').innerHTML = html;
   document.getElementById('assign-legend').textContent =
