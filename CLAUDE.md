@@ -119,21 +119,21 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 - Cards laid out in a wrapping flex grid; each card is 330px wide
 - Card header: team name + filled slots count (e.g. `21/23`) + `$spent` + `$left` remaining vs $260 budget
 - Card body: two columns — Batters (14 slots) on left, Pitchers (9 slots) on right
-  - Each slot row: slot label + player last name + draft price in green; empty slots shown as `—`
+  - Each slot row: slot label + full player name + draft price in green; empty slots shown as `—`
   - For pitcher slots, the label shows the player's actual position (`SP` or `RP`) instead of the slot type
   - Pitchers sorted SP first, then RP within each card
 - Unassigned section at card bottom (orange pills) for any players who couldn't be fit into a slot
 - Display order: league members list first (even if empty/undrafted), then any extra teams found in `draftedBy`, then a `— No Drafter —` card for players with no team assigned
 - Summary line above grid: `N teams · M players drafted`
+- **Live updates**: cards re-render automatically on every draft event when the League tab is active (`renderRoster()` calls `renderLeague()` when `currentTab === 'league'`)
 
 **League tab — auto-assignment logic (`autoAssignRoster`):**
 - Bipartite matching via augmenting-path DFS (same algorithm as `fantasy_bb.py`)
 - Players processed most-constrained first (fewest eligible slots) for better slot coverage
 - `playerSlotElig(name)` maps each player to eligible ROSTER_SLOT IDs:
-  - Pitchers: eligible for all 9 pitcher slots (type = 'p') regardless of SP/RP/CL distinction
-  - Batters: uses union of `positions_2025` eligibility AND the player's natural position from rankings/projections (so a player like Murakami listed at 1B but with only DH calculated eligibility is still placed at 1B)
-  - LF/CF/RF normalized to OF for slot matching
-- `pitcherDisplayPos(name)`: uses `DATA.rankings[name].pos` as the source for SP vs RP display (projections `_pos` is always the generic `'P'` for all pitchers and cannot be used)
+  - Pitchers: eligible for all 9 pitcher slots (type = 'p') regardless of SP/RP/CL distinction — no attempt to match pitch type to slot type
+  - Batters: uses union of `positions_2025` eligibility AND the player's natural position from rankings/projections (so a player like Murakami listed at 1B but with only DH calculated eligibility is still placed at 1B); LF/CF/RF normalized to OF
+- `pitcherDisplayPos(name)`: uses `DATA.rankings[name].pos` as the source for SP vs RP display (`projections._pos` is always the generic `'P'` for all pitchers and cannot be used for this)
 - `getPitcherPos(name)`: determines whether a player is a pitcher at all (for matching); checks projections → rankings → depth chart; treats `'P'` and `'SP'` both as pitcher
 
 **League tab — next planned features:**
@@ -228,24 +228,24 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
 ### Roster Panel
 
-Fixed 220px panel on the right side of the screen showing your roster in progress.
+Fixed 220px panel on the right side of the screen. Now a **team viewer** — shows the auto-assigned roster for any selected league team, not just the user's own team.
 
-**Slots (23 total):**
-- Batters: C, C, 1B, 2B, 3B, SS, OF, OF, OF, OF, OF, MI, CI, Util
-- Pitchers: SP, SP, SP, SP, SP, CL, CL, SU, SU
-- Unassigned section at the bottom for players not yet placed
+**Header**: dropdown (`#roster-view-select`) listing all league members (from Draft Setup) plus any extra teams found in `draftedBy`; selected team persisted in `localStorage` (`ff_roster_view_team`). Slot count shown alongside (`X/23`).
 
-**Interactions:**
-- Click a player name in the panel → opens Assign modal for reassignment
-- **Salary input**: each filled slot has a compact number input on the right for entering the actual auction price paid; CBS projected salary shown as placeholder; green text
-- **Budget footer**: always visible above the buttons — shows `$X spent` (green) and `$Y left` (gray; red if over budget) plus `($Z/slot)` — average remaining budget per unfilled slot
-  - Budget = $260 total; open slot count = `ROSTER_SLOTS.length` minus filled slots (unassigned players don't count as filling a slot)
-  - Salary state persisted in `localStorage` (`ff_sal_paid` key): `{playerName: amountPaid}`
-  - Salary cleared when player is removed from roster or draft is reset
-- **Download Roster** button → exports `fantasy-bb-roster.csv` with columns: Slot, Player, Rank, Pos, AVG, HR, RBI, SB, R, ERA, W, S, WHIP, K; all 23 slots included (empty slots have blank player row); unassigned players appended at bottom
-- **Clear Roster** button removes all slot assignments (keeps drafted marks)
-- Roster state persisted in `localStorage` (`ff_roster` key): `{ slots: {slotId: name}, unassigned: [name, ...] }`
-- `ROSTER_SLOTS` constant defines all slots with `{id, label, type, elig}` — `elig` lists which positions can play that slot (used to color-code the assign modal)
+**Body**: auto-assigned roster using the same `autoAssignRoster()` bipartite matching as the League tab:
+- Batters (14 slots) then Pitchers (9 slots), each labeled by slot type (batters) or player position SP/RP (pitchers)
+- Pitchers sorted SP first, then RP
+- Full player names; draft price in green next to each name
+- Unassigned section at bottom for overflow players
+- Empty slots shown as `—`
+
+**Budget footer**: `$X spent` / `$Y left` based on the viewed team's `draftPrice` values vs. $260 cap.
+
+**Live updates**: re-renders on every draft event (same hook as League tab — `renderRoster()` is called from all draft state changes).
+
+**Key functions**: `populateRosterViewSelect()` builds the dropdown; `setRosterViewTeam(val)` persists and re-renders on change; `renderBudget()` uses `rosterViewTeam` + `draftedBy` to compute spend.
+
+**`ROSTER_SLOTS` constant** defines all 23 slots with `{id, label, type, elig}` — `elig` lists which positions can play that slot (used to color-code the Assign modal buttons).
 
 ### Quick Search (`/` key)
 
@@ -261,13 +261,16 @@ Press `/` anywhere (not while typing in another input) to open the floating sear
 Opens when: checking a checkbox, selecting from quick search, or clicking a name in the roster panel.
 
 - Shows player name and position eligibility at the top
-- Batter slots and pitcher slots shown in separate groups
+- **Price row**: Draft price input + Team dropdown + **`?TBD` button** (all on one line)
+  - `?TBD` is right next to the Team dropdown for fast workflow: enter price → pick team → hit `?TBD`
+  - `?TBD` places the player in the Unassigned bucket; `autoAssignRoster()` will optimally slot them when the roster panel or League tab renders
+- Batter slots and pitcher slots shown in separate groups below
 - **Slot color coding:**
   - Blue = eligible for this slot and currently empty (best pick)
   - Orange = eligible but slot is occupied (will bump that player to Unassigned)
   - Grey = player is not eligible for this slot (still clickable for flexibility)
   - Dark blue = player's current slot (when reassigning)
-  - Yellow `?/TBD` = Unassigned (always available)
+  - Yellow `?/TBD` = Unassigned (always available, also in price row for quick access)
 - **Remove from roster** button visible only when reassigning an already-rostered player (keeps drafted mark, removes slot assignment)
 - Cancel is always safe — player stays in their current state
 
