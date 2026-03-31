@@ -2437,7 +2437,7 @@ function renderRoster() {
     const sal = name && draftPrice[name] ? `<span class="p-sal">$${draftPrice[name]}</span>` : '';
     return `<div class="roster-slot">
       <span class="slot-label">${esc(lbl)}</span>
-      ${name ? `<span class="slot-player" title="${esc(name)}">${esc(lastName(name))}${sal}</span>`
+      ${name ? `<span class="slot-player" title="${esc(name)}">${esc(name)}${sal}</span>`
              : '<span class="slot-empty">—</span>'}
     </div>`;
   }
@@ -2456,7 +2456,7 @@ function renderRoster() {
     unassigned.forEach(name => {
       const sal = draftPrice[name] ? `<span class="p-sal">$${draftPrice[name]}</span>` : '';
       html += `<div class="roster-slot slot-unassigned">
-        <span class="slot-player" title="${esc(name)}">${esc(lastName(name))}${sal}</span>
+        <span class="slot-player" title="${esc(name)}">${esc(name)}${sal}</span>
       </div>`;
     });
   }
@@ -2836,7 +2836,7 @@ function renderLeague() {
       const lbl  = (slot.type === 'p' && name) ? pitcherDisplayPos(name) : slot.label;
       return `<div class="lslot">
         <span class="lslot-lbl">${esc(lbl)}</span>
-        <span class="lslot-name${name ? '' : ' empty'}" title="${name ? esc(name) : ''}">${name ? esc(lastName(name)) : '—'}</span>
+        <span class="lslot-name${name ? '' : ' empty'}" title="${name ? esc(name) : ''}">${name ? esc(name) : '—'}</span>
         ${name && salStr(name) ? `<span class="lslot-sal">${salStr(name)}</span>` : ''}
       </div>`;
     }
@@ -2854,7 +2854,7 @@ function renderLeague() {
       <div class="league-unassigned">
         <div class="league-unasgn-hdr">Unassigned (${unassigned.length})</div>
         <div class="league-unasgn-pills">
-          ${unassigned.map(n => `<span class="league-unasgn-pill" title="${esc(n)}">${esc(lastName(n))}${draftPrice[n] ? ' $'+draftPrice[n] : ''}</span>`).join('')}
+          ${unassigned.map(n => `<span class="league-unasgn-pill" title="${esc(n)}">${esc(n)}${draftPrice[n] ? ' $'+draftPrice[n] : ''}</span>`).join('')}
         </div>
       </div>` : '';
 
