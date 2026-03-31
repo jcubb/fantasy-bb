@@ -2425,6 +2425,7 @@ function renderRoster() {
 
   document.getElementById('roster-body').innerHTML = html;
   renderBudget();
+  if (currentTab === 'league') renderLeague();
 }
 
 // ── Assign modal ────────────────────────────────────────────────────────────
