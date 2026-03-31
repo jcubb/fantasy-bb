@@ -370,13 +370,18 @@ body {
   display: flex; flex-direction: column;
 }
 #roster-panel-header {
-  background: #111f30; padding: 8px 10px;
-  font-size: 12px; font-weight: 700; letter-spacing: .4px;
+  background: #111f30; padding: 6px 8px;
   border-bottom: 1px solid #2a4060;
   position: sticky; top: 0; z-index: 5;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; gap: 6px;
 }
-#roster-count { font-size: 11px; font-weight: 400; opacity: .65; }
+#roster-view-select {
+  flex: 1; min-width: 0; background: #1a2e45; color: #cfe0f8;
+  border: 1px solid #2a4060; border-radius: 3px;
+  font-size: 12px; font-weight: 700; padding: 3px 4px; cursor: pointer;
+}
+#roster-view-select:focus { outline: none; border-color: #5a88b0; }
+#roster-count { font-size: 10px; font-weight: 400; color: #5a88b0; white-space: nowrap; flex-shrink: 0; }
 .roster-sec {
   font-size: 10px; font-weight: 700; letter-spacing: .6px;
   color: #5a88b0; padding: 6px 10px 2px; text-transform: uppercase;
@@ -850,12 +855,11 @@ body {
 <!-- Roster Panel -->
 <div id="roster-panel">
   <div id="roster-panel-header">
-    My Roster <span id="roster-count">0/23</span>
+    <select id="roster-view-select" onchange="setRosterViewTeam(this.value)"></select>
+    <span id="roster-count">0/23</span>
   </div>
   <div id="roster-body"></div>
   <div id="roster-budget"></div>
-  <button id="roster-dl-btn" onclick="downloadRoster()">⬇ Download roster</button>
-  <button id="roster-clear-btn" onclick="clearRoster()">Clear roster</button>
 </div>
 
 <!-- Search Overlay (press /) -->
@@ -954,7 +958,8 @@ let roster      = JSON.parse(localStorage.getItem('ff_roster') || 'null')
 let salPaid     = JSON.parse(localStorage.getItem('ff_sal_paid') || '{}');
 let draftPrice  = JSON.parse(localStorage.getItem('ff_draft_price') || '{}');
 let draftTimes  = JSON.parse(localStorage.getItem('ff_draft_times') || '{}');
-let draftedBy   = JSON.parse(localStorage.getItem('ff_drafted_by')  || '{}');
+let draftedBy      = JSON.parse(localStorage.getItem('ff_drafted_by')  || '{}');
+let rosterViewTeam = localStorage.getItem('ff_roster_view_team') || '';
 
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
@@ -1035,19 +1040,19 @@ function setSalPaid(name, val) {
 }
 
 function renderBudget() {
-  const allPlayers = [...Object.values(roster.slots).filter(Boolean), ...roster.unassigned];
-  const spent      = allPlayers.reduce((s, n) => s + (salPaid[n] || 0), 0);
-  const remaining  = 260 - spent;
-  const openSlots  = ROSTER_SLOTS.length - Object.keys(roster.slots).length;
-  const perSlot    = openSlots > 0 ? Math.floor(remaining / openSlots) : null;
-  const perSlotStr = perSlot !== null ? ` <span style="color:#7a8ca0;font-size:10px">($${perSlot}/slot)</span>` : '';
+  const players  = rosterViewTeam
+    ? Object.entries(draftedBy).filter(([, t]) => t === rosterViewTeam).map(([n]) => n)
+    : [];
+  const spent     = players.reduce((s, n) => s + (draftPrice[n] || 0), 0);
+  const remaining = 260 - spent;
   document.getElementById('roster-budget').innerHTML =
     `<span style="color:#a0d080">$${spent} spent</span>` +
-    `<span style="${remaining < 0 ? 'color:#e05050' : 'color:#9ab0c8'}">$${remaining} left${perSlotStr}</span>`;
+    `<span style="${remaining < 0 ? 'color:#e05050' : 'color:#9ab0c8'}">$${remaining} left</span>`;
 }
 
 function saveLeagueMembers() {
   localStorage.setItem('ff_league_members', document.getElementById('league-members-area').value);
+  renderRoster();
 }
 
 function importDraftPrices(input) {
@@ -2378,47 +2383,78 @@ function downloadRoster() {
 }
 
 // ── Roster panel render ─────────────────────────────────────────────────────
-function renderRoster() {
-  const total = Object.keys(roster.slots).length + roster.unassigned.length;
-  document.getElementById('roster-count').textContent = `${total}/23`;
+function setRosterViewTeam(val) {
+  rosterViewTeam = val;
+  localStorage.setItem('ff_roster_view_team', val);
+  renderRoster();
+}
 
-  const cbsSal = DATA?.salaries || {};
-  const salInput = name => {
-    const paid  = salPaid[name] || '';
-    const hint  = cbsSal[name] ? cbsSal[name].replace('$','') : '';
-    return `<input type="number" class="slot-sal-input" min="1" max="260"
-              value="${paid}" placeholder="${hint}"
-              title="Salary paid (CBS proj: ${cbsSal[name] || '—'})"
-              oninput="setSalPaid('${jsStr(name)}', this.value)"
-              onclick="event.stopPropagation()">`;
-  };
+function populateRosterViewSelect() {
+  const members = (localStorage.getItem('ff_league_members') || '')
+    .split('\n').map(s => s.trim()).filter(Boolean);
+  const extra = [...new Set(Object.values(draftedBy))].filter(t => t && !members.includes(t)).sort();
+  const all = [...members, ...extra];
+  const sel = document.getElementById('roster-view-select');
+  if (!all.length) {
+    sel.innerHTML = '<option value="">— add teams in Draft Setup —</option>';
+    rosterViewTeam = '';
+    return;
+  }
+  if (!all.includes(rosterViewTeam)) {
+    rosterViewTeam = all[0];
+    localStorage.setItem('ff_roster_view_team', rosterViewTeam);
+  }
+  sel.innerHTML = all.map(t =>
+    `<option value="${esc(t)}"${t === rosterViewTeam ? ' selected' : ''}>${esc(t)}</option>`
+  ).join('');
+}
+
+function renderRoster() {
+  populateRosterViewSelect();
+
+  const players = rosterViewTeam
+    ? Object.entries(draftedBy).filter(([, t]) => t === rosterViewTeam).map(([n]) => n)
+    : [];
+  const { slots, unassigned } = DATA ? autoAssignRoster(players) : { slots: {}, unassigned: [] };
+  const filled = Object.keys(slots).length;
+  document.getElementById('roster-count').textContent = `${filled + unassigned.length}/23`;
+
+  const batterSlots  = ROSTER_SLOTS.filter(s => s.type === 'b');
+  const pitcherSlots = ROSTER_SLOTS.filter(s => s.type === 'p');
+
+  // Sort pitchers SP first, then RP
+  const pitcherNames = pitcherSlots.map(s => slots[s.id] || null)
+    .sort((a, b) => {
+      if (!a && !b) return 0; if (!a) return 1; if (!b) return -1;
+      return (pitcherDisplayPos(a) === 'SP' ? 0 : 1) - (pitcherDisplayPos(b) === 'SP' ? 0 : 1);
+    });
+
+  function lastName(n) { const p = n.trim().split(/\s+/); return p[p.length - 1]; }
+
+  function slotRow(lbl, name) {
+    const sal = name && draftPrice[name] ? `<span class="p-sal">$${draftPrice[name]}</span>` : '';
+    return `<div class="roster-slot">
+      <span class="slot-label">${esc(lbl)}</span>
+      ${name ? `<span class="slot-player" title="${esc(name)}">${esc(lastName(name))}${sal}</span>`
+             : '<span class="slot-empty">—</span>'}
+    </div>`;
+  }
 
   let html = '<div class="roster-sec">Batters</div>';
-  ROSTER_SLOTS.filter(s => s.type === 'b').forEach(slot => {
-    const p = roster.slots[slot.id];
-    html += `<div class="roster-slot">
-      <span class="slot-label">${slot.label}</span>
-      ${p ? `<span class="slot-player" onclick="openAssign('${jsStr(p)}')" title="${esc(p)}">${esc(p)}</span>${salInput(p)}`
-          : '<span class="slot-empty">—</span>'}
-    </div>`;
-  });
+  batterSlots.forEach(slot => { html += slotRow(slot.label, slots[slot.id] || null); });
 
   html += '<div class="roster-sec" style="margin-top:4px">Pitchers</div>';
-  ROSTER_SLOTS.filter(s => s.type === 'p').forEach(slot => {
-    const p = roster.slots[slot.id];
-    html += `<div class="roster-slot">
-      <span class="slot-label">${slot.label}</span>
-      ${p ? `<span class="slot-player" onclick="openAssign('${jsStr(p)}')" title="${esc(p)}">${esc(p)}</span>${salInput(p)}`
-          : '<span class="slot-empty">—</span>'}
-    </div>`;
+  pitcherSlots.forEach((slot, i) => {
+    const name = pitcherNames[i] || null;
+    html += slotRow(name ? pitcherDisplayPos(name) : slot.label, name);
   });
 
-  if (roster.unassigned.length) {
+  if (unassigned.length) {
     html += '<div class="roster-sec" style="margin-top:4px;color:#b0a020">Unassigned</div>';
-    roster.unassigned.forEach(name => {
+    unassigned.forEach(name => {
+      const sal = draftPrice[name] ? `<span class="p-sal">$${draftPrice[name]}</span>` : '';
       html += `<div class="roster-slot slot-unassigned">
-        <span class="slot-player" onclick="openAssign('${jsStr(name)}')" title="${esc(name)}">${esc(name)}</span>
-        ${salInput(name)}
+        <span class="slot-player" title="${esc(name)}">${esc(lastName(name))}${sal}</span>
       </div>`;
     });
   }
