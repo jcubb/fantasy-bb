@@ -2982,7 +2982,8 @@ function maxAdditionalForPos(batterPlayers, posX, strict = false) {
   return 0;
 }
 
-// Returns {C, 1B, 2B, 3B, SS, OF, P} open slot counts (excluding Util — dedicated slots only).
+// Returns {C, 1B, 2B, 3B, SS, OF, P} — how many players of each position could still be rostered
+// (includes Util as a possible landing spot — this is the "what's possible" view).
 // Correct approach: assign current batters optimally, then count empty slots per position.
 function openSlotsFor(players) {
   const batterPlayers = players.filter(n => !getPitcherPos(n));
@@ -2992,7 +2993,7 @@ function openSlotsFor(players) {
   const result = { P: Math.max(0, pitcherSlots - pitcherCount) };
   for (const pos of ['C','1B','2B','3B','SS','OF']) {
     result[pos] = ROSTER_SLOTS.filter(s =>
-      s.type === 'b' && s.elig.includes(pos) && s.id !== 'Util' && !slots[s.id]
+      s.type === 'b' && s.elig.includes(pos) && !slots[s.id]
     ).length;
   }
   return result;
