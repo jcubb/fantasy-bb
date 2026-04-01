@@ -1262,6 +1262,7 @@ function render() {
   if (isReadme)     return;
   if (isNotes)      return;
   if (isSetup)      return;
+  renderSalarySummary();
   if (isInjuries)   renderInjuries();
   else if (isNews)  renderNews();
   else if (isStats) renderStats();
@@ -2211,7 +2212,6 @@ function renderSalarySummary() {
 
 function renderPlayerTab() {
   if (!DATA) return;
-  renderSalarySummary();
 
   const searchVal   = document.getElementById('search-box-player').value.trim().toLowerCase();
   const hideDrafted = document.getElementById('player-hide-drafted').checked;
