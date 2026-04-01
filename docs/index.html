@@ -2143,14 +2143,19 @@ function renderSalarySummary() {
   for (const k of [...IND_COLS, 'Bat', 'Pit']) open[k] = 0;
 
   for (const team of members) {
-    const players = Object.entries(draftedBy).filter(([, t]) => t === team).map(([n]) => n);
+    const players  = Object.entries(draftedBy).filter(([, t]) => t === team).map(([n]) => n);
     const batters  = players.filter(n => !getPitcherPos(n));
     const pitCount = players.length - batters.length;
+    const { slots } = autoAssignRoster(batters);
     for (const pos of BAT_POS) {
-      const n = maxAdditionalForPos(batters, pos, true);
-      open[pos] += n;
-      open['Bat'] += n;
+      // Must-draft: dedicated slots only (no Util for non-DH positions)
+      open[pos] += ROSTER_SLOTS.filter(s =>
+        s.type === 'b' && s.elig.includes(pos) &&
+        (pos === 'DH' || s.id !== 'Util') && !slots[s.id]
+      ).length;
     }
+    // All Bat: total open batter slots including Util
+    open['Bat'] += ROSTER_SLOTS.filter(s => s.type === 'b' && !slots[s.id]).length;
     open['Pit'] += Math.max(0, PIT_SLOTS - pitCount);
   }
 
@@ -2977,14 +2982,18 @@ function maxAdditionalForPos(batterPlayers, posX, strict = false) {
   return 0;
 }
 
-// Returns {C, 1B, 2B, 3B, SS, OF, P} counts of additional players that can still be rostered.
+// Returns {C, 1B, 2B, 3B, SS, OF, P} open slot counts (excluding Util — dedicated slots only).
+// Correct approach: assign current batters optimally, then count empty slots per position.
 function openSlotsFor(players) {
   const batterPlayers = players.filter(n => !getPitcherPos(n));
   const pitcherCount  = players.length - batterPlayers.length;
   const pitcherSlots  = ROSTER_SLOTS.filter(s => s.type === 'p').length;
+  const { slots }     = autoAssignRoster(batterPlayers);
   const result = { P: Math.max(0, pitcherSlots - pitcherCount) };
   for (const pos of ['C','1B','2B','3B','SS','OF']) {
-    result[pos] = maxAdditionalForPos(batterPlayers, pos);
+    result[pos] = ROSTER_SLOTS.filter(s =>
+      s.type === 'b' && s.elig.includes(pos) && s.id !== 'Util' && !slots[s.id]
+    ).length;
   }
   return result;
 }
