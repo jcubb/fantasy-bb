@@ -283,6 +283,8 @@ body {
 .sal-section-sep td { height: 3px; padding: 0; background: #c8d3e0; }
 .sal-open-row td { background: #e8f0f8; font-weight: 700; color: #1e3a5f; }
 .sal-open-row td:first-child { color: #3a5a7f; }
+.sal-leftper-row td { background: #f0f4f8; font-weight: 600; color: #2a3a50; }
+.sal-leftper-row td:first-child { color: #3a5a7f; }
 
 /* ── Ranked list ─────────────────────────────────────────────────────────── */
 #ranked-section { padding: 0 16px 24px; }
@@ -2191,12 +2193,29 @@ function renderSalarySummary(allPlayerMap) {
       `<td class="sal-sep">${pct(uMap['Bat'], tMap['Bat'])}</td><td>${pct(uMap['Pit'], tMap['Pit'])}</td></tr>`;
   }
   function openRow() {
+    function cell(key, isSep) {
+      const isBlank = (key === 'SP' || key === 'RP');
+      const val     = isBlank ? 0 : open[key];
+      const display = (isBlank || !val) ? '—' : val;
+      let   style   = '';
+      if (!isBlank && val > 0)
+        style = val <= undN[key] ? ' style="color:#2a7a50"' : ' style="color:#c0392b"';
+      return `<td${isSep ? ' class="sal-sep"' : ''}${style}>${display}</td>`;
+    }
     return `<tr class="sal-open-row"><td>Open</td>` +
-      IND_COLS.map(c => {
-        const val = (c === 'SP' || c === 'RP') ? '—' : fmtN(open[c]);
-        return `<td${sep(c)}>${val}</td>`;
-      }).join('') +
-      `<td class="sal-sep">${fmtN(open['Bat'])}</td><td>${fmtN(open['Pit'])}</td></tr>`;
+      IND_COLS.map(c => cell(c, c === 'SP')).join('') +
+      cell('Bat', true) + cell('Pit', false) + `</tr>`;
+  }
+  function leftPerRow() {
+    function cell(key, isSep) {
+      const isBlank = (key === 'SP' || key === 'RP');
+      const o       = isBlank ? 0 : open[key];
+      const display = (!isBlank && o > 0) ? '$' + Math.round(und[key] / o) : '—';
+      return `<td${isSep ? ' class="sal-sep"' : ''}>${display}</td>`;
+    }
+    return `<tr class="sal-leftper-row"><td>Left $ Per</td>` +
+      IND_COLS.map(c => cell(c, c === 'SP')).join('') +
+      cell('Bat', true) + cell('Pit', false) + `</tr>`;
   }
 
   document.getElementById('sal-summary-body').innerHTML =
@@ -2208,7 +2227,8 @@ function renderSalarySummary(allPlayerMap) {
     countRow('Left #', undN) +
     pctRow('% Left #', undN, totN) +
     SEP_ROW +
-    openRow();
+    openRow() +
+    leftPerRow();
 }
 
 function renderPlayerTab(allPlayerMap) {
