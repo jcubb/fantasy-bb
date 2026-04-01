@@ -280,6 +280,9 @@ body {
 #sal-summary-table thead .sal-sep { border-left: 2px solid #4a78a8; }
 .sal-pct-row td { background: #f0f6ea; font-weight: 700; color: #2a6030; }
 .sal-pct-row td:first-child { color: #5a7a50; }
+.sal-section-sep td { height: 3px; padding: 0; background: #c8d3e0; }
+.sal-open-row td { background: #e8f0f8; font-weight: 700; color: #1e3a5f; }
+.sal-open-row td:first-child { color: #3a5a7f; }
 
 /* ── Ranked list ─────────────────────────────────────────────────────────── */
 #ranked-section { padding: 0 16px 24px; }
@@ -2098,7 +2101,9 @@ function renderSalarySummary() {
 
   const allPlayers = buildAllPlayerMap();
   const IND_COLS   = ['C','1B','2B','SS','3B','OF','DH','SP','RP'];
-  const BAT_SET    = new Set(['C','1B','2B','3B','SS','OF','DH']);
+  const BAT_POS    = ['C','1B','2B','SS','3B','OF','DH'];
+  const BAT_SET    = new Set(BAT_POS);
+  const PIT_SLOTS  = ROSTER_SLOTS.filter(s => s.type === 'p').length; // 9
 
   function posKey(p) {
     const pos = (p.pos || '').toUpperCase();
@@ -2109,8 +2114,13 @@ function renderSalarySummary() {
   }
   function parseSal(s) { return s ? (parseInt(s.replace('$',''), 10) || 0) : 0; }
 
-  const tot = {}, dft = {}, und = {};
-  for (const k of [...IND_COLS, 'Bat', 'Pit']) { tot[k] = 0; dft[k] = 0; und[k] = 0; }
+  // ── Salary sums ──
+  const tot = {}, und = {};
+  for (const k of [...IND_COLS, 'Bat', 'Pit']) { tot[k] = 0; und[k] = 0; }
+
+  // ── Player counts (salary ≥ $1) ──
+  const totN = {}, undN = {};
+  for (const k of [...IND_COLS, 'Bat', 'Pit']) { totN[k] = 0; undN[k] = 0; }
 
   for (const [name, salStr] of Object.entries(salaries)) {
     const sal = parseSal(salStr);
@@ -2122,32 +2132,76 @@ function renderSalarySummary() {
     const grp   = BAT_SET.has(key) ? 'Bat' : 'Pit';
     const isDft = drafted.has(name);
     tot[key] += sal; tot[grp] += sal;
-    if (isDft) { dft[key] += sal; dft[grp] += sal; }
-    else        { und[key] += sal; und[grp] += sal; }
+    totN[key]++;     totN[grp]++;
+    if (!isDft) { und[key] += sal; und[grp] += sal; undN[key]++; undN[grp]++; }
   }
 
-  function fmt(n) { return n ? '$' + n : '—'; }
+  // ── League must-draft open slots (strict: no Util for non-DH) ──
+  const members = (localStorage.getItem('ff_league_members') || '')
+    .split('\n').map(s => s.trim()).filter(Boolean);
+  const open = {};
+  for (const k of [...IND_COLS, 'Bat', 'Pit']) open[k] = 0;
+
+  for (const team of members) {
+    const players = Object.entries(draftedBy).filter(([, t]) => t === team).map(([n]) => n);
+    const batters  = players.filter(n => !getPitcherPos(n));
+    const pitCount = players.length - batters.length;
+    for (const pos of BAT_POS) {
+      const n = maxAdditionalForPos(batters, pos, true);
+      open[pos] += n;
+      open['Bat'] += n;
+    }
+    open['Pit'] += Math.max(0, PIT_SLOTS - pitCount);
+  }
+
+  // ── Render ──
+  function fmt(n)  { return n  ? '$' + n  : '—'; }
+  function fmtN(n) { return n  ?       n  : '—'; }
   function pct(u, t) { return t ? Math.round(100 * u / t) + '%' : '—'; }
+  function sep(c) { return c === 'SP' ? ' class="sal-sep"' : ''; }
 
   document.getElementById('sal-summary-head').innerHTML = `<tr>
     <th></th>
-    ${IND_COLS.map(c => `<th${c === 'SP' ? ' class="sal-sep"' : ''}>${c}</th>`).join('')}
+    ${IND_COLS.map(c => `<th${sep(c)}>${c}</th>`).join('')}
     <th class="sal-sep">All Bat</th><th>All Pit</th>
   </tr>`;
 
-  function dataRow(lbl, map) {
+  const SEP_ROW = `<tr class="sal-section-sep"><td colspan="${IND_COLS.length + 3}"></td></tr>`;
+
+  function dollarRow(lbl, map) {
     return `<tr><td>${lbl}</td>` +
-      IND_COLS.map(c => `<td${c === 'SP' ? ' class="sal-sep"' : ''}>${fmt(map[c])}</td>`).join('') +
+      IND_COLS.map(c => `<td${sep(c)}>${fmt(map[c])}</td>`).join('') +
       `<td class="sal-sep">${fmt(map['Bat'])}</td><td>${fmt(map['Pit'])}</td></tr>`;
   }
-  function pctRow() {
-    return `<tr class="sal-pct-row"><td>% Left</td>` +
-      IND_COLS.map(c => `<td${c === 'SP' ? ' class="sal-sep"' : ''}>${pct(und[c], tot[c])}</td>`).join('') +
-      `<td class="sal-sep">${pct(und['Bat'], tot['Bat'])}</td><td>${pct(und['Pit'], tot['Pit'])}</td></tr>`;
+  function countRow(lbl, map) {
+    return `<tr><td>${lbl}</td>` +
+      IND_COLS.map(c => `<td${sep(c)}>${fmtN(map[c])}</td>`).join('') +
+      `<td class="sal-sep">${fmtN(map['Bat'])}</td><td>${fmtN(map['Pit'])}</td></tr>`;
+  }
+  function pctRow(lbl, uMap, tMap) {
+    return `<tr class="sal-pct-row"><td>${lbl}</td>` +
+      IND_COLS.map(c => `<td${sep(c)}>${pct(uMap[c], tMap[c])}</td>`).join('') +
+      `<td class="sal-sep">${pct(uMap['Bat'], tMap['Bat'])}</td><td>${pct(uMap['Pit'], tMap['Pit'])}</td></tr>`;
+  }
+  function openRow() {
+    return `<tr class="sal-open-row"><td>Open</td>` +
+      IND_COLS.map(c => {
+        const val = (c === 'SP' || c === 'RP') ? '—' : fmtN(open[c]);
+        return `<td${sep(c)}>${val}</td>`;
+      }).join('') +
+      `<td class="sal-sep">${fmtN(open['Bat'])}</td><td>${fmtN(open['Pit'])}</td></tr>`;
   }
 
   document.getElementById('sal-summary-body').innerHTML =
-    dataRow('Total', tot) + dataRow('Drafted', dft) + dataRow('Undrafted', und) + pctRow();
+    dollarRow('Total $', tot) +
+    dollarRow('Undrafted $', und) +
+    pctRow('% Left $', und, tot) +
+    SEP_ROW +
+    countRow('Total #', totN) +
+    countRow('Undrafted #', undN) +
+    pctRow('% Left #', undN, totN) +
+    SEP_ROW +
+    openRow();
 }
 
 function renderPlayerTab() {
@@ -2893,8 +2947,10 @@ function pitcherDisplayPos(name) {
 
 // ── Open slot capacity ────────────────────────────────────────────────────
 // Max additional players of posX that can still be rostered alongside batterPlayers.
-function maxAdditionalForPos(batterPlayers, posX) {
-  const xSlotIds  = ROSTER_SLOTS.filter(s => s.type === 'b' && s.elig.includes(posX)).map(s => s.id);
+function maxAdditionalForPos(batterPlayers, posX, strict = false) {
+  let xSlotIds = ROSTER_SLOTS.filter(s => s.type === 'b' && s.elig.includes(posX)).map(s => s.id);
+  if (strict && posX !== 'DH') xSlotIds = xSlotIds.filter(id => id !== 'Util');
+  if (!xSlotIds.length) return 0;
   const bSlotIdSet = new Set(ROSTER_SLOTS.filter(s => s.type === 'b').map(s => s.id));
   function eligFor(name) {
     if (name.startsWith('__virt_')) return xSlotIds;
