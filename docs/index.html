@@ -254,6 +254,33 @@ body {
 .row-drafted td { opacity: .5; }
 .row-drafted .r-name { text-decoration: line-through; }
 
+/* ── Salary Pool summary table ────────────────────────────────────────────── */
+#sal-summary-wrap { padding: 12px 0 6px; }
+#sal-summary-title {
+  font-size: 11px; font-weight: 700; color: #7a8ca0;
+  letter-spacing: .5px; text-transform: uppercase;
+  display: block; margin-bottom: 5px;
+}
+#sal-summary-table { border-collapse: collapse; }
+#sal-summary-table th {
+  background: #2a4f7a; color: #cfe0f8;
+  padding: 4px 10px; text-align: right;
+  font-size: 11px; font-weight: 700;
+}
+#sal-summary-table th:first-child { text-align: left; width: 72px; }
+#sal-summary-table td {
+  padding: 3px 10px; text-align: right;
+  border-bottom: 1px solid #e8eef5; font-size: 11px; color: #1a2035;
+}
+#sal-summary-table td:first-child {
+  text-align: left; color: #7a8ca0; font-weight: 600;
+  font-size: 10px; text-transform: uppercase; letter-spacing: .4px; width: 72px;
+}
+#sal-summary-table .sal-sep { border-left: 2px solid #c8d3e0; }
+#sal-summary-table thead .sal-sep { border-left: 2px solid #4a78a8; }
+.sal-pct-row td { background: #f0f6ea; font-weight: 700; color: #2a6030; }
+.sal-pct-row td:first-child { color: #5a7a50; }
+
 /* ── Ranked list ─────────────────────────────────────────────────────────── */
 #ranked-section { padding: 0 16px 24px; }
 #player-section { padding: 0 16px 24px; }
@@ -769,6 +796,13 @@ body {
 
 <!-- Player tab -->
 <div id="player-section" style="display:none">
+  <div id="sal-summary-wrap" style="display:none">
+    <span id="sal-summary-title">Salary Pool by Position</span>
+    <table id="sal-summary-table">
+      <thead id="sal-summary-head"></thead>
+      <tbody id="sal-summary-body"></tbody>
+    </table>
+  </div>
   <div id="player-header">
     <h2>Available Players</h2>
     <div id="player-controls">
@@ -2055,8 +2089,70 @@ function renderPlayerTableInto(headId, bodyId, list, showElig) {
   document.getElementById(bodyId).innerHTML = html;
 }
 
+function renderSalarySummary() {
+  const wrap = document.getElementById('sal-summary-wrap');
+  if (!DATA) { wrap.style.display = 'none'; return; }
+  const salaries = DATA.salaries || {};
+  if (!Object.keys(salaries).length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+
+  const allPlayers = buildAllPlayerMap();
+  const IND_COLS   = ['C','1B','2B','SS','3B','OF','DH','SP','RP'];
+  const BAT_SET    = new Set(['C','1B','2B','3B','SS','OF','DH']);
+
+  function posKey(p) {
+    const pos = (p.pos || '').toUpperCase();
+    if (['LF','CF','RF','OF'].includes(pos)) return 'OF';
+    if (['CL','RP','P'].includes(pos)) return 'RP';
+    if (IND_COLS.includes(pos)) return pos;
+    return null;
+  }
+  function parseSal(s) { return s ? (parseInt(s.replace('$',''), 10) || 0) : 0; }
+
+  const tot = {}, dft = {}, und = {};
+  for (const k of [...IND_COLS, 'Bat', 'Pit']) { tot[k] = 0; dft[k] = 0; und[k] = 0; }
+
+  for (const [name, salStr] of Object.entries(salaries)) {
+    const sal = parseSal(salStr);
+    if (!sal) continue;
+    const p = allPlayers[name];
+    if (!p) continue;
+    const key = posKey(p);
+    if (!key) continue;
+    const grp   = BAT_SET.has(key) ? 'Bat' : 'Pit';
+    const isDft = drafted.has(name);
+    tot[key] += sal; tot[grp] += sal;
+    if (isDft) { dft[key] += sal; dft[grp] += sal; }
+    else        { und[key] += sal; und[grp] += sal; }
+  }
+
+  function fmt(n) { return n ? '$' + n : '—'; }
+  function pct(u, t) { return t ? Math.round(100 * u / t) + '%' : '—'; }
+
+  document.getElementById('sal-summary-head').innerHTML = `<tr>
+    <th></th>
+    ${IND_COLS.map(c => `<th${c === 'SP' ? ' class="sal-sep"' : ''}>${c}</th>`).join('')}
+    <th class="sal-sep">All Bat</th><th>All Pit</th>
+  </tr>`;
+
+  function dataRow(lbl, map) {
+    return `<tr><td>${lbl}</td>` +
+      IND_COLS.map(c => `<td${c === 'SP' ? ' class="sal-sep"' : ''}>${fmt(map[c])}</td>`).join('') +
+      `<td class="sal-sep">${fmt(map['Bat'])}</td><td>${fmt(map['Pit'])}</td></tr>`;
+  }
+  function pctRow() {
+    return `<tr class="sal-pct-row"><td>% Left</td>` +
+      IND_COLS.map(c => `<td${c === 'SP' ? ' class="sal-sep"' : ''}>${pct(und[c], tot[c])}</td>`).join('') +
+      `<td class="sal-sep">${pct(und['Bat'], tot['Bat'])}</td><td>${pct(und['Pit'], tot['Pit'])}</td></tr>`;
+  }
+
+  document.getElementById('sal-summary-body').innerHTML =
+    dataRow('Total', tot) + dataRow('Drafted', dft) + dataRow('Undrafted', und) + pctRow();
+}
+
 function renderPlayerTab() {
   if (!DATA) return;
+  renderSalarySummary();
 
   const searchVal   = document.getElementById('search-box-player').value.trim().toLowerCase();
   const hideDrafted = document.getElementById('player-hide-drafted').checked;
