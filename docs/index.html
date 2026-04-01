@@ -1262,12 +1262,13 @@ function render() {
   if (isReadme)     return;
   if (isNotes)      return;
   if (isSetup)      return;
-  renderSalarySummary();
+  const allPlayerMap = DATA ? buildAllPlayerMap() : null;
+  renderSalarySummary(allPlayerMap);
   if (isInjuries)   renderInjuries();
   else if (isNews)  renderNews();
   else if (isStats) renderStats();
-  else if (isPlayer) renderPlayerTab();
-  else if (isDrafted) renderDrafted();
+  else if (isPlayer) renderPlayerTab(allPlayerMap);
+  else if (isDrafted) renderDrafted(allPlayerMap);
   else if (isLeague)  renderLeague();
   else { buildPosFilter(); renderGrid(); renderList(); }
 }
@@ -1944,6 +1945,9 @@ function normPosGroup(pos) {
   return pos;
 }
 
+// Parse a salary string like "$46" → 46. Returns 0 for missing/invalid.
+function parseSal(s) { return s ? (parseInt(s.replace('$', ''), 10) || 0) : 0; }
+
 function buildAllPlayerMap() {
   const rankings    = DATA.rankings    || {};
   const dc          = DATA.depth_chart || {};
@@ -2093,27 +2097,24 @@ function renderPlayerTableInto(headId, bodyId, list, showElig) {
   document.getElementById(bodyId).innerHTML = html;
 }
 
-function renderSalarySummary() {
+function renderSalarySummary(allPlayerMap) {
   const wrap = document.getElementById('sal-summary-wrap');
   if (!DATA) { wrap.style.display = 'none'; return; }
   const salaries = DATA.salaries || {};
   if (!Object.keys(salaries).length) { wrap.style.display = 'none'; return; }
   wrap.style.display = '';
 
-  const allPlayers = buildAllPlayerMap();
+  const allPlayers = allPlayerMap || buildAllPlayerMap();
   const IND_COLS   = ['C','1B','2B','SS','3B','OF','DH','SP','RP'];
   const BAT_POS    = ['C','1B','2B','SS','3B','OF','DH'];
   const BAT_SET    = new Set(BAT_POS);
   const PIT_SLOTS  = ROSTER_SLOTS.filter(s => s.type === 'p').length; // 9
 
   function posKey(p) {
-    const pos = (p.pos || '').toUpperCase();
-    if (['LF','CF','RF','OF'].includes(pos)) return 'OF';
-    if (['CL','RP','P'].includes(pos)) return 'RP';
-    if (IND_COLS.includes(pos)) return pos;
-    return null;
+    let pos = normPosGroup((p.pos || '').toUpperCase()); // normalises LF/CF/RF → OF
+    if (pos === 'CL' || pos === 'P') pos = 'RP';
+    return IND_COLS.includes(pos) ? pos : null;
   }
-  function parseSal(s) { return s ? (parseInt(s.replace('$',''), 10) || 0) : 0; }
 
   // ── Salary sums ──
   const tot = {}, und = {};
@@ -2210,12 +2211,12 @@ function renderSalarySummary() {
     openRow();
 }
 
-function renderPlayerTab() {
+function renderPlayerTab(allPlayerMap) {
   if (!DATA) return;
 
   const searchVal   = document.getElementById('search-box-player').value.trim().toLowerCase();
   const hideDrafted = document.getElementById('player-hide-drafted').checked;
-  const allPlayers  = Object.values(buildAllPlayerMap());
+  const allPlayers  = Object.values(allPlayerMap || buildAllPlayerMap());
 
   // Top table: players matching the search (optionally hiding drafted)
   const matched = allPlayers.filter(p => {
@@ -2256,10 +2257,10 @@ function fmtDraftTime(iso) {
   return new Date(iso).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 }
 
-function renderDrafted() {
+function renderDrafted(allPlayerMap) {
   if (!DATA) return;
 
-  const allPlayers  = Object.values(buildAllPlayerMap());
+  const allPlayers  = Object.values(allPlayerMap || buildAllPlayerMap());
   const draftedList = allPlayers.filter(p => drafted.has(p.name));
   // Sort by draft time descending (most recently drafted first)
   draftedList.sort((a, b) => {
@@ -2948,38 +2949,6 @@ function pitcherDisplayPos(name) {
     if ((td.SP || []).some(p => p.name === name)) return 'SP';
   }
   return 'RP';
-}
-
-// ── Open slot capacity ────────────────────────────────────────────────────
-// Max additional players of posX that can still be rostered alongside batterPlayers.
-function maxAdditionalForPos(batterPlayers, posX, strict = false) {
-  let xSlotIds = ROSTER_SLOTS.filter(s => s.type === 'b' && s.elig.includes(posX)).map(s => s.id);
-  if (strict && posX !== 'DH') xSlotIds = xSlotIds.filter(id => id !== 'Util');
-  if (!xSlotIds.length) return 0;
-  const bSlotIdSet = new Set(ROSTER_SLOTS.filter(s => s.type === 'b').map(s => s.id));
-  function eligFor(name) {
-    if (name.startsWith('__virt_')) return xSlotIds;
-    return playerSlotElig(name).filter(id => bSlotIdSet.has(id));
-  }
-  for (let k = xSlotIds.length; k >= 1; k--) {
-    const virtuals   = Array.from({length: k}, (_, i) => `__virt_${i}`);
-    const allPlayers = [...batterPlayers, ...virtuals];
-    const sorted     = [...allPlayers].sort((a, b) => eligFor(a).length - eligFor(b).length);
-    const slotMatch  = {};
-    function augment(name, vis) {
-      for (const sid of eligFor(name)) {
-        if (vis.has(sid)) continue;
-        vis.add(sid);
-        const prev = slotMatch[sid];
-        if (!prev || augment(prev, vis)) { slotMatch[sid] = name; return true; }
-      }
-      return false;
-    }
-    const assigned = new Set();
-    for (const p of sorted) { if (augment(p, new Set())) assigned.add(p); }
-    if (virtuals.every(v => assigned.has(v))) return k;
-  }
-  return 0;
 }
 
 // Returns {C, 1B, 2B, 3B, SS, OF, P} — how many players of each position could still be rostered

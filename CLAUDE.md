@@ -109,6 +109,11 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 - Draft state localStorage note (local to each browser, not shared)
 
 **Player tab** — combined batter + pitcher search and position-pool view:
+- **Salary Pool by Position table** (top of tab): compact summary table showing salary and player-count data across positions C, 1B, 2B, SS, 3B, OF, DH, SP, RP plus All Bat / All Pit aggregates
+  - Rows: Total $ | Left $ | % Left $ (salary) — then separator — Total # | Left # | % Left # (player counts, salary ≥ $1) — then separator — Open (must-draft)
+  - **Open row** (blue): league-wide sum of open roster slots per position, using "must-draft" semantics — Util slot excluded for non-DH batter positions so the number reflects genuinely needed slots rather than flex overflow. SP/RP show `—` (pitcher slots are undifferentiated); All Pit shows total open pitcher slots
+  - Recalculates on every draft/undraft event regardless of active tab
+  - Hidden when no salary data is loaded
 - **Top table (Available Players)**: all players (batters and pitchers) filtered by the search box; columns: Rank, Starting, Name, Team, Pos, Eligible, Sal, batter stats (AVG/HR/RBI/SB/R), pitcher stats (ERA/W/S/WHIP/K)
 - **Bottom table (Remaining Available — POS (N))**: all non-drafted players at the union of positions of the matched players; same columns minus Eligible; title updates dynamically with position group(s) and count
 - OF is grouped (LF/CF/RF all → OF) for the position pool; SP/CL/RP stay separate
@@ -122,9 +127,11 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
   - Each slot row: slot label + full player name + draft price in green; empty slots shown as `—`
   - For pitcher slots, the label shows the player's actual position (`SP` or `RP`) instead of the slot type
   - Pitchers sorted SP first, then RP within each card
+- **Open slots footer** on each card (green `OPEN` label): shows per-position open slot counts for C, 1B, 2B, 3B, SS, OF, P; zeros hidden; uses "could draft" semantics (Util counts as an eligible landing spot); computed by `openSlotsFor()` → `openSlotsHtml()`
 - Unassigned section at card bottom (orange pills) for any players who couldn't be fit into a slot
 - Display order: league members list first (even if empty/undrafted), then any extra teams found in `draftedBy`, then a `— No Drafter —` card for players with no team assigned
 - Summary line above grid: `N teams · M players drafted`
+- **Recalc button** in header: force re-render of all cards (backup if display is stale)
 - **Live updates**: cards re-render automatically on every draft event when the League tab is active (`renderRoster()` calls `renderLeague()` when `currentTab === 'league'`)
 
 **League tab — auto-assignment logic (`autoAssignRoster`):**
@@ -136,8 +143,9 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 - `pitcherDisplayPos(name)`: uses `DATA.rankings[name].pos` as the source for SP vs RP display (`projections._pos` is always the generic `'P'` for all pitchers and cannot be used for this)
 - `getPitcherPos(name)`: determines whether a player is a pitcher at all (for matching); checks projections → rankings → depth chart; treats `'P'` and `'SP'` both as pitcher
 
-**League tab — next planned features:**
-- Supply/demand view: for a given position, how many teams have open slots + budget to spend vs. how many undrafted quality players remain
+**Open slot semantics — two views:**
+- **"Could draft"** (`openSlotsFor`, used by league cards and roster panel): counts all empty batter slots that accept posX including Util — shows what's *possible*. Computed by running `autoAssignRoster` on current batters then counting unfilled slots per position.
+- **"Must draft"** (salary summary Open row): same slot-counting approach but Util excluded for non-DH positions — shows what's *necessary*. Util still counts for DH (it's DH's only slot).
 
 **Batters tab** — columns: C, 1B, 2B, 3B, SS, LF, CF, RF, DH
 - Each cell: starter (bold) + 1 backup (gray/small)
@@ -238,6 +246,8 @@ Fixed 220px panel on the right side of the screen. Now a **team viewer** — sho
 - Full player names; draft price in green next to each name
 - Unassigned section at bottom for overflow players
 - Empty slots shown as `—`
+
+**Open slots row** (`#roster-open-slots`): between roster body and budget footer; shows same "could draft" open slot counts as the league cards (teal values on dark background); cleared when no team is selected.
 
 **Budget footer**: `$X spent` / `$Y left` based on the viewed team's `draftPrice` values vs. $260 cap.
 
