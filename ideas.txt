@@ -1,0 +1,77 @@
+Draft Dashboard Ideas — Live Auction Analytics
+===============================================
+
+Goal: real-time dashboard for a fast-paced AL-only rotisserie auction draft.
+Track where supply is ample or tight, and whether it's a "good time" to bid
+based on whether the market is running hot or cold.
+
+All of the following build on data already in the app:
+- draftPrice (actual auction prices paid)
+- salaries (CBS AL-only projected salaries)
+- draftTimes (ISO timestamp on every pick — preserves temporal order)
+- roster state (draftedBy, open slot counts per team)
+
+
+PRIORITY 1 — Inflation Rate (highest impact, single number)
+------------------------------------------------------------
+Formula: Total league money remaining / Total projected salary value remaining
+  - League money remaining = sum of (260 - spent) across all teams
+  - Projected value remaining = Left $ All Bat + Left $ All Pit (already in table)
+
+Interpretation:
+  - Inflation 1.25x → bid up to 1.25 × projected salary on any player
+  - Inflation < 1.0 → market is underpaying, bid near projection for value
+
+Display: headline number above the Salary Pool table, or a footer row.
+This is the single most actionable number during a live auction.
+
+
+PRIORITY 2 — Recent Market Premium (draft tempo signal)
+--------------------------------------------------------
+Uses timestamps. Compute: (draftPrice - projectedSal) / projectedSal
+for recent picks (last ~10) vs. overall-draft average.
+
+Example display:
+  Market: +18% over projection  (last 10 picks: +28% ↑)
+
+When recent premium is rising → market running hot → wait, don't bid.
+When recent premium drops below overall average → value opportunities open up.
+
+
+PRIORITY 3 — Team Budget Pressure (per-team $/slot)
+----------------------------------------------------
+For each team in the League tab: budget remaining / open roster slots.
+
+  $120 left, 8 slots = $15/slot → dangerous bidder, will compete hard
+  $25 left, 8 slots  = $3/slot  → cash-strapped, hunting bargains only
+
+Already partially visible from the budget footer per card, but distilling
+it to a single $/slot number per card makes it immediately actionable.
+
+
+PRIORITY 4 — Position Scarcity Ratio (extend existing table)
+-------------------------------------------------------------
+Already have Open and Left# in the Salary Pool table. Add ratio: Open / Left#.
+
+  C:  Open=8,  Left#=6  → ratio 1.33 → more demand than supply → prices stay high
+  OF: Open=20, Left#=45 → ratio 0.44 → supply >> demand → can afford to wait
+
+Could be a new row in the table, or replace/augment one of the existing rows.
+
+
+PRIORITY 5 — Stranded Salary Warning
+--------------------------------------
+Teams that are nearly full but still have significant budget left can't spend
+that money — yet it inflates prices for everyone else bidding on the remaining
+players. Identifying teams with high $ remaining but few/no open slots gives
+a cleaner picture of actual available competition at each position.
+
+Could flag these teams in the League tab (e.g., a subtle indicator on the card).
+
+
+Implementation notes:
+- Priorities 1 and 2 are the most impactful pair: together they answer
+  "what should I bid?" and "is now a good time to bid?"
+- All five are fast to compute from existing in-memory state.
+- Timestamps are stored as ISO strings; temporal order is available for
+  computing rolling averages over the last N picks.
