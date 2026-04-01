@@ -563,6 +563,31 @@ body {
 .league-unasgn-hdr { font-size: 9px; font-weight: 700; color: #9ab0c8; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 3px; }
 .league-unasgn-pills { display: flex; flex-wrap: wrap; gap: 3px; }
 .league-unasgn-pill { background: #fff3e0; border: 1px solid #f0a030; color: #7a4000; border-radius: 3px; padding: 1px 6px; font-size: 10px; }
+.league-recalc-btn {
+  background: #2a4f7a; border: none; color: #cfe0f8;
+  padding: 3px 9px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-left: auto;
+}
+.league-recalc-btn:hover { background: #3a6a9a; }
+
+/* ── Open Slots display ───────────────────────────────────────────────────── */
+.open-slots-row {
+  padding: 4px 8px 5px; border-top: 1px solid #e8eef4;
+  display: flex; flex-wrap: wrap; gap: 5px; align-items: center;
+}
+.open-slots-row .open-slots-lbl {
+  font-size: 9px; font-weight: 700; letter-spacing: .6px;
+  color: #9ab0c8; text-transform: uppercase; margin-right: 1px;
+}
+.open-slots-row .open-slots-val { font-size: 10px; font-weight: 600; color: #2a7a50; }
+#roster-open-slots {
+  padding: 5px 10px 4px; border-top: 1px solid #1e3550;
+  display: flex; flex-wrap: wrap; gap: 5px; align-items: center; flex-shrink: 0;
+}
+#roster-open-slots .open-slots-lbl {
+  font-size: 9px; font-weight: 700; letter-spacing: .6px;
+  color: #5a88b0; text-transform: uppercase; margin-right: 1px;
+}
+#roster-open-slots .open-slots-val { font-size: 10px; font-weight: 600; color: #7adb8a; }
 
 /* ── My Team Stats tab ───────────────────────────────────────────────────── */
 #stats-section { padding: 0 16px 24px; display: none; }
@@ -849,6 +874,7 @@ body {
   <div id="league-header">
     <h2>League Rosters</h2>
     <span id="league-count"></span>
+    <button class="league-recalc-btn" onclick="renderLeague()">Recalc</button>
   </div>
   <div id="league-body"></div>
 </div>
@@ -860,6 +886,7 @@ body {
     <span id="roster-count">0/23</span>
   </div>
   <div id="roster-body"></div>
+  <div id="roster-open-slots"></div>
   <div id="roster-budget"></div>
 </div>
 
@@ -2463,6 +2490,13 @@ function renderRoster() {
 
   document.getElementById('roster-body').innerHTML = html;
   renderBudget();
+
+  const openTeamPlayers = rosterViewTeam
+    ? Object.entries(draftedBy).filter(([, t]) => t === rosterViewTeam).map(([n]) => n)
+    : [];
+  document.getElementById('roster-open-slots').innerHTML =
+    DATA && rosterViewTeam ? openSlotsHtml(openSlotsFor(openTeamPlayers)) : '';
+
   if (currentTab === 'league') renderLeague();
 }
 
@@ -2761,6 +2795,57 @@ function pitcherDisplayPos(name) {
   return 'RP';
 }
 
+// ── Open slot capacity ────────────────────────────────────────────────────
+// Max additional players of posX that can still be rostered alongside batterPlayers.
+function maxAdditionalForPos(batterPlayers, posX) {
+  const xSlotIds  = ROSTER_SLOTS.filter(s => s.type === 'b' && s.elig.includes(posX)).map(s => s.id);
+  const bSlotIdSet = new Set(ROSTER_SLOTS.filter(s => s.type === 'b').map(s => s.id));
+  function eligFor(name) {
+    if (name.startsWith('__virt_')) return xSlotIds;
+    return playerSlotElig(name).filter(id => bSlotIdSet.has(id));
+  }
+  for (let k = xSlotIds.length; k >= 1; k--) {
+    const virtuals   = Array.from({length: k}, (_, i) => `__virt_${i}`);
+    const allPlayers = [...batterPlayers, ...virtuals];
+    const sorted     = [...allPlayers].sort((a, b) => eligFor(a).length - eligFor(b).length);
+    const slotMatch  = {};
+    function augment(name, vis) {
+      for (const sid of eligFor(name)) {
+        if (vis.has(sid)) continue;
+        vis.add(sid);
+        const prev = slotMatch[sid];
+        if (!prev || augment(prev, vis)) { slotMatch[sid] = name; return true; }
+      }
+      return false;
+    }
+    const assigned = new Set();
+    for (const p of sorted) { if (augment(p, new Set())) assigned.add(p); }
+    if (virtuals.every(v => assigned.has(v))) return k;
+  }
+  return 0;
+}
+
+// Returns {C, 1B, 2B, 3B, SS, OF, P} counts of additional players that can still be rostered.
+function openSlotsFor(players) {
+  const batterPlayers = players.filter(n => !getPitcherPos(n));
+  const pitcherCount  = players.length - batterPlayers.length;
+  const pitcherSlots  = ROSTER_SLOTS.filter(s => s.type === 'p').length;
+  const result = { P: Math.max(0, pitcherSlots - pitcherCount) };
+  for (const pos of ['C','1B','2B','3B','SS','OF']) {
+    result[pos] = maxAdditionalForPos(batterPlayers, pos);
+  }
+  return result;
+}
+
+// Renders open slot counts as HTML (used in both league cards and roster panel).
+function openSlotsHtml(counts) {
+  const parts = ['C','1B','2B','3B','SS','OF','P']
+    .filter(p => counts[p] > 0)
+    .map(p => `<span class="open-slots-val">${p}:${counts[p]}</span>`);
+  if (!parts.length) return '';
+  return `<span class="open-slots-lbl">OPEN</span>${parts.join('')}`;
+}
+
 // Bipartite matching — assign players to roster slots optimally.
 // Processes most-constrained players first for better coverage.
 function autoAssignRoster(players) {
@@ -2824,6 +2909,8 @@ function renderLeague() {
     const players = team === '__orphan__' ? orphans : (byTeam[team] || []);
     const label   = team === '__orphan__' ? '— No Drafter —' : team;
     const { slots, unassigned } = autoAssignRoster(players);
+    const openCounts = openSlotsFor(players);
+    const openHtml   = openSlotsHtml(openCounts);
     const spent    = players.reduce((s, n) => s + (draftPrice[n] || 0), 0);
     const filled   = Object.keys(slots).length;
     const left     = 260 - spent;
@@ -2874,6 +2961,7 @@ function renderLeague() {
         </div>
       </div>
       ${unassignedHtml}
+      ${openHtml ? `<div class="open-slots-row">${openHtml}</div>` : ''}
     </div>`;
   }
 
