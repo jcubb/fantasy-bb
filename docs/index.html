@@ -255,18 +255,15 @@ body {
 .row-drafted .r-name { text-decoration: line-through; }
 
 /* ── Salary Pool summary table ────────────────────────────────────────────── */
-#sal-summary-wrap { padding: 12px 0 6px; display: flex; gap: 24px; align-items: stretch; flex-wrap: wrap; }
+#sal-summary-wrap { padding: 12px 0 6px; display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
 #sal-summary-left { flex: 0 0 auto; }
-#sal-market-chart-wrap {
-  flex: 1 1 260px; min-width: 220px;
-  display: flex; flex-direction: column;
-}
+#sal-market-chart-wrap { flex: 0 0 auto; display: flex; flex-direction: column; }
 #sal-market-chart-title {
   font-size: 11px; font-weight: 700; color: #7a8ca0;
   letter-spacing: .5px; text-transform: uppercase;
   display: block; margin-bottom: 5px;
 }
-#sal-market-chart { display: block; width: 100%; height: 100%; }
+#sal-market-chart { display: block; }
 #sal-summary-title {
   font-size: 11px; font-weight: 700; color: #7a8ca0;
   letter-spacing: .5px; text-transform: uppercase;
@@ -2178,8 +2175,9 @@ function buildDraftPool(allPlayers, N) {
 
 function renderMarketChart(picks, N) {
   const svg = document.getElementById('sal-market-chart');
-  const W = svg.parentElement.clientWidth  || 300;
-  const H = svg.parentElement.clientHeight || 200;
+  const table = document.getElementById('sal-summary-table');
+  const W = Math.max(220, table ? table.offsetWidth  : 300);
+  const H = Math.max(120, table ? table.offsetHeight : 200);
   const PAD = { top: 14, right: 12, bottom: 28, left: 36 };
   const pw = W - PAD.left - PAD.right;
   const ph = H - PAD.top  - PAD.bottom;
@@ -3405,10 +3403,6 @@ function jsStr(s) {
 }
 
 init();
-window.addEventListener('resize', () => {
-  const svg = document.getElementById('sal-market-chart');
-  if (svg && svg.innerHTML) render();
-});
 </script>
 </body>
 </html>
