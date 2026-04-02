@@ -2176,56 +2176,107 @@ function renderSalarySummary(allPlayerMap) {
     open['Pit'] += Math.max(0, PIT_SLOTS - pitCount);
   }
 
-  // ── Inflation rate ──
+  // ── Draft pool (realistic fill for N teams) ──
+  const N = members.length;
+  let poolSalStart = 0;
+  let poolSalRemaining = 0;
+  if (N > 0) {
+    // Batters: iteratively fill N × 14 batter slots by running autoAssignRoster N times
+    const allBatNames = Object.keys(allPlayers)
+      .filter(n => !getPitcherPos(n) && parseSal(salaries[n]) > 0)
+      .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]));
+    let batRemaining = [...allBatNames];
+    for (let t = 0; t < N; t++) {
+      const { slots } = autoAssignRoster(batRemaining);
+      const assigned = new Set(Object.values(slots));
+      for (const name of assigned) {
+        const s = parseSal(salaries[name]);
+        poolSalStart     += s;
+        if (!drafted.has(name)) poolSalRemaining += s;
+      }
+      batRemaining = batRemaining.filter(n => !assigned.has(n));
+    }
+    // Pitchers: top N×5 SP + top N×4 RP by projected salary
+    const allPitNames = Object.keys(allPlayers)
+      .filter(n => getPitcherPos(n) && parseSal(salaries[n]) > 0);
+    const spNames = allPitNames
+      .filter(n => pitcherDisplayPos(n) === 'SP')
+      .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]))
+      .slice(0, N * 5);
+    const rpNames = allPitNames
+      .filter(n => pitcherDisplayPos(n) !== 'SP')
+      .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]))
+      .slice(0, N * 4);
+    for (const name of [...spNames, ...rpNames]) {
+      const s = parseSal(salaries[name]);
+      poolSalStart     += s;
+      if (!drafted.has(name)) poolSalRemaining += s;
+    }
+  }
+
+  // ── Price Scale ──
   const leagueMoney = members.reduce((sum, team) => {
     const teamSpent = Object.entries(draftedBy)
       .filter(([, t]) => t === team)
       .reduce((s, [n]) => s + (draftPrice[n] || 0), 0);
     return sum + Math.max(0, 260 - teamSpent);
   }, 0);
-  const projValRemaining = und['Bat'] + und['Pit'];
-  const inflation = (projValRemaining > 0 && members.length > 0)
-    ? leagueMoney / projValRemaining : null;
+  const moneyStart = N * 260;
+  const priceScale = (poolSalStart > 0 && poolSalRemaining > 0 && N > 0)
+    ? (leagueMoney / poolSalRemaining) / (moneyStart / poolSalStart) : null;
 
-  // ── Market premium (recent picks vs overall) ──
+  // ── Market markup (sum of prices / sum of projected salaries) ──
   const picks = [];
   for (const name of drafted) {
     const price   = draftPrice[name];
-    const projSal = parseSal((DATA.salaries || {})[name]);
+    const projSal = parseSal(salaries[name]);
     if (!price || !projSal) continue;
-    picks.push({ premium: (price - projSal) / projSal, time: draftTimes[name] || '' });
+    picks.push({ price, projSal, time: draftTimes[name] || '' });
   }
   picks.sort((a, b) => a.time.localeCompare(b.time));
 
+  function markupPct(slice) {
+    const sumP = slice.reduce((s, p) => s + p.price,   0);
+    const sumS = slice.reduce((s, p) => s + p.projSal, 0);
+    return sumS > 0 ? (sumP / sumS - 1) * 100 : null;
+  }
+  function fmtPct(v) {
+    if (v === null) return null;
+    const sign = v >= 0 ? '+' : '';
+    return sign + Math.round(v) + '%';
+  }
+
   // ── Stats bar HTML ──
-  let inflationHtml;
-  if (inflation !== null) {
-    const color = inflation >= 1.15 ? '#c0392b' : inflation <= 0.9 ? '#2a7a50' : '#2a3a50';
-    inflationHtml = `<span class="sal-stat-val" style="color:${color}">${inflation.toFixed(2)}x</span>`;
+  let psHtml;
+  if (priceScale !== null) {
+    // < 1 = running hot (overpaying), > 1 = running cold (underpaying)
+    const color = priceScale <= 0.85 ? '#c0392b' : priceScale >= 1.1 ? '#2a7a50' : '#2a3a50';
+    psHtml = `<span class="sal-stat-val" style="color:${color}">${priceScale.toFixed(2)}x</span>`;
   } else {
-    inflationHtml = `<span class="sal-stat-val">—</span>`;
+    psHtml = `<span class="sal-stat-val">—</span>`;
   }
 
   let mktHtml;
-  if (picks.length > 0) {
-    const avgPct = picks.reduce((s, p) => s + p.premium, 0) / picks.length * 100;
-    const last   = picks.slice(-10);
-    const l10Pct = last.reduce((s, p) => s + p.premium, 0) / last.length * 100;
-    const avgSign = avgPct >= 0 ? '+' : '';
-    const l10Sign = l10Pct >= 0 ? '+' : '';
-    const trend   = l10Pct > avgPct + 1 ? '↑' : l10Pct < avgPct - 1 ? '↓' : '→';
-    const tColor  = l10Pct > avgPct + 1 ? '#c0392b' : l10Pct < avgPct - 1 ? '#2a7a50' : '#7a8ca0';
-    mktHtml =
-      `<span class="sal-stat-val">${avgSign}${Math.round(avgPct)}%</span>` +
-      ` <span style="font-size:11px;color:#7a8ca0">(last ${last.length}:&nbsp;</span>` +
-      `<span style="color:${tColor};font-weight:700">${l10Sign}${Math.round(l10Pct)}%&nbsp;${trend}</span>` +
-      `<span style="font-size:11px;color:#7a8ca0">)</span>`;
+  const overallPct = markupPct(picks);
+  if (overallPct !== null) {
+    const overallStr = fmtPct(overallPct);
+    // Complete rounds (oldest→newest, up to last 3)
+    const completeRounds = N > 0 ? Math.floor(picks.length / N) : 0;
+    const startRound     = Math.max(0, completeRounds - 3);
+    const roundStrs = [];
+    for (let r = startRound; r < completeRounds; r++) {
+      roundStrs.push(fmtPct(markupPct(picks.slice(r * N, (r + 1) * N))));
+    }
+    mktHtml = `<span class="sal-stat-val">${overallStr}</span>`;
+    if (roundStrs.length) {
+      mktHtml += ` <span style="font-size:11px;color:#7a8ca0">(${roundStrs.join(' → ')})</span>`;
+    }
   } else {
     mktHtml = `<span class="sal-stat-val">—</span>`;
   }
 
   document.getElementById('sal-stats-bar').innerHTML =
-    `<div class="sal-stat-item"><span class="sal-stat-label">Inflation</span>${inflationHtml}</div>` +
+    `<div class="sal-stat-item"><span class="sal-stat-label">Price Scale</span>${psHtml}</div>` +
     `<div class="sal-stat-item"><span class="sal-stat-label">Market</span>${mktHtml}</div>`;
 
   // ── Render ──
