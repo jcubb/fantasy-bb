@@ -255,7 +255,18 @@ body {
 .row-drafted .r-name { text-decoration: line-through; }
 
 /* ── Salary Pool summary table ────────────────────────────────────────────── */
-#sal-summary-wrap { padding: 12px 0 6px; }
+#sal-summary-wrap { padding: 12px 0 6px; display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+#sal-summary-left { flex: 0 0 auto; }
+#sal-market-chart-wrap {
+  flex: 1 1 260px; min-width: 220px;
+  display: flex; flex-direction: column;
+}
+#sal-market-chart-title {
+  font-size: 11px; font-weight: 700; color: #7a8ca0;
+  letter-spacing: .5px; text-transform: uppercase;
+  display: block; margin-bottom: 5px;
+}
+#sal-market-chart { display: block; width: 100%; }
 #sal-summary-title {
   font-size: 11px; font-weight: 700; color: #7a8ca0;
   letter-spacing: .5px; text-transform: uppercase;
@@ -814,12 +825,18 @@ body {
 <!-- Player tab -->
 <div id="player-section" style="display:none">
   <div id="sal-summary-wrap" style="display:none">
-    <span id="sal-summary-title">Salary Pool by Position</span>
-    <div id="sal-stats-bar"></div>
-    <table id="sal-summary-table">
-      <thead id="sal-summary-head"></thead>
-      <tbody id="sal-summary-body"></tbody>
-    </table>
+    <div id="sal-summary-left">
+      <span id="sal-summary-title">Salary Pool by Position</span>
+      <div id="sal-stats-bar"></div>
+      <table id="sal-summary-table">
+        <thead id="sal-summary-head"></thead>
+        <tbody id="sal-summary-body"></tbody>
+      </table>
+    </div>
+    <div id="sal-market-chart-wrap">
+      <span id="sal-market-chart-title">Market Markup — Rolling Window</span>
+      <svg id="sal-market-chart"></svg>
+    </div>
   </div>
   <div id="player-header">
     <h2>Available Players</h2>
@@ -2159,6 +2176,91 @@ function buildDraftPool(allPlayers, N) {
   return { poolSet, poolSalTotal: total };
 }
 
+function renderMarketChart(picks, N) {
+  const svg = document.getElementById('sal-market-chart');
+  const W = svg.parentElement.clientWidth || 300;
+  const H = 160;
+  const PAD = { top: 14, right: 12, bottom: 28, left: 36 };
+  const pw = W - PAD.left - PAD.right;
+  const ph = H - PAD.top  - PAD.bottom;
+
+  // Build rolling series for windows N, 2N, 3N
+  const WINDOWS = [
+    { w: N,     color: '#e67e22', label: `N=${N}`   },
+    { w: N * 2, color: '#2a7a50', label: `2N`       },
+    { w: N * 3, color: '#1e3a5f', label: `3N`       },
+  ].filter(s => s.w > 0 && s.w <= picks.length);
+
+  const series = WINDOWS.map(({ w, color, label }) => {
+    const pts = [];
+    for (let i = w - 1; i < picks.length; i++) {
+      const slice = picks.slice(i - w + 1, i + 1);
+      const sumP  = slice.reduce((s, p) => s + p.price,   0);
+      const sumS  = slice.reduce((s, p) => s + p.projSal, 0);
+      if (sumS > 0) pts.push({ x: i, y: (sumP / sumS - 1) * 100 });
+    }
+    return { pts, color, label };
+  });
+
+  // Y range: include zero, pad by 5pp
+  let yMin = 0, yMax = 0;
+  for (const { pts } of series)
+    for (const p of pts) { yMin = Math.min(yMin, p.y); yMax = Math.max(yMax, p.y); }
+  const yPad = Math.max(5, (yMax - yMin) * 0.1);
+  yMin -= yPad; yMax += yPad;
+  const xMax = picks.length - 1;
+
+  function sx(xi) { return PAD.left + (xMax > 0 ? (xi / xMax) * pw : pw); }
+  function sy(yi) { return PAD.top  + ph - ((yi - yMin) / (yMax - yMin)) * ph; }
+
+  // Grid lines + Y-axis labels (every ~20pp)
+  const step = yMax - yMin > 60 ? 20 : yMax - yMin > 30 ? 10 : 5;
+  const gridStart = Math.ceil(yMin / step) * step;
+  let gridHtml = '';
+  for (let v = gridStart; v <= yMax + 0.01; v += step) {
+    const y = sy(v);
+    const isZero = Math.abs(v) < 0.01;
+    gridHtml += `<line x1="${PAD.left}" y1="${y.toFixed(1)}" x2="${PAD.left + pw}" y2="${y.toFixed(1)}"
+      stroke="${isZero ? '#8a9ab0' : '#dce4ee'}" stroke-width="${isZero ? 1.5 : 1}"
+      stroke-dasharray="${isZero ? '4,3' : 'none'}"/>`;
+    gridHtml += `<text x="${PAD.left - 4}" y="${(y + 3.5).toFixed(1)}"
+      font-size="9" fill="#9aaabb" text-anchor="end">${v > 0 ? '+' : ''}${v}%</text>`;
+  }
+
+  // X-axis tick labels (every ~20 picks)
+  const tickStep = xMax > 100 ? 40 : xMax > 40 ? 20 : xMax > 20 ? 10 : 5;
+  for (let xi = 0; xi <= xMax; xi += tickStep) {
+    const x = sx(xi).toFixed(1);
+    gridHtml += `<text x="${x}" y="${(PAD.top + ph + 16).toFixed(1)}"
+      font-size="9" fill="#9aaabb" text-anchor="middle">${xi}</text>`;
+  }
+
+  // Lines
+  let linesHtml = '';
+  for (const { pts, color } of series) {
+    if (pts.length < 2) continue;
+    const d = pts.map((p, i) =>
+      (i === 0 ? 'M' : 'L') + sx(p.x).toFixed(1) + ',' + sy(p.y).toFixed(1)
+    ).join(' ');
+    linesHtml += `<path d="${d}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round"/>`;
+  }
+
+  // Legend
+  let legendHtml = '';
+  let lx = PAD.left;
+  for (const { color, label } of WINDOWS) {
+    legendHtml += `<line x1="${lx}" y1="${PAD.top - 5}" x2="${lx + 14}" y2="${PAD.top - 5}"
+      stroke="${color}" stroke-width="2"/>`;
+    legendHtml += `<text x="${lx + 17}" y="${PAD.top - 2}" font-size="9" fill="${color}">${label}</text>`;
+    lx += 44;
+  }
+
+  svg.setAttribute('width',  W);
+  svg.setAttribute('height', H);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = gridHtml + linesHtml + legendHtml;
+}
+
 function renderSalarySummary(allPlayerMap) {
   const wrap = document.getElementById('sal-summary-wrap');
   if (!DATA) { wrap.style.display = 'none'; return; }
@@ -2255,6 +2357,7 @@ function renderSalarySummary(allPlayerMap) {
     picks.push({ price, projSal, time: draftTimes[name] || '' });
   }
   picks.sort((a, b) => a.time.localeCompare(b.time));
+  renderMarketChart(picks, N);
 
   function markupPct(slice) {
     const sumP = slice.reduce((s, p) => s + p.price,   0);
@@ -3302,6 +3405,10 @@ function jsStr(s) {
 }
 
 init();
+window.addEventListener('resize', () => {
+  const svg = document.getElementById('sal-market-chart');
+  if (svg && svg.innerHTML) render();
+});
 </script>
 </body>
 </html>
