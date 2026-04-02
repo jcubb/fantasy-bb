@@ -110,19 +110,34 @@ Takes ~5 minutes. Uses the project venv: `C:/Users/gcubb/OneDrive/Python/.venv`
 
 **Player tab** — combined batter + pitcher search and position-pool view:
 - **Salary Pool by Position table** (top of tab): compact summary table showing salary and player-count data across positions C, 1B, 2B, SS, 3B, OF, DH, SP, RP plus All Bat / All Pit aggregates
-  - Rows: Total $ | Left $ | % Left $ (salary) — then separator — Total # | Left # | % Left # (player counts, salary ≥ $1) — then separator — Open (must-draft)
-  - **Open row** (blue): league-wide sum of open roster slots per position, using "must-draft" semantics — Util slot excluded for non-DH batter positions so the number reflects genuinely needed slots rather than flex overflow. SP/RP show `—` (pitcher slots are undifferentiated); All Pit shows total open pitcher slots
+  - Rows: Total $ | Left $ | % Left $ (salary) — then separator — Total # | Left # | % Left # (player counts, salary ≥ $1) — then separator — Open (must-draft) | Left $ Per | Scarcity
+  - **Open row** (blue): league-wide sum of open roster slots per position, using "must-draft" semantics — Util slot excluded for non-DH batter positions so the number reflects genuinely needed slots rather than flex overflow. SP/RP show `—` (pitcher slots are undifferentiated); All Pit shows total open pitcher slots. Colored green if Open ≤ Left# (supply ok), red otherwise.
+  - **Left $ Per row**: Left $ ÷ Open per position (how much salary value remains per needed slot)
+  - **Scarcity row**: Open ÷ Left# per position — ratio > 1 = demand > supply (red), > 0.6 (orange), ≤ 0.6 (green); ∞ when slots remain but no players left
   - Recalculates on every draft/undraft event regardless of active tab
   - Hidden when no salary data is loaded
+- **Stats bar** above the table (two metrics):
+  - **Price Scale**: `(money remaining / pool sal remaining) / (money start / pool sal start)` — normalized to 1.00 at draft start; < 1 = market running hot (overpaying), > 1 = running cold (underpaying). Pool-adjusted (see Draft Pool below). Red ≤ 0.85, green ≥ 1.10.
+  - **Market**: overall sum(draft prices)/sum(proj salaries)−1 markup across all qualifying picks; followed by up to 3 complete rounds of N picks each shown oldest→newest e.g. `+18% (+8% → +15% → +28%)`. Round averages only appear once a full round of N qualifying picks exists. Qualifying pick = player has both a draft price and a projected salary.
+- **Rolling market chart**: SVG line chart to the right of the table (same pixel dimensions, fixed size). Three rolling-window lines: N picks (orange), 2N (green), 3N (dark blue). X-axis = pick index, Y-axis = markup %. Dashed zero line. Legend and grid labels included. Each line starts once its window is full.
+- **Draft Pool** (module-level cache): realistic N-team draft fill used for Price Scale denominator.
+  - Batters: iteratively run `autoAssignRoster` N times on salary-sorted undrafted batters, taking the matched set each time (handles C scarcity and flex slots correctly)
+  - Pitchers: top N×5 SP + top N×4 RP by projected salary
+  - Stored in `_poolSet` (Set of names), `_poolSalTotal`, `_poolN`. Rebuilt only when N (member count) changes — stable throughout a draft session. `buildDraftPool(allPlayers, N)` is the standalone function.
 - **Top table (Available Players)**: all players (batters and pitchers) filtered by the search box; columns: Rank, Starting, Name, Team, Pos, Eligible, Sal, batter stats (AVG/HR/RBI/SB/R), pitcher stats (ERA/W/S/WHIP/K)
 - **Bottom table (Remaining Available — POS (N))**: all non-drafted players at the union of positions of the matched players; same columns minus Eligible; title updates dynamically with position group(s) and count
 - OF is grouped (LF/CF/RF all → OF) for the position pool; SP/CL/RP stay separate
 - Search box is synced bidirectionally with the Batters/Pitchers tab search box — switching tabs carries the value over
 - Typical use: type enough of a name to uniquely identify a player being bid on; top table shows that player, bottom table shows the full remaining pool at their position(s)
 
-**League tab** — grid of roster cards for every league team (one card per member defined in Draft Setup):
+**League tab** — projected standings table at top, roster card grid below:
+- **Projected Standings table** (`renderStandings()`): ranks all league teams across 10 roto categories (HR, RBI, BA, SB, R, W, S, ERA, WHIP, K). Points = sum of (N+1−rank) per category; higher = better. Color-coded: rank 1 dark green → rank N red. Each cell shows projected stat value; hover shows rank. Recomputes on every draft/undraft when League tab is active.
+  - **`computeFilledRoster(teamPlayers)`**: fills open slots with best affordable undrafted players. Per-slot cap = floor(budget / open_slots). Batters filled via `autoAssignRoster` on drafted batters + all affordable undrafted batter candidates (salary-sorted desc). Pitchers: top N×needSP SP + top N×needRP RP within cap. Same undrafted players shared across all teams (optimistic/best-case fill).
+  - **`computeTeamStats(names)`**: sums HR/RBI/SB/R, H/AB for BA, W/S/K, innings-weighted ERA and WHIP across full projected roster.
+  - **Open question (not yet implemented)**: should fill-in candidate salary cap be divided by the current Market markup (e.g. cap / 1.18 if market is running +18% hot) to reflect what the budget can actually buy at current prices? Arguments for: more realistic, rewards teams with budget flexibility. Arguments against: fill-in is intentionally optimistic, markup may not persist. Recommendation: scale by Market markup (sum/sum, not Price Scale) when implemented.
+- **Roster cards** grid — one card per member defined in Draft Setup:
 - Cards laid out in a wrapping flex grid; each card is 330px wide
-- Card header: team name + filled slots count (e.g. `21/23`) + `$spent` + `$left` remaining vs $260 budget
+- Card header: team name + filled slots count (e.g. `21/23`) + `$spent` + `$left` remaining vs $260 budget + **Max Bid** (gold): `max($1, budget − (open_slots − 1))` — most spendable on one player while keeping $1/slot for the rest
 - Card body: two columns — Batters (14 slots) on left, Pitchers (9 slots) on right
   - Each slot row: slot label + full player name + draft price in green; empty slots shown as `—`
   - For pitcher slots, the label shows the player's actual position (`SP` or `RP`) instead of the slot type
