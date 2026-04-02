@@ -621,6 +621,37 @@ body {
 }
 .league-recalc-btn:hover { background: #3a6a9a; }
 
+/* ── Standings table ─────────────────────────────────────────────────────── */
+#standings-wrap { padding: 8px 0 16px; }
+#standings-title {
+  font-size: 11px; font-weight: 700; color: #7a8ca0;
+  letter-spacing: .5px; text-transform: uppercase;
+  display: block; margin-bottom: 6px;
+}
+#standings-table { border-collapse: collapse; white-space: nowrap; }
+#standings-table th {
+  background: #2a4f7a; color: #cfe0f8;
+  padding: 4px 10px; text-align: right;
+  font-size: 11px; font-weight: 700;
+}
+#standings-table th:first-child  { text-align: center; width: 28px; }
+#standings-table th:nth-child(2) { text-align: left; }
+#standings-table th.std-sep { border-left: 2px solid #4a78a8; }
+#standings-table td {
+  padding: 3px 10px; text-align: right;
+  border-bottom: 1px solid #e8eef5; font-size: 11px;
+}
+#standings-table td:first-child  { text-align: center; color: #7a8ca0; font-weight: 700; font-size: 12px; }
+#standings-table td:nth-child(2) { text-align: left; font-weight: 600; color: #1a2035; }
+#standings-table td.std-sep { border-left: 2px solid #c8d3e0; }
+#standings-table td.std-pts { font-weight: 700; color: #1e3a5f; background: #eef3fa; }
+.std-r1  { background: #1a6640; color: white !important; }
+.std-r2  { background: #2a8a55; color: white !important; }
+.std-r3  { background: #4aaa75; color: white !important; }
+.std-mid { background: #f8f0e0; color: #5a4a20 !important; }
+.std-rlo { background: #e8b090; color: #5a2010 !important; }
+.std-rl  { background: #c0392b; color: white !important; }
+
 /* ── Open Slots display ───────────────────────────────────────────────────── */
 .open-slots-row {
   padding: 4px 8px 5px; border-top: 1px solid #e8eef4;
@@ -941,6 +972,13 @@ body {
     <h2>League Rosters</h2>
     <span id="league-count"></span>
     <button class="league-recalc-btn" onclick="renderLeague()">Recalc</button>
+  </div>
+  <div id="standings-wrap" style="display:none">
+    <span id="standings-title">Projected Standings</span>
+    <table id="standings-table">
+      <thead id="standings-head"></thead>
+      <tbody id="standings-body"></tbody>
+    </table>
   </div>
   <div id="league-body"></div>
 </div>
@@ -3283,8 +3321,218 @@ function autoAssignRoster(players) {
   return { slots: { ...slotMatch }, unassigned: players.filter(n => !assigned.has(n)) };
 }
 
+// ── Standings helpers ────────────────────────────────────────────────────────
+
+// Build a full projected roster for a team: drafted players + fill-ins.
+// Fill-ins are the best undrafted affordable players that fit open slots.
+function computeFilledRoster(teamPlayers) {
+  const salaries  = DATA.salaries || {};
+  const spent     = teamPlayers.reduce((s, n) => s + (draftPrice[n] || 0), 0);
+  const budget    = Math.max(0, 260 - spent);
+  const openSlots = ROSTER_SLOTS.length - teamPlayers.length;
+  if (openSlots <= 0) return teamPlayers;
+
+  // Per-slot salary cap for fill-ins (simple, fair heuristic)
+  const cap = openSlots > 0 ? Math.floor(budget / openSlots) : 0;
+
+  const draftedBatters  = teamPlayers.filter(n => !getPitcherPos(n));
+  const draftedPitchers = teamPlayers.filter(n =>  getPitcherPos(n));
+
+  // Count current SP/RP
+  const curSP = draftedPitchers.filter(n => pitcherDisplayPos(n) === 'SP').length;
+  const curRP = draftedPitchers.filter(n => pitcherDisplayPos(n) !== 'SP').length;
+  const needSP = Math.max(0, 5 - curSP);
+  const needRP = Math.max(0, 4 - curRP);
+
+  // Batter fill-ins: all undrafted batters with salary ≤ cap, salary-sorted desc
+  const batCandidates = Object.keys(DATA.projections?.batters || {})
+    .filter(n => !drafted.has(n) && parseSal(salaries[n]) > 0 && parseSal(salaries[n]) <= cap)
+    .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]));
+
+  const { slots } = autoAssignRoster([...draftedBatters, ...batCandidates]);
+  const assignedSet = new Set(Object.values(slots));
+  const batFillIns  = batCandidates.filter(n => assignedSet.has(n));
+
+  // Pitcher fill-ins: top undrafted SP/RP by salary, within cap
+  const pitCandidates = Object.keys(DATA.projections?.pitchers || {})
+    .filter(n => !drafted.has(n) && parseSal(salaries[n]) > 0 && parseSal(salaries[n]) <= cap);
+  const spFillIns = pitCandidates
+    .filter(n => pitcherDisplayPos(n) === 'SP')
+    .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]))
+    .slice(0, needSP);
+  const rpFillIns = pitCandidates
+    .filter(n => pitcherDisplayPos(n) !== 'SP')
+    .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]))
+    .slice(0, needRP);
+
+  return [...teamPlayers, ...batFillIns, ...spFillIns, ...rpFillIns];
+}
+
+// Compute the 10 rotisserie category totals for a list of player names.
+function computeTeamStats(names) {
+  const batProj = DATA.projections?.batters  || {};
+  const pitProj = DATA.projections?.pitchers || {};
+  let HR=0, RBI=0, SB=0, R=0, H=0, AB=0, W=0, S=0, K=0;
+  let eraNum=0, eraInn=0, whipNum=0, whipInn=0;
+
+  for (const n of names) {
+    const bp = batProj[n];
+    if (bp) {
+      HR  += parseFloat(bp.HR)  || 0;
+      RBI += parseFloat(bp.RBI) || 0;
+      SB  += parseFloat(bp.SB)  || 0;
+      R   += parseFloat(bp.R)   || 0;
+      const h = parseFloat(bp.H), ab = parseFloat(bp.AB);
+      if (!isNaN(h) && !isNaN(ab)) { H += h; AB += ab; }
+    }
+    const pp = pitProj[n];
+    if (pp) {
+      W += parseFloat(pp.W) || 0;
+      S += parseFloat(pp.S) || 0;
+      K += parseFloat(pp.K) || 0;
+      const inn = parseFloat(pp.INNs);
+      if (!isNaN(inn) && inn > 0) {
+        const era = parseFloat(pp.ERA), whip = parseFloat(pp.WHIP);
+        if (!isNaN(era))  { eraNum  += era  * inn; eraInn  += inn; }
+        if (!isNaN(whip)) { whipNum += whip * inn; whipInn += inn; }
+      }
+    }
+  }
+
+  return {
+    HR:   Math.round(HR),
+    RBI:  Math.round(RBI),
+    BA:   AB > 0 ? H / AB : null,
+    SB:   Math.round(SB),
+    R:    Math.round(R),
+    W:    Math.round(W),
+    S:    Math.round(S),
+    ERA:  eraInn  > 0 ? eraNum  / eraInn  : null,
+    WHIP: whipInn > 0 ? whipNum / whipInn : null,
+    K:    Math.round(K),
+  };
+}
+
+function renderStandings(allPlayerMap) {
+  const wrap = document.getElementById('standings-wrap');
+  const projections = DATA?.projections || {};
+  const hasProj = Object.keys(projections.batters  || {}).length > 0 ||
+                  Object.keys(projections.pitchers || {}).length > 0;
+  if (!DATA || !hasProj) { wrap.style.display = 'none'; return; }
+
+  const members = (localStorage.getItem('ff_league_members') || '')
+    .split('\n').map(s => s.trim()).filter(Boolean);
+  if (!members.length) { wrap.style.display = 'none'; return; }
+
+  // Build byTeam
+  const byTeam = {};
+  for (const m of members) byTeam[m] = [];
+  for (const name of drafted) {
+    const team = draftedBy[name];
+    if (team && byTeam[team]) byTeam[team].push(name);
+  }
+
+  // Compute filled rosters and stats for each team
+  const rows = members.map(team => {
+    const drafted_players = byTeam[team] || [];
+    const full    = computeFilledRoster(drafted_players);
+    const stats   = computeTeamStats(full);
+    return { team, stats };
+  });
+
+  // Rank each category (1 = best)
+  const CATS = [
+    { key:'HR',   hb:true  },
+    { key:'RBI',  hb:true  },
+    { key:'BA',   hb:true  },
+    { key:'SB',   hb:true  },
+    { key:'R',    hb:true  },
+    { key:'W',    hb:true  },
+    { key:'S',    hb:true  },
+    { key:'ERA',  hb:false },
+    { key:'WHIP', hb:false },
+    { key:'K',    hb:true  },
+  ];
+  const N = members.length;
+
+  // For each category, rank teams (1=best). Null values rank last.
+  const ranks = {}; // ranks[team][cat] = rank 1..N
+  for (const { key, hb } of CATS) {
+    const sorted = [...rows].sort((a, b) => {
+      const va = a.stats[key], vb = b.stats[key];
+      if (va == null && vb == null) return 0;
+      if (va == null) return 1;
+      if (vb == null) return -1;
+      return hb ? vb - va : va - vb; // hb=true: higher is better → sort desc
+    });
+    sorted.forEach((row, i) => {
+      if (!ranks[row.team]) ranks[row.team] = {};
+      ranks[row.team][key] = i + 1;
+    });
+  }
+
+  // Points = sum of (N+1 - rank) across all categories; higher = better
+  for (const row of rows) {
+    row.pts = CATS.reduce((s, { key }) => s + (N + 1 - (ranks[row.team][key] || N)), 0);
+  }
+  rows.sort((a, b) => b.pts - a.pts);
+
+  // Rank coloring helper
+  function rankCls(rank, n) {
+    if (n <= 3) {
+      if (rank === 1) return 'std-r1';
+      if (rank === n) return 'std-rl';
+      return 'std-mid';
+    }
+    if (rank === 1) return 'std-r1';
+    if (rank === 2) return 'std-r2';
+    if (rank === 3) return 'std-r3';
+    if (rank === n) return 'std-rl';
+    if (rank === n - 1) return 'std-rlo';
+    return '';
+  }
+
+  // Format values
+  function fmtStat(key, v) {
+    if (v == null) return '—';
+    if (key === 'BA')   return v.toFixed(3).replace(/^0/, '');
+    if (key === 'ERA' || key === 'WHIP') return v.toFixed(2);
+    return Math.round(v);
+  }
+
+  // Header
+  const BAT_CATS = CATS.slice(0, 5);
+  const PIT_CATS = CATS.slice(5);
+  document.getElementById('standings-head').innerHTML = `<tr>
+    <th>#</th><th>Team</th>
+    ${BAT_CATS.map(c => `<th>${c.key}</th>`).join('')}
+    <th class="std-sep">${PIT_CATS[0].key}</th>
+    ${PIT_CATS.slice(1).map(c => `<th>${c.key}</th>`).join('')}
+    <th class="std-sep">Pts</th>
+  </tr>`;
+
+  // Body
+  document.getElementById('standings-body').innerHTML = rows.map((row, i) => {
+    const r = ranks[row.team];
+    function cell(cat, extraCls) {
+      const cls = [rankCls(r[cat.key], N), extraCls].filter(Boolean).join(' ');
+      return `<td class="${cls}" title="Rank ${r[cat.key]}">${fmtStat(cat.key, row.stats[cat.key])}</td>`;
+    }
+    return `<tr>
+      <td>${i + 1}</td>
+      <td>${esc(row.team)}</td>
+      ${BAT_CATS.map(c => cell(c, '')).join('')}
+      ${PIT_CATS.map((c, j) => cell(c, j === 0 ? 'std-sep' : '')).join('')}
+      <td class="std-sep std-pts">${row.pts}</td>
+    </tr>`;
+  }).join('');
+
+  wrap.style.display = '';
+}
+
 function renderLeague() {
   if (!DATA) return;
+  renderStandings();
 
   const members = (localStorage.getItem('ff_league_members') || '')
     .split('\n').map(s => s.trim()).filter(Boolean);
