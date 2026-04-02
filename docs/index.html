@@ -1042,6 +1042,13 @@ let draftTimes  = JSON.parse(localStorage.getItem('ff_draft_times') || '{}');
 let draftedBy      = JSON.parse(localStorage.getItem('ff_drafted_by')  || '{}');
 let rosterViewTeam = localStorage.getItem('ff_roster_view_team') || '';
 
+// ── Draft pool cache ─────────────────────────────────────────────────────────
+// Pool = set of player names that would realistically be drafted to fill N rosters.
+// Rebuilt only when N (member count) changes. Stable throughout a draft session.
+let _poolSet   = null; // Set of player names in the pool
+let _poolSalTotal = 0; // sum of projected salaries for all pool members
+let _poolN     = -1;   // N used to build the current pool
+
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
   try {
@@ -2112,6 +2119,46 @@ function renderPlayerTableInto(headId, bodyId, list, showElig) {
   document.getElementById(bodyId).innerHTML = html;
 }
 
+function buildDraftPool(allPlayers, N) {
+  // Returns { poolSet, poolSalTotal } for the given N-team league.
+  // Batters: iteratively run autoAssignRoster N times (salary-sorted, most valuable first).
+  // Pitchers: top N×5 SP + top N×4 RP by projected salary.
+  const salaries = (DATA && DATA.salaries) || {};
+  const poolSet  = new Set();
+  let   total    = 0;
+
+  const allBatNames = Object.keys(allPlayers)
+    .filter(n => !getPitcherPos(n) && parseSal(salaries[n]) > 0)
+    .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]));
+  let batRemaining = [...allBatNames];
+  for (let t = 0; t < N; t++) {
+    const { slots } = autoAssignRoster(batRemaining);
+    const assigned = new Set(Object.values(slots));
+    for (const name of assigned) {
+      poolSet.add(name);
+      total += parseSal(salaries[name]);
+    }
+    batRemaining = batRemaining.filter(n => !assigned.has(n));
+  }
+
+  const allPitNames = Object.keys(allPlayers)
+    .filter(n => getPitcherPos(n) && parseSal(salaries[n]) > 0);
+  const spNames = allPitNames
+    .filter(n => pitcherDisplayPos(n) === 'SP')
+    .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]))
+    .slice(0, N * 5);
+  const rpNames = allPitNames
+    .filter(n => pitcherDisplayPos(n) !== 'SP')
+    .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]))
+    .slice(0, N * 4);
+  for (const name of [...spNames, ...rpNames]) {
+    poolSet.add(name);
+    total += parseSal(salaries[name]);
+  }
+
+  return { poolSet, poolSalTotal: total };
+}
+
 function renderSalarySummary(allPlayerMap) {
   const wrap = document.getElementById('sal-summary-wrap');
   if (!DATA) { wrap.style.display = 'none'; return; }
@@ -2176,43 +2223,17 @@ function renderSalarySummary(allPlayerMap) {
     open['Pit'] += Math.max(0, PIT_SLOTS - pitCount);
   }
 
-  // ── Draft pool (realistic fill for N teams) ──
+  // ── Draft pool (realistic fill for N teams) — rebuild only if N changed ──
   const N = members.length;
-  let poolSalStart = 0;
-  let poolSalRemaining = 0;
-  if (N > 0) {
-    // Batters: iteratively fill N × 14 batter slots by running autoAssignRoster N times
-    const allBatNames = Object.keys(allPlayers)
-      .filter(n => !getPitcherPos(n) && parseSal(salaries[n]) > 0)
-      .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]));
-    let batRemaining = [...allBatNames];
-    for (let t = 0; t < N; t++) {
-      const { slots } = autoAssignRoster(batRemaining);
-      const assigned = new Set(Object.values(slots));
-      for (const name of assigned) {
-        const s = parseSal(salaries[name]);
-        poolSalStart     += s;
-        if (!drafted.has(name)) poolSalRemaining += s;
-      }
-      batRemaining = batRemaining.filter(n => !assigned.has(n));
-    }
-    // Pitchers: top N×5 SP + top N×4 RP by projected salary
-    const allPitNames = Object.keys(allPlayers)
-      .filter(n => getPitcherPos(n) && parseSal(salaries[n]) > 0);
-    const spNames = allPitNames
-      .filter(n => pitcherDisplayPos(n) === 'SP')
-      .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]))
-      .slice(0, N * 5);
-    const rpNames = allPitNames
-      .filter(n => pitcherDisplayPos(n) !== 'SP')
-      .sort((a, b) => parseSal(salaries[b]) - parseSal(salaries[a]))
-      .slice(0, N * 4);
-    for (const name of [...spNames, ...rpNames]) {
-      const s = parseSal(salaries[name]);
-      poolSalStart     += s;
-      if (!drafted.has(name)) poolSalRemaining += s;
-    }
+  if (N !== _poolN && N > 0) {
+    const result = buildDraftPool(allPlayers, N);
+    _poolSet      = result.poolSet;
+    _poolSalTotal = result.poolSalTotal;
+    _poolN        = N;
   }
+  const poolSalStart     = _poolSalTotal;
+  const poolSalRemaining = (_poolSet && N > 0)
+    ? [..._poolSet].reduce((s, n) => drafted.has(n) ? s : s + parseSal(salaries[n]), 0) : 0;
 
   // ── Price Scale ──
   const leagueMoney = members.reduce((sum, team) => {
