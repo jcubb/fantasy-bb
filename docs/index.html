@@ -3822,7 +3822,14 @@ function routeVoiceToSearch(text) {
 
 // Main voice result handler: try allocation parse first, fall back to search.
 function handleVoiceResult(transcript) {
-  const words       = voiceNorm(transcript).split(/\s+/).filter(Boolean);
+  const words = voiceNorm(transcript).split(/\s+/).filter(Boolean);
+
+  // "spell S K U B A L" → search "skubal"
+  if (words[0] === 'spell' && words.length > 1) {
+    routeVoiceToSearch(words.slice(1).join(''));
+    return;
+  }
+
   const priceResult = voiceFindPrice(words);
 
   if (!priceResult) {
