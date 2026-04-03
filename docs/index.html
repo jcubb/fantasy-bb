@@ -50,7 +50,7 @@ body {
 }
 #btn-mic:hover { background: #3a6a9a; }
 #btn-mic.mic-active { background: #c0392b; }
-#mic-status { font-size: 11px; color: #cfe0f8; opacity: .8; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#mic-status { font-size: 11px; color: #cfe0f8; opacity: .8; width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
 
 /* ── Tabs ───────────────────────────────────────────────────────────────── */
 #tabs {
@@ -737,10 +737,10 @@ body {
     <button id="btn-load-draft" onclick="document.getElementById('load-draft-input').click()">Load Draft</button>
     <input type="file" id="load-draft-input" accept=".json" style="display:none" onchange="loadDraft(this)">
     <button id="btn-reset" onclick="resetDraft()">Reset Draft</button>
+    <span id="mic-status"></span>
     <button id="btn-mic" style="display:none"
       onmousedown="voiceStart(event)" onmouseup="voiceStop()" onmouseleave="voiceStop()"
       ontouchstart="voiceStart(event)" ontouchend="voiceStop()">&#9679; Hold to Talk</button>
-    <span id="mic-status"></span>
   </div>
 </div>
 
