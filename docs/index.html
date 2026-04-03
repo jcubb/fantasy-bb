@@ -43,6 +43,14 @@ body {
   padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; white-space: nowrap;
 }
 #btn-save-draft:hover, #btn-load-draft:hover { background: #3a6a9a; }
+#btn-mic {
+  background: #2a4f7a; border: none; color: #cfe0f8;
+  padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; white-space: nowrap;
+  user-select: none; -webkit-user-select: none;
+}
+#btn-mic:hover { background: #3a6a9a; }
+#btn-mic.mic-active { background: #c0392b; }
+#mic-status { font-size: 11px; color: #cfe0f8; opacity: .8; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ── Tabs ───────────────────────────────────────────────────────────────── */
 #tabs {
@@ -729,6 +737,10 @@ body {
     <button id="btn-load-draft" onclick="document.getElementById('load-draft-input').click()">Load Draft</button>
     <input type="file" id="load-draft-input" accept=".json" style="display:none" onchange="loadDraft(this)">
     <button id="btn-reset" onclick="resetDraft()">Reset Draft</button>
+    <button id="btn-mic" style="display:none"
+      onmousedown="voiceStart(event)" onmouseup="voiceStop()" onmouseleave="voiceStop()"
+      ontouchstart="voiceStart(event)" ontouchend="voiceStop()">&#9679; Hold to Talk</button>
+    <span id="mic-status"></span>
   </div>
 </div>
 
@@ -1116,6 +1128,7 @@ async function init() {
     if (saved) document.getElementById('notes-area').value = saved;
     const savedMembers = localStorage.getItem('ff_league_members');
     if (savedMembers) document.getElementById('league-members-area').value = savedMembers;
+    initVoice();
   } catch (e) {
     document.getElementById('grid-body').innerHTML =
       `<tr><td colspan="20" style="padding:20px;color:#c0392b">
@@ -3655,6 +3668,201 @@ function renderLeague() {
     return;
   }
   body.innerHTML = order.map(buildCard).join('');
+}
+
+// ── Voice Input ──────────────────────────────────────────────────────────────
+let _voiceRecog  = null;
+let _voiceActive = false;
+
+// Word-to-number for common auction prices
+const VOICE_WORD_NUM = {
+  'a':1,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,
+  'nine':9,'ten':10,'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
+  'sixteen':16,'seventeen':17,'eighteen':18,'nineteen':19,'twenty':20,
+  'thirty':30,'forty':40,'fifty':50,'sixty':60
+};
+
+function initVoice() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+
+  const recog = new SR();
+  recog.continuous    = false;
+  recog.interimResults = true;
+  recog.lang          = 'en-US';
+  _voiceRecog = recog;
+
+  recog.onresult = function(e) {
+    let interim = '', final = '';
+    for (const r of e.results) {
+      if (r.isFinal) final += r[0].transcript;
+      else interim += r[0].transcript;
+    }
+    const text = (final || interim).trim();
+    document.getElementById('mic-status').textContent = text ? `"${text}"` : '';
+    if (final) handleVoiceResult(final.trim());
+  };
+
+  recog.onerror = function(e) {
+    if (e.error !== 'no-speech')
+      document.getElementById('mic-status').textContent = `mic: ${e.error}`;
+    _voiceActive = false;
+    document.getElementById('btn-mic').classList.remove('mic-active');
+  };
+
+  recog.onend = function() {
+    _voiceActive = false;
+    document.getElementById('btn-mic').classList.remove('mic-active');
+    setTimeout(() => { document.getElementById('mic-status').textContent = ''; }, 3000);
+  };
+
+  document.getElementById('btn-mic').style.display = '';
+
+  // Backtick key push-to-talk when not typing in an input
+  document.addEventListener('keydown', e => {
+    if (e.key === '`' && !e.repeat && !e.target.matches('input,textarea,[contenteditable]'))
+      voiceStart(e);
+  });
+  document.addEventListener('keyup', e => { if (e.key === '`') voiceStop(); });
+}
+
+function voiceStart(e) {
+  if (e) e.preventDefault();
+  if (_voiceActive || !_voiceRecog) return;
+  _voiceActive = true;
+  document.getElementById('btn-mic').classList.add('mic-active');
+  document.getElementById('mic-status').textContent = 'listening…';
+  try { _voiceRecog.start(); } catch(_) {}
+}
+
+function voiceStop() {
+  if (!_voiceActive || !_voiceRecog) return;
+  // Don't clear _voiceActive here — recog.onend handles it after final result fires
+  try { _voiceRecog.stop(); } catch(_) {}
+}
+
+function voiceNorm(s) {
+  return s.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
+}
+
+// Find a price (number) in an array of normalized words.
+// Returns { price, start, end } (word index range) or null.
+function voiceFindPrice(words) {
+  // Digit token (most common — Chrome returns digits for spoken numbers)
+  for (let i = 0; i < words.length; i++) {
+    const n = parseInt(words[i], 10);
+    if (!isNaN(n) && n > 0 && n <= 260) return { price: n, start: i, end: i + 1 };
+  }
+  // Two-word combo: "twenty five" = 25
+  for (let i = 0; i < words.length - 1; i++) {
+    const a = VOICE_WORD_NUM[words[i]], b = VOICE_WORD_NUM[words[i + 1]];
+    if (a >= 20 && b && b < 10) return { price: a + b, start: i, end: i + 2 };
+  }
+  // Single word number: "fifteen"
+  for (let i = 0; i < words.length; i++) {
+    const n = VOICE_WORD_NUM[words[i]];
+    if (n) return { price: n, start: i, end: i + 1 };
+  }
+  return null;
+}
+
+// Fuzzy-match spoken text to a known player name.
+// Priority: exact normalized → all words match → last name only.
+function voiceFuzzyPlayer(text) {
+  if (!DATA || !text.trim()) return null;
+  const allPlayers = buildAllPlayerMap();
+  const t      = voiceNorm(text);
+  const tWords = t.split(/\s+/).filter(Boolean);
+  if (!tWords.length) return null;
+
+  for (const name of Object.keys(allPlayers))
+    if (voiceNorm(name) === t) return name;
+
+  const allWordMatch = Object.keys(allPlayers).filter(name => {
+    const nWords = voiceNorm(name).split(/\s+/);
+    return tWords.every(w => nWords.some(p => p === w || p.startsWith(w)));
+  });
+  if (allWordMatch.length === 1) return allWordMatch[0];
+
+  // Last word of spoken phrase vs last name of player
+  const spoken_last = tWords[tWords.length - 1];
+  const lastNameMatch = Object.keys(allPlayers).filter(name => {
+    const parts = voiceNorm(name).split(/\s+/);
+    return parts[parts.length - 1] === spoken_last;
+  });
+  if (lastNameMatch.length === 1) return lastNameMatch[0];
+
+  return null;
+}
+
+// Fuzzy-match spoken text to a known league member name.
+function voiceFuzzyTeam(text) {
+  const members = (localStorage.getItem('ff_league_members') || '')
+    .split('\n').map(s => s.trim()).filter(Boolean);
+  if (!text.trim() || !members.length) return '';
+  const t = voiceNorm(text);
+  const exact = members.find(m => voiceNorm(m) === t);
+  if (exact) return exact;
+  const contains = members.filter(m => voiceNorm(m).includes(t) || t.includes(voiceNorm(m)));
+  if (contains.length === 1) return contains[0];
+  return '';
+}
+
+// Route transcript to player search box, switching to Player tab if needed.
+function routeVoiceToSearch(text) {
+  if (currentTab !== 'player') {
+    const btn = [...document.querySelectorAll('.tab-btn')].find(b => b.textContent.trim() === 'Player');
+    if (btn) switchTab('player', btn);
+  }
+  const box = document.getElementById('search-box-player');
+  box.value = text;
+  syncSearchBoxes(box, 'search-box');
+  renderPlayerTab();
+}
+
+// Main voice result handler: try allocation parse first, fall back to search.
+function handleVoiceResult(transcript) {
+  const words       = voiceNorm(transcript).split(/\s+/).filter(Boolean);
+  const priceResult = voiceFindPrice(words);
+
+  if (!priceResult) {
+    routeVoiceToSearch(transcript);
+    return;
+  }
+
+  const namePart = words.slice(0, priceResult.start).join(' ');
+  const teamPart = words.slice(priceResult.end).join(' ');
+  const player   = voiceFuzzyPlayer(namePart);
+
+  if (!player) {
+    // Couldn't identify a player — treat whole thing as a search
+    routeVoiceToSearch(transcript);
+    return;
+  }
+
+  const team = voiceFuzzyTeam(teamPart);
+
+  // Mirror the handleCheck(true) flow exactly: mark drafted, timestamp, add to unassigned, open modal
+  drafted.add(player);
+  if (!draftTimes[player]) {
+    draftTimes[player] = new Date().toISOString();
+    localStorage.setItem('ff_draft_times', JSON.stringify(draftTimes));
+  }
+  localStorage.setItem('ff_drafted', JSON.stringify([...drafted]));
+
+  // Pre-fill price and team so openAssign shows them
+  draftPrice[player] = priceResult.price;
+  localStorage.setItem('ff_draft_price', JSON.stringify(draftPrice));
+  if (team) {
+    draftedBy[player] = team;
+    localStorage.setItem('ff_drafted_by', JSON.stringify(draftedBy));
+  }
+
+  document.getElementById('mic-status').textContent =
+    `${player} · $${priceResult.price}${team ? ' · ' + team : ' · team?'}`;
+
+  if (!isOnRoster(player)) { rosterAdd(player, '__unassigned', true); saveRoster(); }
+  openAssign(player, true);
 }
 
 // ── Utils ──────────────────────────────────────────────────────────────────
