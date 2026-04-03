@@ -3323,8 +3323,25 @@ function autoAssignRoster(players) {
 
 // ── Standings helpers ────────────────────────────────────────────────────────
 
+// Compute overall market markup (sum of prices / sum of proj salaries - 1)
+// across all qualifying drafted players. Used to convert real budget → proj-salary terms.
+function overallMarketMarkup() {
+  const salaries = DATA.salaries || {};
+  let sumP = 0, sumS = 0;
+  for (const name of drafted) {
+    const p = draftPrice[name];
+    const s = parseSal(salaries[name]);
+    if (p && s) { sumP += p; sumS += s; }
+  }
+  return sumS > 0 ? sumP / sumS - 1 : 0;
+}
+
 // Build a full projected roster for a team: drafted players + fill-ins.
 // Fill-ins are the best undrafted affordable players that fit open slots.
+// The real-dollar budget cap is converted to projected-salary terms by
+// dividing by (1 + market markup), floored at 0.1 to prevent blow-up.
+// Example: $1 real budget, markup = −80% → $1 / 0.20 = $5 proj-sal cap,
+// allowing late-auction bargain players to fill slots realistically.
 function computeFilledRoster(teamPlayers) {
   const salaries  = DATA.salaries || {};
   const spent     = teamPlayers.reduce((s, n) => s + (draftPrice[n] || 0), 0);
@@ -3332,8 +3349,11 @@ function computeFilledRoster(teamPlayers) {
   const openSlots = ROSTER_SLOTS.length - teamPlayers.length;
   if (openSlots <= 0) return teamPlayers;
 
-  // Per-slot salary cap for fill-ins (simple, fair heuristic)
-  const cap = openSlots > 0 ? Math.floor(budget / openSlots) : 0;
+  // Convert real budget per slot → projected-salary cap using market markup.
+  // Floor at 0.1 prevents cap blow-up when markup approaches −100%.
+  const markup    = overallMarketMarkup();
+  const realCapPerSlot = openSlots > 0 ? budget / openSlots : 0;
+  const cap = Math.floor(realCapPerSlot / Math.max(0.1, 1 + markup));
 
   const draftedBatters  = teamPlayers.filter(n => !getPitcherPos(n));
   const draftedPitchers = teamPlayers.filter(n =>  getPitcherPos(n));
