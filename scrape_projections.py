@@ -451,54 +451,49 @@ async def extract_table_text(page: Page) -> str:
 
 async def extract_all_pages(page: Page) -> str:
     """
-    Extract table text, handling pagination if the table spans multiple pages.
-    Concatenates text from all pages.
+    Extract table text from all pages of CBS stats.
+
+    CBS uses numbered pagination links (1, 2, 3...) with URLs like
+    /stats/data-stats-report/.../projections?start_row=101.
+    We find these links and navigate to each page in order.
     """
     all_text = await extract_table_text(page)
     if not all_text:
         return ''
 
-    page_num = 1
-    while True:
-        # Look for a "Next" link
-        next_el = None
-        for sel in [
-            'a[class*="next"]:not([class*="disabled"])',
-            'a:has-text("Next"):not([class*="disabled"])',
-            'button:has-text("Next"):not(:disabled)',
-            '[aria-label="Next page"]',
-        ]:
-            next_el = await page.query_selector(sel)
-            if next_el:
-                break
+    # Find all numbered pagination links with start_row URLs
+    page_urls = await page.evaluate('''() => {
+        const urls = [];
+        for (const a of document.querySelectorAll('a')) {
+            const text = (a.textContent || '').trim();
+            const href = a.href || '';
+            if (/^\\d+$/.test(text) && href.includes('start_row=')) {
+                const num = parseInt(text);
+                if (num > 1) urls.push({num, href});
+            }
+        }
+        urls.sort((a, b) => a.num - b.num);
+        return urls;
+    }''')
 
-        if not next_el:
-            break
+    if not page_urls:
+        return all_text
 
-        cls = (await next_el.get_attribute('class') or '').lower()
-        if 'disabled' in cls or 'inactive' in cls:
-            break
+    print(f'    Found {len(page_urls)} additional pages')
 
-        page_num += 1
-        print(f'    Paginating to page {page_num}...')
-        await next_el.click()
+    for pu in page_urls:
+        print(f'    Paginating to page {pu["num"]}...')
+        await page.goto(pu['href'], wait_until='domcontentloaded', timeout=30000)
         await page.wait_for_timeout(2000)
 
         page_text = await extract_table_text(page)
         if not page_text:
             break
 
-        # Append data rows only (skip header lines on subsequent pages)
-        lines = page_text.splitlines()
-        # Headers on subsequent pages are lines without the bullet character
-        data_lines = [l for l in lines if '•' in l or '•' in l]
+        # Keep only data rows (lines with the bullet character)
+        data_lines = [l for l in page_text.splitlines() if '•' in l]
         if data_lines:
             all_text += '\n' + '\n'.join(data_lines)
-        else:
-            all_text += '\n' + page_text
-
-        if page_num > 30:
-            break
 
     return all_text
 
