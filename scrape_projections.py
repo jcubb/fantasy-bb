@@ -1,51 +1,116 @@
 #!/usr/bin/env python
 """
-scrape_projections.py — One-time CBS projected stats scraper.
+scrape_projections.py — Automated CBS projected stats scraper.
 
-URL: https://pochicago.baseball.cbssports.com/stats/stats-main
-Settings: Projections | Timeframe = Rest of Season | Categories = Standard
-Runs twice: All Players - Batters, then All Players - P
+Navigates to the private CBS league stats page using Playwright,
+extracts projection tables via clipboard copy, and writes date-stamped
+files: batters_YYYY-MM-DD.txt / pitchers_YYYY-MM-DD.txt.
 
-Merges results into docs/data.json under a "projections" key.
+Does NOT write data.json — use load_projections.py to choose a snapshot
+and load it into the app.
+
+Login session is cached in .cbs_session.json (gitignored). First run
+requires manual login in the browser window; subsequent runs reuse the
+saved session until it expires.
 
 Usage: python scrape_projections.py
-Note: Opens a real browser window. Follow the prompts.
 """
 
 import asyncio
+from datetime import date
 import json
 import re
 from pathlib import Path
 
-from playwright.async_api import async_playwright, Page
+from playwright.async_api import async_playwright, Page, BrowserContext
 
-STATS_URL = 'https://pochicago.baseball.cbssports.com/stats/stats-main'
-DOCS_DIR  = Path(__file__).parent / 'docs'
-OUT_FILE  = DOCS_DIR / 'data.json'
+STATS_URL    = 'https://pochicago.baseball.cbssports.com/stats/stats-main'
+BASE_DIR     = Path(__file__).parent
+SESSION_FILE = BASE_DIR / '.cbs_session.json'
 
-
-# ── Debug helper ───────────────────────────────────────────────────────────
-
-async def dump_selects(page: Page):
-    selects = await page.query_selector_all('select')
-    print(f'    [{len(selects)} <select> elements]')
-    for sel in selects:
-        name = (await sel.get_attribute('name') or
-                await sel.get_attribute('id') or '?')
-        options = await sel.query_selector_all('option')
-        labels  = [(await o.text_content() or '').strip() for o in options[:10]]
-        sel_val = await sel.evaluate('el => el.value')
-        print(f'      name={name!r} value={sel_val!r}: {labels}{"..." if len(options)>10 else ""}')
+TODAY        = date.today().isoformat()
+BATTER_FILE  = BASE_DIR / f'batters_{TODAY}.txt'
+PITCHER_FILE = BASE_DIR / f'pitchers_{TODAY}.txt'
 
 
-# ── Select helpers ─────────────────────────────────────────────────────────
+# ── Session management ────────────────────────────────────────────────────
+
+async def save_session(ctx: BrowserContext) -> None:
+    """Save browser cookies/storage so we can skip login next time."""
+    state = await ctx.storage_state()
+    SESSION_FILE.write_text(json.dumps(state, indent=2), encoding='utf-8')
+    print(f'  Session saved -> {SESSION_FILE.name}')
+
+
+async def create_context(pw):
+    """Create a headed browser context, restoring saved session if available."""
+    browser = await pw.chromium.launch(headless=False, slow_mo=100)
+
+    storage_state = None
+    if SESSION_FILE.exists():
+        try:
+            storage_state = json.loads(SESSION_FILE.read_text(encoding='utf-8'))
+            print(f'  Restored session from {SESSION_FILE.name}')
+        except Exception:
+            print(f'  Warning: could not read {SESSION_FILE.name}, starting fresh')
+
+    ctx = await browser.new_context(
+        storage_state=storage_state,
+        user_agent=(
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+            'AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/122.0.0.0 Safari/537.36'
+        ),
+    )
+    return browser, ctx
+
+
+async def ensure_logged_in(page: Page) -> bool:
+    """
+    Navigate to CBS stats page. If redirected to login, wait for user
+    to authenticate in the browser window, then save the session.
+    Returns True if we're on the stats page, False on timeout.
+    """
+    print(f'\nNavigating to {STATS_URL}')
+    await page.goto(STATS_URL, wait_until='domcontentloaded', timeout=60000)
+    await page.wait_for_timeout(2000)
+
+    if any(x in page.url.lower() for x in ('login', 'signin', 'auth')):
+        print()
+        print('=' * 60)
+        print('  LOGIN REQUIRED')
+        print('=' * 60)
+        print('  Please log in to CBS Sports in the browser window.')
+        print('  Your session will be saved for future runs.')
+        print('  Waiting up to 3 minutes...')
+        print()
+        try:
+            await page.wait_for_url('**/stats**', timeout=180000)
+        except Exception:
+            print('  Timed out waiting for login.')
+            return False
+        await page.wait_for_timeout(2000)
+        await save_session(page.context)
+    else:
+        print('  Already logged in (session restored)')
+
+    return 'stats' in page.url.lower()
+
+
+# ── Select / click helpers ────────────────────────────────────────────────
+
+def _normalize_ws(s: str) -> str:
+    """Replace non-breaking spaces and collapse whitespace."""
+    return re.sub(r'[\s\xa0]+', ' ', s).strip()
+
 
 async def select_by_partial_label(sel_el, text: str) -> str | None:
-    """Select the first option whose label contains `text` (case-insensitive)."""
+    """Select the first <option> whose label contains `text` (case-insensitive)."""
+    needle = _normalize_ws(text).lower()
     options = await sel_el.query_selector_all('option')
     for opt in options:
         label = (await opt.text_content() or '').strip()
-        if text.lower() in label.lower():
+        if needle in _normalize_ws(label).lower():
             val = await opt.get_attribute('value') or label
             await sel_el.select_option(value=val)
             return label
@@ -53,7 +118,7 @@ async def select_by_partial_label(sel_el, text: str) -> str | None:
 
 
 async def set_select(page: Page, selectors: list[str], text: str) -> str | None:
-    """Try each CSS selector; on first match attempt to pick option by label."""
+    """Try each CSS selector; pick the first option matching text."""
     for sel in selectors:
         try:
             for el in await page.query_selector_all(sel):
@@ -66,6 +131,7 @@ async def set_select(page: Page, selectors: list[str], text: str) -> str | None:
 
 
 async def click_text(page: Page, text: str) -> bool:
+    """Click the first interactive element containing text."""
     for sel in [
         f'a:has-text("{text}")',
         f'button:has-text("{text}")',
@@ -85,118 +151,316 @@ async def click_text(page: Page, text: str) -> bool:
     return False
 
 
-# ── Table scraper ──────────────────────────────────────────────────────────
+async def dump_selects(page: Page):
+    """Debug: print all <select> elements and their options."""
+    selects = await page.query_selector_all('select')
+    print(f'    [{len(selects)} <select> elements]')
+    for sel in selects:
+        name = (await sel.get_attribute('name') or
+                await sel.get_attribute('id') or '?')
+        options = await sel.query_selector_all('option')
+        labels  = [(await o.text_content() or '').strip() for o in options[:10]]
+        sel_val = await sel.evaluate('el => el.value')
+        print(f'      name={name!r} value={sel_val!r}: {labels}{"..." if len(options)>10 else ""}')
 
-async def scrape_table(page: Page) -> tuple[list[str], list[dict]]:
-    """Extract headers and rows from the stats table on the current page."""
-    await page.wait_for_timeout(800)
 
-    table = None
-    for sel in ['.TableBase table', 'table.data', '#stats-table',
-                'table[class*="stats"]', 'table']:
-        table = await page.query_selector(sel)
-        if table:
-            break
-    if not table:
-        return [], []
+# ── Filter navigation ─────────────────────────────────────────────────────
 
-    # Headers
-    headers: list[str] = []
-    for h_sel in ['thead th', 'thead td']:
-        cells = await table.query_selector_all(h_sel)
-        if cells:
-            headers = [(await c.text_content() or '').strip() for c in cells]
-            if any(h for h in headers):
+async def js_select_by_content(page: Page, option_text: str,
+                               must_also_have: str | None = None) -> str | None:
+    """
+    Find the <select> whose options contain option_text, set its value
+    via JS, and fire its onchange handler.
+
+    If must_also_have is provided, only consider <select> elements that
+    also contain an option matching that text (used to disambiguate when
+    multiple dropdowns share an option label like "Standard").
+
+    CBS dropdowns fail Playwright's visibility checks and use JS form
+    submissions (the URL doesn't change), so we manipulate the DOM directly.
+    """
+    needle = _normalize_ws(option_text).lower()
+    also = _normalize_ws(must_also_have).lower() if must_also_have else None
+    result = await page.evaluate('''([needle, also]) => {
+        const normalize = s => s.replace(/[\\s\\u00a0]+/g, ' ').trim().toLowerCase();
+        for (const sel of document.querySelectorAll('select')) {
+            if (also) {
+                const labels = Array.from(sel.options).map(o => normalize(o.textContent));
+                if (!labels.some(l => l.includes(also))) continue;
+            }
+            for (const opt of sel.options) {
+                if (normalize(opt.textContent).includes(needle)) {
+                    sel.value = opt.value;
+                    var evt = document.createEvent('HTMLEvents');
+                    evt.initEvent('change', true, false);
+                    sel.dispatchEvent(evt);
+                    return opt.textContent.trim();
+                }
+            }
+        }
+        return null;
+    }''', [needle, also])
+
+    if result:
+        await page.wait_for_timeout(3000)
+    return _normalize_ws(result) if result else None
+
+
+async def navigate_to_projections(page: Page, player_type: str) -> bool:
+    """
+    Navigate the CBS stats page to show projections for the given player type.
+    player_type: 'Batter' or 'P' (pitchers).
+    Returns True if a data table is found after filtering.
+    """
+    print(f'  Setting up filters for {player_type}...')
+
+    # Step 1: Click "Projections" tab/link
+    clicked = await click_text(page, 'Projections')
+    if clicked:
+        print('    Clicked "Projections"')
+        await page.wait_for_timeout(2500)
+    else:
+        for path in ['/stats/stats-main/projections/', '/stats/projections/']:
+            try:
+                base = '/'.join(STATS_URL.split('/')[:3])
+                await page.goto(base + path, wait_until='domcontentloaded', timeout=20000)
+                await page.wait_for_timeout(2000)
                 break
-    if not headers:
-        rows_el = await table.query_selector_all('tr')
-        if rows_el:
-            cells = await rows_el[0].query_selector_all('td, th')
-            headers = [(await c.text_content() or '').strip() for c in cells]
+            except Exception:
+                pass
 
-    # Rows
-    rows: list[dict] = []
-    row_els = await table.query_selector_all('tbody tr')
-    if not row_els:
-        all_rows = await table.query_selector_all('tr')
-        row_els = all_rows[1:]
+    # Step 2: Click the player type sidebar link ("Batter" or "P")
+    # These are short sidebar links — need exact text matching to avoid
+    # "P" matching every link on the page
+    type_clicked = False
+    for sel in [
+        f'a >> text="{player_type}"',
+        f'a:text-is("{player_type}")',
+    ]:
+        try:
+            loc = page.locator(sel).first
+            if await loc.count() > 0:
+                await loc.click(timeout=5000)
+                type_clicked = True
+                break
+        except Exception:
+            pass
 
-    for row_el in row_els:
-        cells = await row_el.query_selector_all('td')
-        if len(cells) < 2:
-            continue
+    if not type_clicked:
+        type_clicked = await click_text(page, player_type)
 
-        # Player name — prefer link
-        name = ''
-        for name_sel in [
-            'a[href*="/players/"]', 'a[href*="/player/"]',
-            '.CellPlayerName a', '[class*="player-name"] a',
-            '[class*="playerName"] a',
-        ]:
-            el = await row_el.query_selector(name_sel)
-            if el:
-                name = (await el.text_content() or '').strip()
-                if name:
-                    break
+    if type_clicked:
+        print(f'    Clicked "{player_type}" link')
+        await page.wait_for_timeout(2500)
+    else:
+        print(f'    WARNING: Could not click "{player_type}" link')
 
-        if not name:
-            for idx in (1, 0):
-                if idx < len(cells):
-                    candidate = (await cells[idx].text_content() or '').strip()
-                    candidate = re.sub(r'^\d+\.?\s*', '', candidate).strip()
-                    if candidate and not candidate.isdigit() and candidate not in ('-', '—'):
-                        name = candidate
-                        break
+    # Step 3: Click "All Players" to ensure we see everyone, not just free agents
+    all_clicked = await click_text(page, 'All Players')
+    if all_clicked:
+        print('    Clicked "All Players"')
+        await page.wait_for_timeout(2500)
+    else:
+        print('    WARNING: Could not click "All Players"')
 
-        if not name:
-            continue
+    print(f'    Current URL: {page.url}')
+    await dump_selects(page)
 
-        row_data = {'name': name}
-        for i, hdr in enumerate(headers):
-            if i < len(cells) and hdr:
-                row_data[hdr] = (await cells[i].text_content() or '').strip()
-        rows.append(row_data)
+    # Step 4: Set timeframe to "Rest of Season" via the pulldown that has it
+    r = await js_select_by_content(page, 'Rest of Season')
+    print(f'    Timeframe: {r or "not set"}')
+    if r:
+        print(f'    URL after timeframe: {page.url}')
 
-    return headers, rows
+    # Step 5: Set categories to "Standard" (the dropdown that also has "Advanced")
+    r = await js_select_by_content(page, 'Standard', must_also_have='Advanced')
+    print(f'    Categories: {r or "not set"}')
 
+    # Step 6: Click Go / Submit to apply any remaining filters
+    for text in ('Go', 'Apply', 'Submit', 'Search'):
+        if await click_text(page, text):
+            print(f'    Submitted via "{text}"')
+            await page.wait_for_timeout(2500)
+            break
 
-async def scrape_all_pages(page: Page) -> list[dict]:
-    """Scrape all paginated pages of the stats table."""
-    # Try to set page size to All / large number first
-    for size_label in ('All', '500', '250', '100'):
+    # Step 7: Try to show all rows (page size selector)
+    # First try the Playwright approach
+    page_size_set = False
+    for size_label in ('All', '500', '250'):
         r = await set_select(page,
             ['select[name*="size" i]', 'select[name*="per" i]',
-             'select[name*="page" i]', 'select[id*="size" i]'],
+             'select[name*="count" i]', 'select[name*="page" i]',
+             'select[id*="size" i]'],
             size_label)
         if r:
-            print(f'    Page size set to: {r}')
-            await page.wait_for_timeout(1500)
+            print(f'    Page size: {r}')
+            await page.wait_for_timeout(2500)
+            page_size_set = True
             break
 
-    all_rows: list[dict] = []
-    seen:     set[str]   = set()
+    # Fallback: try JS to find any select with an "All" or large count option
+    # (skip numbers > 999 to avoid matching year labels like "2025")
+    if not page_size_set:
+        r = await page.evaluate('''() => {
+            const normalize = s => s.replace(/[\\s\\u00a0]+/g, ' ').trim().toLowerCase();
+            for (const sel of document.querySelectorAll('select')) {
+                for (const opt of sel.options) {
+                    const label = normalize(opt.textContent);
+                    const num = parseInt(label);
+                    if (label === 'all' || (num >= 200 && num <= 999)) {
+                        sel.value = opt.value;
+                        var evt = document.createEvent('HTMLEvents');
+                        evt.initEvent('change', true, false);
+                        sel.dispatchEvent(evt);
+                        return opt.textContent.trim();
+                    }
+                }
+            }
+            return null;
+        }''')
+        if r:
+            print(f'    Page size (via JS): {r}')
+            await page.wait_for_timeout(2500)
+            page_size_set = True
+
+    if not page_size_set:
+        print('    WARNING: Could not set page size — will use pagination if needed')
+
+    # Verify table exists
+    row_count = await page.evaluate('''() => {
+        const tables = document.querySelectorAll('table');
+        let best = 0;
+        for (const t of tables) {
+            const rows = t.querySelectorAll('tbody tr');
+            if (rows.length > best) best = rows.length;
+        }
+        return best;
+    }''')
+    print(f'    Table found with {row_count} rows')
+    return row_count > 1
+
+
+def manual_prompt(player_type_label: str) -> None:
+    """Block until user signals they've set up the page manually."""
+    print()
+    print('=' * 60)
+    print(f'  MANUAL SETUP NEEDED -- {player_type_label}')
+    print('=' * 60)
+    print('  In the browser window:')
+    print('    1. Click "Projections"')
+    print('    2. Set Timeframe  = Rest of Season')
+    print('    3. Set Categories = Standard')
+    print(f'    4. Set player filter = All Players - {player_type_label}')
+    print('    5. Click Go / Apply / Submit')
+    print('    6. Set page size to "All" if available')
+    print('    7. Wait for the full stats table to appear')
+    print()
+    input('  >>> Press Enter here once the stats table is visible... ')
+    print()
+
+
+# ── Table extraction ──────────────────────────────────────────────────────
+
+async def extract_table_text(page: Page) -> str:
+    """
+    Extract stats table content as tab-separated text, mimicking what
+    a user gets when they select-all + copy from the page.
+
+    Tries three strategies in order:
+    1. Clipboard: Ctrl+A, Ctrl+C, read clipboard
+    2. Selection API: select table contents, read selection.toString()
+    3. Cell-by-cell: iterate rows/cells and build TSV manually
+    """
+
+    # Strategy 1: Clipboard copy (most faithful to manual copy-paste)
+    try:
+        # Grant clipboard permission via CDP
+        cdp = await page.context.new_cdp_session(page)
+        await cdp.send('Browser.grantPermissions', {
+            'origin': page.url,
+            'permissions': ['clipboardReadWrite', 'clipboardSanitizedWrite'],
+        })
+    except Exception:
+        pass
+
+    try:
+        await page.keyboard.press('Control+a')
+        await page.wait_for_timeout(200)
+        await page.keyboard.press('Control+c')
+        await page.wait_for_timeout(500)
+        text = await page.evaluate('navigator.clipboard.readText()')
+        if text and '\t' in text and len(text) > 200:
+            print('    Extracted via clipboard copy')
+            return text
+    except Exception as e:
+        print(f'    Clipboard copy failed ({e.__class__.__name__}), trying selection API...')
+
+    # Strategy 2: Selection API on the table element
+    try:
+        text = await page.evaluate('''() => {
+            const table = document.querySelector('.TableBase table') ||
+                          document.querySelector('table.data') ||
+                          document.querySelector('table');
+            if (!table) return '';
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            const range = document.createRange();
+            range.selectNodeContents(table);
+            sel.addRange(range);
+            const result = sel.toString();
+            sel.removeAllRanges();
+            return result;
+        }''')
+        if text and '\t' in text and len(text) > 200:
+            print('    Extracted via selection API')
+            return text
+    except Exception as e:
+        print(f'    Selection API failed ({e.__class__.__name__}), trying cell-by-cell...')
+
+    # Strategy 3: Build TSV from table cells directly
+    try:
+        text = await page.evaluate('''() => {
+            const table = document.querySelector('.TableBase table') ||
+                          document.querySelector('table.data') ||
+                          document.querySelector('table');
+            if (!table) return '';
+            const rows = table.querySelectorAll('tr');
+            const lines = [];
+            for (const row of rows) {
+                const cells = row.querySelectorAll('td, th');
+                if (cells.length < 2) continue;
+                const vals = [];
+                for (const cell of cells) {
+                    // Get visible text, collapse whitespace
+                    let t = cell.innerText || cell.textContent || '';
+                    t = t.replace(/\\n/g, ' ').replace(/\\s+/g, ' ').trim();
+                    vals.push(t);
+                }
+                lines.push(vals.join('\\t'));
+            }
+            return lines.join('\\n');
+        }''')
+        if text and len(text) > 100:
+            print('    Extracted via cell-by-cell')
+            return text
+    except Exception as e:
+        print(f'    Cell-by-cell failed ({e.__class__.__name__})')
+
+    return ''
+
+
+async def extract_all_pages(page: Page) -> str:
+    """
+    Extract table text, handling pagination if the table spans multiple pages.
+    Concatenates text from all pages.
+    """
+    all_text = await extract_table_text(page)
+    if not all_text:
+        return ''
+
     page_num = 1
-
     while True:
-        print(f'    Page {page_num}...')
-        _, rows = await scrape_table(page)
-        if not rows:
-            print('    No rows found on this page.')
-            break
-
-        added = 0
-        for row in rows:
-            n = row.get('name', '')
-            if n and n not in seen:
-                seen.add(n)
-                all_rows.append(row)
-                added += 1
-
-        print(f'      +{added} new rows (total {len(all_rows)})')
-        if added == 0:
-            break
-
-        # Pagination
+        # Look for a "Next" link
         next_el = None
         for sel in [
             'a[class*="next"]:not([class*="disabled"])',
@@ -215,205 +479,84 @@ async def scrape_all_pages(page: Page) -> list[dict]:
         if 'disabled' in cls or 'inactive' in cls:
             break
 
+        page_num += 1
+        print(f'    Paginating to page {page_num}...')
         await next_el.click()
         await page.wait_for_timeout(2000)
-        page_num += 1
+
+        page_text = await extract_table_text(page)
+        if not page_text:
+            break
+
+        # Append data rows only (skip header lines on subsequent pages)
+        lines = page_text.splitlines()
+        # Headers on subsequent pages are lines without the bullet character
+        data_lines = [l for l in lines if '•' in l or '•' in l]
+        if data_lines:
+            all_text += '\n' + '\n'.join(data_lines)
+        else:
+            all_text += '\n' + page_text
+
         if page_num > 30:
             break
 
-    return all_rows
+    return all_text
 
 
-# ── Auto-filter attempt ────────────────────────────────────────────────────
-
-async def try_auto_filters(page: Page, player_type: str) -> bool:
-    """
-    Try to navigate to the Projections section and set filters automatically.
-    Returns True if we think it worked (table found with >1 row).
-    """
-    print('  Attempting auto-filter...')
-
-    # Step 1: Click "Projections" tab/link if not already there
-    clicked = await click_text(page, 'Projections')
-    if clicked:
-        print('    Clicked "Projections" tab')
-        await page.wait_for_timeout(2000)
-    else:
-        # Try URL fragments
-        for path in ['/stats/stats-main/projections/', '/stats/projections/']:
-            try:
-                base = '/'.join(STATS_URL.split('/')[:3])
-                await page.goto(base + path, wait_until='domcontentloaded', timeout=20000)
-                await page.wait_for_timeout(1500)
-                break
-            except Exception:
-                pass
-
-    await dump_selects(page)
-
-    # Step 2: Set Timeframe = Rest of Season
-    r = await set_select(page,
-        ['select[name="timeframe"]', 'select[name="pulldown"]',
-         'select[id*="time" i]', 'select[id*="period" i]'],
-        'Rest of Season')
-    print(f'    Timeframe: {r or "not set"}')
-    if r:
-        await page.wait_for_timeout(500)
-
-    # Step 3: Categories = Standard
-    r = await set_select(page,
-        ['select[name="pulldown"]', 'select[id*="cat" i]',
-         'select[id*="group" i]'],
-        'Standard')
-    print(f'    Categories: {r or "not set"}')
-    if r:
-        await page.wait_for_timeout(500)
-
-    # Step 4: Player type (Batters / P)
-    for text in (f'All Players - {player_type}', player_type, 'Batters' if player_type == 'Batters' else 'Pitchers'):
-        r = await set_select(page,
-            ['select[name="pulldown"]', 'select[name*="split" i]',
-             'select[name*="player" i]', 'select[id*="split" i]'],
-            text)
-        if r:
-            break
-    print(f'    Player type: {r or "not set"}')
-    if r:
-        await page.wait_for_timeout(500)
-
-    # Step 5: Submit / Go
-    for text in ('Go', 'Apply', 'Submit', 'Search'):
-        if await click_text(page, text):
-            print(f'    Submitted via "{text}"')
-            await page.wait_for_timeout(2500)
-            break
-
-    # Check if we got a real stats table
-    _, rows = await scrape_table(page)
-    return len(rows) > 1
-
-
-# ── Manual fallback ────────────────────────────────────────────────────────
-
-def manual_prompt(player_type_label: str) -> None:
-    """Block until user signals they've set up the page."""
-    print()
-    print('=' * 60)
-    print(f'MANUAL SETUP NEEDED — {player_type_label}')
-    print('=' * 60)
-    print('In the browser window:')
-    print('  1. Click "Projections" (in the navigation)')
-    print('  2. Set Timeframe  = Rest of Season')
-    print('  3. Set Categories = Standard')
-    print(f'  4. Set player filter = All Players - {player_type_label}')
-    print('  5. Click Go / Apply / Submit')
-    print('  6. Wait for the stats table to appear')
-    print()
-    input('>>> Press Enter here once the stats table is visible... ')
-    print()
-
-
-# ── Conversion ─────────────────────────────────────────────────────────────
-
-def rows_to_projections(rows: list[dict]) -> dict:
-    skip = {'rank', '#', 'rk', 'no.', 'player', 'name',
-            'team', 'tm', 'pos', 'position', ''}
-    result = {}
-    for row in rows:
-        name = row.get('name', '').strip()
-        if not name:
-            continue
-        stats = {k: v for k, v in row.items()
-                 if k.lower().strip() not in skip
-                 and k != 'name'
-                 and v not in ('', '-', '—')}
-        result[name] = stats
-    return result
-
-
-# ── Main ────────────────────────────────────────────────────────────────────
+# ── Main ──────────────────────────────────────────────────────────────────
 
 async def main():
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False, slow_mo=120)
-        ctx = await browser.new_context(
-            user_agent=(
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                'AppleWebKit/537.36 (KHTML, like Gecko) '
-                'Chrome/122.0.0.0 Safari/537.36'
-            )
-        )
+    async with async_playwright() as pw:
+        browser, ctx = await create_context(pw)
         page = await ctx.new_page()
 
-        # ── Navigate & login ───────────────────────────────────────────────
-        print(f'\nNavigating to {STATS_URL}')
-        await page.goto(STATS_URL, wait_until='domcontentloaded', timeout=60000)
-        await page.wait_for_timeout(2000)
+        # ── Login ─────────────────────────────────────────────────────────
+        logged_in = await ensure_logged_in(page)
+        if not logged_in:
+            print('\nCould not reach the stats page. Exiting.')
+            await browser.close()
+            return
 
-        if any(x in page.url.lower() for x in ('login', 'signin', 'auth')):
-            print('\n*** Please log in in the browser window. ***')
-            print('    Waiting up to 3 minutes...')
-            try:
-                await page.wait_for_url('**/stats**', timeout=180000)
-            except Exception:
-                pass
-            await page.wait_for_timeout(2000)
-
-        # ── BATTERS ────────────────────────────────────────────────────────
+        # ── BATTERS ───────────────────────────────────────────────────────
         print('\n[1/2] BATTERS')
-        success = await try_auto_filters(page, 'Batters')
+        success = await navigate_to_projections(page, 'Batter')
         if not success:
             manual_prompt('Batters')
 
-        batter_rows = await scrape_all_pages(page)
-        print(f'  Batter rows scraped: {len(batter_rows)}')
+        print('  Extracting table...')
+        batter_text = await extract_all_pages(page)
 
-        if not batter_rows:
-            print('  WARNING: No batter rows found. Check the browser and re-run if needed.')
+        if batter_text:
+            BATTER_FILE.write_text(batter_text, encoding='utf-8')
+            print(f'  Wrote {BATTER_FILE.name} ({len(batter_text)} chars)')
+        else:
+            print('  WARNING: No batter data extracted.')
 
-        # ── PITCHERS ───────────────────────────────────────────────────────
+        # ── PITCHERS ──────────────────────────────────────────────────────
         print('\n[2/2] PITCHERS')
         print(f'  Navigating back to {STATS_URL}')
         await page.goto(STATS_URL, wait_until='domcontentloaded', timeout=60000)
         await page.wait_for_timeout(2000)
 
-        success = await try_auto_filters(page, 'P')
+        success = await navigate_to_projections(page, 'P')
         if not success:
             manual_prompt('Pitchers (P)')
 
-        pitcher_rows = await scrape_all_pages(page)
-        print(f'  Pitcher rows scraped: {len(pitcher_rows)}')
+        print('  Extracting table...')
+        pitcher_text = await extract_all_pages(page)
 
-        if not pitcher_rows:
-            print('  WARNING: No pitcher rows found.')
+        if pitcher_text:
+            PITCHER_FILE.write_text(pitcher_text, encoding='utf-8')
+            print(f'  Wrote {PITCHER_FILE.name} ({len(pitcher_text)} chars)')
+        else:
+            print('  WARNING: No pitcher data extracted.')
 
+        # Save session in case it was refreshed during navigation
+        await save_session(ctx)
         await browser.close()
 
-    # ── Save ───────────────────────────────────────────────────────────────
-    batters_proj  = rows_to_projections(batter_rows)
-    pitchers_proj = rows_to_projections(pitcher_rows)
-
-    print(f'\nProjections: {len(batters_proj)} batters, {len(pitchers_proj)} pitchers')
-
-    if batters_proj:
-        sample = next(iter(batters_proj))
-        print(f'  Sample batter  — {sample}: {batters_proj[sample]}')
-    if pitchers_proj:
-        sample = next(iter(pitchers_proj))
-        print(f'  Sample pitcher — {sample}: {pitchers_proj[sample]}')
-
-    existing = {}
-    if OUT_FILE.exists():
-        existing = json.loads(OUT_FILE.read_text(encoding='utf-8'))
-
-    existing['projections'] = {
-        'batters':  batters_proj,
-        'pitchers': pitchers_proj,
-    }
-
-    OUT_FILE.write_text(json.dumps(existing, indent=2), encoding='utf-8')
-    print(f'\nSaved -> {OUT_FILE}')
-    print('Next: git add docs/data.json && git commit -m "Add projections" && git push')
+    print(f'\nDone. Files saved with date stamp {TODAY}.')
+    print(f'Next: python load_projections.py')
 
 
 if __name__ == '__main__':

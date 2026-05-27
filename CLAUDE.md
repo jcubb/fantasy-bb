@@ -304,22 +304,53 @@ Opens when: checking a checkbox, selecting from quick search, or clicking a name
 
 ## One-Time Data Scripts (run locally, do NOT add to daily scrape)
 
-### Projections + Salaries (`parse_projections.py`)
+### Projections — two-step workflow
 
-Parses tab-separated text copied from CBS projected stats pages and salary projections into `data.json`. Also stores `_team` and `_pos` from the player info field so the web app can show team/pos for players not in the AL depth chart.
+**Step 1: Scrape** (`scrape_projections.py`) — Playwright-based CBS scraper. Saves date-stamped snapshot files (`batters_YYYY-MM-DD.txt` / `pitchers_YYYY-MM-DD.txt`). Does NOT write `data.json`.
 
-**Setup:**
+**Step 2: Load** (`load_projections.py`) — Lists all available snapshots, lets you choose which one, and writes it into `data.json`.
+
+```
+python scrape_projections.py        # saves batters_2026-05-27.txt etc.
+python load_projections.py          # choose snapshot → writes data.json
+git add docs/data.json && git commit -m "Update projections" && git push
+```
+
+**Why two scripts:** Pre-season full-year projections can't be regenerated once the season starts (CBS switches to rest-of-season). Date-stamped files accumulate as a historical archive; `load_projections.py` lets you switch between snapshots.
+
+**Session management:** Login cookies saved to `.cbs_session.json` (gitignored). First run requires manual login in the browser window; subsequent runs reuse the saved session.
+
+**`scrape_projections.py` internals:**
+1. Opens Chromium (headed), navigates to CBS stats page, restores session cookies
+2. Clicks Projections → Batter → All Players → sets dropdowns (Rest of Season, Standard) via JS DOM manipulation → clicks Go
+3. Extracts table via Ctrl+A/Ctrl+C clipboard copy
+4. Repeats for Pitchers (P)
+5. Falls back to manual setup instructions if automated navigation fails
+
+**CBS page quirks:**
+- Dropdowns use `onchange` JS handlers — URL doesn't change. Must use `page.evaluate()` to set values and dispatch change events
+- `Event` constructor not available — use `document.createEvent('HTMLEvents')` instead
+- Non-breaking spaces (`\xa0`) in option labels require normalization
+- Two dropdowns have "Standard" — disambiguated by requiring "Advanced" sibling option
+- Page defaults to top 100 players; no "show all" option available
+
+**`load_projections.py`:** Discovers both date-stamped files (`batters_YYYY-MM-DD.txt`) and legacy files (`batters2026.txt`). Prompts for selection, defaults to latest. Parses and merges into `data.json` projections key.
+
+### Projections — manual fallback (`parse_projections.py`)
+
+Parses tab-separated text manually copied from CBS projected stats pages into `data.json`. Use if `scrape_projections.py` breaks. Also handles salary projections from `salproj.txt`.
+
+**Manual setup:**
 1. Go to https://pochicago.baseball.cbssports.com/stats/stats-main
 2. Click Projections → set Timeframe = Rest of Season, Categories = Standard
 3. Run "All Players - Batters" → select all → copy → paste into `batters2026.txt`
 4. Run "All Players - P" → select all → copy → paste into `pitchers2026.txt`
-5. Copy CBS salary projections (AL-only column) into `salproj.txt`
 
-**Run:**
-```
-python parse_projections.py
-git add docs/data.json && git commit -m "Add projections" && git push
-```
+**Run:** `python parse_projections.py`
+
+### Salaries (`parse_projections.py`)
+
+Salary projections parsed from `salproj.txt` (tab-separated: `Name POS • TEAM\tPos\tTeam\tMixed\tAL-Only`). AL-Only column (index 4) stored as string e.g. `"$46"`. Stored under top-level `salaries` key in `data.json`. Salary projections may not be available mid-season.
 
 **Row format — projections** (`{action}\t{Name POS • TEAM}\t{stat1}\t...\t{Rank}`):
 - Batter columns: AB, R, H, 1B, 2B, 3B, HR, RBI, BB, K, SB, CS, AVG, OBP, SLG, Rank
@@ -327,14 +358,7 @@ git add docs/data.json && git commit -m "Add projections" && git push
 - Rank is excluded from stored stats (already in CBS rankings)
 - `_team` and `_pos` are extracted from the player info field and stored alongside stats
 
-**Row format — salaries** (`salproj.txt`, tab-separated: `Name POS • TEAM\tPos\tTeam\tMixed\tAL-Only`):
-- AL-Only column (index 4) stored as string e.g. `"$46"`
-- `parse_salaries()` uses the same `PLAYER_RE` regex as projections
-- Stored under top-level `salaries` key in `data.json`; ~275 players
-
 **`scrape.py` field ownership:** does NOT touch `projections`, `salaries`, or `eligibility` — those are carried forward from the existing file on each scrape run.
-
-Note: `scrape_projections.py` is a Playwright-based alternative that was attempted but abandoned — CBS page JS polluted the columns. Use `parse_projections.py` (text copy-paste approach) instead.
 
 ### Position Eligibility (`build_eligibility.py`)
 

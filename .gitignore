@@ -1,0 +1,17 @@
+# CBS login session (contains auth cookies)
+.cbs_session.json
+
+# Scraped projection snapshots (local artifacts, data.json is the committed output)
+batters_*.txt
+pitchers_*.txt
+
+# Lahman database files (large, publicly available)
+People.csv
+Fielding.csv
+
+# Python
+__pycache__/
+*.pyc
+
+# Debug artifacts
+debug_*.html
