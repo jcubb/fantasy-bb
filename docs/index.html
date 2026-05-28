@@ -806,9 +806,10 @@ body {
     manually via the Run Scraper button.</li>
     <li><span class="rm-key">Rankings</span> — CBS Sports AL-only rotisserie top-300, scraped at
     the same time as depth charts.</li>
-    <li><span class="rm-key">Projections</span> — CBS Sports Rest-of-Season projected stats,
-    manually copied from the CBS stats page and parsed locally. <em>Not refreshed automatically</em>;
-    last updated when the projections were last run.</li>
+    <li><span class="rm-key">Projections</span> — CBS Sports projected stats, scraped from the
+    private league stats page via <code>scrape_projections.py</code> and loaded via
+    <code>load_projections.py</code>. Date-stamped snapshots are preserved locally so pre-season
+    projections can be restored later.</li>
     <li><span class="rm-key">Position eligibility</span> — calculated from SABR/Lahman historical
     fielding data. A player is eligible at a position if they played 20+ games there in the 2025
     season. This is <em>not</em> official CBS eligibility.</li>
